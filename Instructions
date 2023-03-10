@@ -1,0 +1,127 @@
+OVERVIEW
+
+The PowerSDI is an R package capable of calculating the SPI and SPEI from NASA POWER data. 
+This package is based on four friendly-use R-functions designed to calculate these two standardized drought indices (SPI and SPEI) in scientific and operational modes. 
+The functions ScientSDI.R, Accuracy.R and Reference.R may be used to assess, among other features, the ability of the SPI and SPEI frequency distributions to meet the normality assumption, and how well NASAPOWER estimates represent “real-world” data.
+The OperatSDI.R function calculates both SPI and SPEI in an operational mode. 
+The PowerSDI adopt a basic time scale that splits each month into four subperiods: 
+days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 28, 29, 30, or 31 depending on the month. 
+If TS=4, the time scale corresponds to a moving window with a 1-month length that is calculated four times each month. 
+If TS=48, the time scale corresponds to a moving window with a 12-month length that is calculated four times each month. This time scale is referred as to quart.month.
+Imports ‘lmom’ and ‘nasapower’ packages.
+
+BASIC INSTRUCTIONS
+
+####Function ScientSDI.R####
+Main Goal: Verify the conceptual assumptions of NASA-SPI and NASA-SPEI series.
+This function may also provide inputs for the Accuracy.R function.
+Usage: ScientSDI(lon, lat, start.date, end.date, TS)
+Inputs:
+lon: longitude in decinal degrees: (+) Estern Hemispher (-) Western Hemisphere.
+lat: latitude in decinal degrees: (+) Northern hemispher (-) Southern Hemisphere.
+start.date: date at which the indices estimates should start. Format: DD-MM-YYYY". E.g. 1, January, 1991: start.date="01-01-1991".
+end.date: date at which the indices estimates should end. format:DD-MM-YYYY".
+TS: Time scale on the "quart.month" basis (integer values between 1 and 96).
+
+Outputs:
+Scatter plots of Rainfall and potential evapotranspiration accumulated at the 1-quart.month time scale.
+Four csv files with data calculated at the time scale selected by the user. 
+DistPar.csv: The parameters of the distributions (gamma and GEV) used to calculate the indices.
+Goodness.csv: The Lilliefors and Anderson-Darling tests goodness-of-fit tests.
+Normality.csv: The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015)
+ScientSDI.csv: The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.
+This function also presents other data obtained from the NASAPOWER project, that is:
+Rainfall amounts (Rain)
+Potential evapotranspitations values estimated through the Hargreaves & Samani method (EPHS)
+Potential evapotranspitations values estimated through the FAO-56 Penman-Monteith method (EPPM)
+The difference between rainfall and potential evapotranspiration (P-EPHS and P-EPPM)
+
+##Details##
+The difference between end.date and start.date should be of at least 30 years. If the user sets this difference (end.date-star.date) for values between 29 and 10 years, the function exhibits the following message “Caution: Ideally, the SPI and SPEI require at least a 30-year period for their calculation. Why don't you select a longer period between start.date and end.date?”
+Periods (end.date-star.date) smaller than 10 years are not allowed.
+TS is the time scale on the "quart.month" basis.
+The quart.month time scale splits each month into four subperiods:
+days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 30, 31, 28, or 29 depending on the month.
+TS can only assume integer values between 1 and 96
+# Example
+The lon and lat presented in this example represent a pixel in the Sao Paulo State, Southest Brazil.
+ScientSDI(lon=-47.01, lat=-22.87, start.date="01-01-1991", end.date="31-12-2022", TS=1)
+
+####Function Reference.R####
+Goal: Calculates the SPI, SPEI, potential evapotranspiration, and other (agro)climatic parameters, from data of a reference source. It may provide inputs for Function Accuracy.R.
+Usage: Reference(ref)
+Inputs:
+A csv file with the variables required for calculating the SPI and SPEI. The number of variables depends on the potential evapotranspiration method selected by the user.
+Variables required for both Hargreaves & Samani and FAO-56 Penman-Monteith methods:
+1st Column (Head=YEAR): The year of each daily data
+2nd Column (Head=MM): The month of each daily data (1 to 12) 
+3rd Column (Head=DD): The day of each daily data (1 to 28, 29, 30, or, 31) 
+4th Column (Head=tmed): Daily average air temperature at 2 meters above the ground (ºC)
+5th Column (Head=tmax): Daily maximum air temperature at 2 meters above the ground (ºC)
+6th Column (Head=tmin): Daily minimum air temperature at 2 meters above the ground (ºC)
+7th Column (Head=Ra): Daily top of the atmosphere (extraterrestrial) radiation (MJ/m^2/day)
+For the Hargreaves & Samani method
+8th Column (Head=Rain): Daily rainfall amounts (mm)
+Tip: Use the file referenceHS.csv as example. 
+For the FAO-56 Penman-Monteith method
+8th Column (Head=Rs): Daily global horizontal irradiance (MJ/m^2/day)
+9th Column (Head=W): Daily average wind speed at 2 meters above the ground (m/s)
+10th Column (Head=RH): Daily average relative humidity at 2 meters above the ground (%)
+11th Column (Head=Rain): Daily rainfall amounts (mm)
+Tip: Use the file referencePM.csv as example.
+
+Outputs
+Scatter plots of Rainfall and potential evapotranspiration accumulated at the 1-quart.month time scale.
+A csv file (ReferenceSDI.csv) with: Rain, Potential evapotranspiration, 
+The difference between rainfall and potential evapotranspiration,
+SPI and SPEI calculated at the times scales selected by the user.
+The user may also select the evapotranspiration estimation method:
+Hargreaves & Samani or FAO-56 Penman-Monteith method
+
+# Examples
+#Using the Hargreaves & Samani method
+ref=Example_ref_HS 
+Reference (ref=ref)
+#Using the FAO-56 Penman-Monteith method
+ref=Example_ref_PM 
+Reference(ref=ref)
+
+####Function Accuracy.R####
+Goal: Describe the suitability of NASAPOWER data to represent the “real-world”.
+Usage: Accuracy(obs_pred)
+Inputs:
+A 2-column csv file. The 1st column is the reference/observed data. The 2nd column is the estimated/predicted data 
+
+Outputs:
+Absolute mean error (AME), Square root of the mean squared error (RMSE), Willmott's indices of agreemenet: original (d); modified (dmod) and refined (dref), and Pearson determination coefficient (R2).
+All measures may have their corresponding confidence intervals (CIinf:CIsup) calculated.
+# Example
+obs_est=Example_obs_est
+Accuracy(obs_est)
+
+####Function OperatSDI.R####
+Goal: Generate routine operational NASA-SPI and NASA-SPEI estimates.
+Usage: Operational_SDI(lon, lat, start.date, end.date, DistPar, TS)
+Inputs
+start.date: the date at each the calculation must star (format; “DD-MM-YYYY").
+end.date: the date at each the calculation must end (format; “DD-MM-YYYY"). 
+The lonlat.csv file: A 2-column matrix. The first column is the longitude in decinal degrees: (+) Estern Hemispher (-) Western Hemisphere. The second column is the latitude in decinal degrees: (+) Northern hemispher (-) Southern Hemisphere.
+The DistPar.csv file: A csv file provided by the Scient.R function with the parameters of the distributions (gamma and GEV) used to calculate the indices. See Example_DistPar.csv.
+
+# Outputs
+# A csv file with Rainfall amounts, potential evapotranspiration amounts (EP; Hargreaves & Samani or FAO-56 Penman-Monteith), differences between rainfall and EP, the NASA-SPI and NASA_SPEI, and the SPI/SPEI classification (dry/wet categories) corresponding to each indices estimates. 
+
+# Example
+lonlat=Example_lonlat
+DistPar=Example_DistPar
+OperatSDI(lonlat=lonlat, start.date="02-01-2013", end.date="31-12-2014", DistPar=DistPar, TS=1)
+
+References
+Allen, R.G.; Pereira, L.S.; Raes, D.; Smith, M. Crop evapotranspiration. In Guidelines for Computing Crop Water Requirements. Irrigation and Drainage Paper 56; FAO: Rome, Italy, 1998; p. 300.
+Blain, G. C., 2014. Revisiting the critical values of the Lilliefors test: towards the correct agrometeorological use of the Kolmogorov- Smirnov framework. Bragantia, 73, 192-202. http://dx.doi.org/10.1590/brag.2014.015
+Hargreaves, G.H.; Samani, Z.A. 1985.Reference crop evapotranspiration from temperature. Appl. Eng. Agric,1, 96–99.
+Mckee, T. B., Doesken, N.J. and Kleist, J., 1993. The relationship of drought frequency and duration to time scales. In: 8th Conference on Applied Climatology. Boston, MA: American Meteorological Society, 179–184.
+Stagge, J. H., Tallaksen, L. M., Gudmundsson, L., Van Loon, A. F. and Stahl, K., 2015. Candidate distribution for climatological drought indices (SPI and SPEI). International Journal of Climatology, 35(13), 4027–4040. https://doi.org/10.1002/joc.4267
+Package ‘lmom’, Version 2.9, Author J. R. M. Hosking. https://CRAN.R-project.org/package=lmom
+Package ‘nasapower’, Version 4.0.10, Author Adam H. Sparks et al., https://CRAN.R-project.org/package=nasapower
+Wu, H., Svoboda, M. D., Hayes, M. J., Wilhite, D. A. and Wen, F., 2007. Appropriate application of the standardized precipitation index in arid locations and dry seasons. International Journal of Climatology, 27(1), 65–79. https://doi.org/10.1002/joc.1371.
