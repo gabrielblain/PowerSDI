@@ -19,7 +19,9 @@
 #' @export
 #' @import lmom nasapower
 OperatSDI=function(lonlat, start.date, end.date, DistPar, TS){
-  question.par=menu(c("If Yes type 1 ", "If No type 2"), title="Do you have the parameters for all locals?")
+  distribution=menu(c("If GEV, type 1", "If GLO, type 2"),
+  title="Generalized Extreme Value (GEV) or Generalized Logistic (GLO) to calculate the SPEI?")
+  question.par=menu(c("If Yes type 1 ", "If No type 2"), title="Do you have the distributions parameters for all locals?")
   if (question.par==2){message("You must first run function ScientSDI.R")}
   if (question.par==1){
     if (!require(nasapower)) install.packages('nasapower')
@@ -163,22 +165,37 @@ OperatSDI=function(lonlat, start.date, end.date, DistPar, TS){
           data.at.timescale=cbind(data.at.timescale,(data.at.timescale[,6]-data.at.timescale[,7]))
           n.weeks=length(data.at.timescale[,1]);pos=1;SDI=matrix(NA,n.weeks,2)
           parameters=as.data.frame(DistPar[which(DistPar$lon==lon & DistPar$lat==lat),])
-          if(length(parameters[,1])==0){message("It seems that you don't have the gamma or GEV parameters for this local.
+          if(length(parameters[,1])==0){message("It seems that you don't have the distributions parameters for this local.
                                       Run Scient.R function.")}else{
                                         pos=1
-                                        while (pos<=n.weeks){
-                                          i=data.at.timescale[pos,5];par=as.numeric(parameters[i,])
-                                          prob=(par[6]+(1-par[6]))*cdfgam(data.at.timescale[pos,6],c(par[4],par[5]))
-                                          if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
-                                          SDI[pos,1]=qnorm(prob, mean = 0, sd = 1)
-                                          if (question==1){
-                                            prob=cdfgev(data.at.timescale[pos,8],c(par[7],par[8],par[9]))}
-                                          if (question==2){
-                                            prob=cdfgev(data.at.timescale[pos,8],c(par[10],par[11],par[12]))}
-                                          if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
-                                          SDI[pos,2]=qnorm(prob, mean = 0, sd = 1)
-                                          pos=pos+1
-                                        }
+                                        if(distribution==1){
+                                          while (pos<=n.weeks){
+                                            i=data.at.timescale[pos,5];par=as.numeric(parameters[i,])
+                                            prob=(par[6]+(1-par[6]))*cdfgam(data.at.timescale[pos,6],c(par[4],par[5]))
+                                            if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+                                            SDI[pos,1]=qnorm(prob, mean = 0, sd = 1)
+                                            if (question==1){
+                                              prob=cdfgev(data.at.timescale[pos,8],c(par[7],par[8],par[9]))}
+                                            if (question==2){
+                                              prob=cdfgev(data.at.timescale[pos,8],c(par[10],par[11],par[12]))}
+                                            if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+                                            SDI[pos,2]=qnorm(prob, mean = 0, sd = 1)
+                                            pos=pos+1
+                                          }}
+                                        if(distribution==2){
+                                          while (pos<=n.weeks){
+                                            i=data.at.timescale[pos,5];par=as.numeric(parameters[i,])
+                                            prob=(par[6]+(1-par[6]))*cdfgam(data.at.timescale[pos,6],c(par[4],par[5]))
+                                            if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+                                            SDI[pos,1]=qnorm(prob, mean = 0, sd = 1)
+                                            if (question==1){
+                                              prob=cdfglo(data.at.timescale[pos,8],c(par[7],par[8],par[9]))}
+                                            if (question==2){
+                                              prob=cdfglo(data.at.timescale[pos,8],c(par[10],par[11],par[12]))}
+                                            if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+                                            SDI[pos,2]=qnorm(prob, mean = 0, sd = 1)
+                                            pos=pos+1
+                                          }}
                                         categories=matrix(NA,n.weeks,2)
                                         for(i in 1:n.weeks){
                                           if(SDI[i,1]<=-2.0 & !is.na(SDI[i,1])){categories[i,1]="ext.dry"} else{

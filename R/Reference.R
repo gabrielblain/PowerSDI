@@ -51,6 +51,8 @@ Reference=function(ref){
                          stop("TS must be an interger value ranging between 1 and 96.
             Please, choose another TS and press esc")}
                      }}
+distribution=menu(c("If GEV, type 1", "If GLO, type 2"),
+title="Generalized Extreme Value (GEV) or Generalized Logistic (GLO) to calculate the SPEI?")
                    n.tot=length(ref[,1])
                    end.year=ref$YEAR[n.tot]
                    end.month=ref$MM[n.tot]
@@ -186,18 +188,20 @@ Reference=function(ref){
                        rain=data.at.timescale[which(data.at.timescale[,3]==i),4];rain.nozero=rain[rain>0];n.rain=length(rain)
                        n.nonzero=length(rain.nozero); n.z=n.rain-n.nonzero; probzero=(n.z+1)/(2*(n.rain+1))
                        parameters[i,1:4]=c(i,pelgam(samlmu(rain.nozero)),probzero)
-                       petp=data.at.timescale[which(data.at.timescale[,3]==i),6] ####
-                       parameters[i,5:7]=c(pelgev(samlmu(petp)))
+                       pep=data.at.timescale[which(data.at.timescale[,3]==i),6]
+                       if (distribution==1){
+                         parameters[i,5:7]=c(pelgev(samlmu(pep)))}else{parameters[i,5:7]=c(pelglo(samlmu(pep)))}
                      }
                      colnames(parameters)=c("lastweek","alfa.gam","beta.gam","probzero.rain","loc.gev","sc.gev","sh.gev")
-                     ########Parameter fitting:P-EP
                      n.weeks=length(data.at.timescale[,1]);pos=1;SDI=matrix(NA,n.weeks,2)
                      while (pos<=n.weeks){
                        i=data.at.timescale[pos,3]
                        prob=parameters[i,4]+(1-parameters[i,4])*cdfgam(data.at.timescale[pos,4],c(parameters[i,2],parameters[i,3]))
                        if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
                        SDI[pos,1]=qnorm(prob, mean = 0, sd = 1)
-                       prob=cdfgev(data.at.timescale[pos,6],c(parameters[i,5],parameters[i,6],parameters[i,7]))
+                       if (distribution==1){
+                         prob=cdfgev(data.at.timescale[pos,6],c(parameters[i,5],parameters[i,6],parameters[i,7]))}else{
+                           prob=cdfglo(data.at.timescale[pos,6],c(parameters[i,5],parameters[i,6],parameters[i,7]))}
                        if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
                        SDI[pos,2]=qnorm(prob, mean = 0, sd = 1)
                        pos=pos+1

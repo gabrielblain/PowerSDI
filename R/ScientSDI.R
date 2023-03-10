@@ -29,6 +29,8 @@ ScientSDI=function(lon,lat,start.date, end.date,TS){
   if (!require(lmom)) install.packages('lmom')
   library(nasapower)
   library(lmom)
+  distribution=menu(c("If GEV, type 1", "If GLO, type 2"),
+title="Generalized Extreme Value (GEV) or Generalized Logistic (GLO) to calculate the SPEI?")
   if(is.na(as.Date(end.date, "%d-%m-%Y"))==TRUE || is.na(as.Date(start.date, "%d-%m-%Y"))==TRUE
      || TS<1 || TS>96 || all.equal(TS, as.integer(TS))!=TRUE){
     message("Recall Date format should be DD-MM-YYYY and TS must be an interger  value ranging between 1 and 96")} else {
@@ -141,8 +143,8 @@ Consider selecting a longer period between start.date and end.date?")}
                         "If no, type 2",
                         "If only from the upper tail, type 3",
                         "If only from the lower tail, type 4"),
-                      title="Are there suspicions weekly potential evapotranspiration data to be removed?
-              Remember that the function Accuracy.R may provide information for this question.")
+        title="Are there suspicions weekly potential evapotranspiration data to be removed?
+        Remember that the function Accuracy.R may provide information for this question.")
         if (question==1){
           Uplim=as.numeric(readline(prompt="Insert a upper limit. Values larger than this threshold will be removed: "))
           Lowlim=as.numeric(readline(prompt="Insert a lower limit. Values smaller than this threshold will be removed: "))
@@ -196,9 +198,8 @@ Consider selecting a longer period between start.date and end.date?")}
           }
         data.at.timescale=cbind(data.at.timescale,(data.at.timescale[,4]-data.at.timescale[,5]),(data.at.timescale[,4]-data.at.timescale[,6]))
         parameters=matrix(NA,48,10)
-        complete=menu(c("If yes, type 1",
-                        "If no, type 2"),
-                      title="Do you want to calculate the goodness-of-fit and normality-checking tests?")
+        complete=menu(c("If yes, type 1", "If no, type 2"),
+        title="Do you want to calculate the goodness-of-fit and normality-checking tests?")
         if (complete==1){
           question.sig=menu(c("If 5% type 1 ", "If 10% type 2"), title="Please, select a significance level")
           if (question.sig==1){sig.level=0.95}else{sig.level=0.9}
@@ -215,15 +216,20 @@ Consider selecting a longer period between start.date and end.date?")}
             Goodness[i,1]=max(abs(prob.emp-prob.rain))
             petp.harg=data.at.timescale[which(data.at.timescale[,3]==i),7]
             petp.pm=data.at.timescale[which(data.at.timescale[,3]==i),8]
+            if (distribution==1){
             parameters[i,5:10]=c(pelgev(samlmu(petp.harg)),pelgev(samlmu(petp.pm)))
             prob.harg=sort(cdfgev(petp.harg,c(parameters[i,5],parameters[i,6],parameters[i,7])))
+            prob.pm=sort(cdfgev(petp.pm,c(parameters[i,8],parameters[i,9],parameters[i,10])))}
+            if (distribution==2){
+              parameters[i,5:10]=c(pelglo(samlmu(petp.harg)),pelglo(samlmu(petp.pm)))
+              prob.harg=sort(cdfglo(petp.harg,c(parameters[i,5],parameters[i,6],parameters[i,7])))
+              prob.pm=sort(cdfglo(petp.pm,c(parameters[i,8],parameters[i,9],parameters[i,10])))}
             prob.harg[prob.harg<0.001351]=0.001351;prob.harg[prob.harg>0.998649]=0.998649
+            prob.pm[prob.pm<0.001351]=0.001351;prob.pm[prob.pm>0.998649]=0.998649
             n.harg=length(petp.harg)
             soma.harg=matrix(NA,n.harg,1)
             prob.emp=sort(rank(petp.harg,na.last = NA,ties.method=c("first")))/n.harg
             Goodness[i,3]=max(abs(prob.emp-prob.harg))
-            prob.pm=sort(cdfgev(petp.pm,c(parameters[i,8],parameters[i,9],parameters[i,10])))
-            prob.pm[prob.pm<0.001351]=0.001351;prob.pm[prob.pm>0.998649]=0.998649
             n.pm=length(petp.pm)
             soma.pm=matrix(NA,n.pm,1)
             prob.emp=sort(rank(petp.pm,na.last = NA,ties.method=c("first")))/n.pm
@@ -240,7 +246,6 @@ Consider selecting a longer period between start.date and end.date?")}
               soma.pm[ad,1]=((2*ad)-1)*((log(prob.pm[ad]))+log(1-prob.pm[n.pm+1-ad]))
             }
             Goodness[i,11]=-n.pm-((1/n.pm)*sum(soma.pm,na.rm = TRUE))
-
             ####Critical values
             null.dist=matrix(NA,2000,6)
             for (j in 1:2000){
@@ -253,6 +258,7 @@ Consider selecting a longer period between start.date and end.date?")}
                 soma.rain[ad,1]=((2*ad)-1)*((log(prob.synt[ad]))+log(1-prob.synt[n.nonzero+1-ad]))
               }
               null.dist[j,4]=-n.nonzero-((1/n.nonzero)*sum(soma.rain,na.rm = TRUE))
+              if (distribution==1){
               y=sort(quagev(runif(n.harg), c(parameters[i,5],parameters[i,6],parameters[i,7])))
               prob.synt=cdfgev(y,pelgev(samlmu(y)))
               prob.synt[prob.synt<0.001351]=0.001351;prob.synt[prob.synt>0.998649]=0.998649
@@ -271,7 +277,28 @@ Consider selecting a longer period between start.date and end.date?")}
                 soma.pm[ad,1]=((2*ad)-1)*((log(prob.synt[ad]))+log(1-prob.synt[n.pm+1-ad]))
               }
               null.dist[j,6]=-n.pm-((1/n.pm)*sum(soma.pm,na.rm = TRUE))
-            }
+              }
+              if (distribution==2){
+                y=sort(quaglo(runif(n.harg), c(parameters[i,5],parameters[i,6],parameters[i,7])))
+                prob.synt=cdfglo(y,pelglo(samlmu(y)))
+                prob.synt[prob.synt<0.001351]=0.001351;prob.synt[prob.synt>0.998649]=0.998649
+                prob.emp=sort(rank(y))/n.harg
+                null.dist[j,2]=max(abs(prob.emp-prob.synt))
+                for (ad in 1:n.harg){
+                  soma.harg[ad,1]=((2*ad)-1)*((log(prob.synt[ad]))+log(1-prob.synt[n.harg+1-ad]))
+                }
+                null.dist[j,5]=-n.harg-((1/n.harg)*sum(soma.harg,na.rm = TRUE))
+                z=sort(quaglo(runif(n.pm), c(parameters[i,8],parameters[i,9],parameters[i,10])))
+                prob.synt=cdfglo(z,pelglo(samlmu(z)))
+                prob.synt[prob.synt<0.001351]=0.001351;prob.synt[prob.synt>0.998649]=0.998649
+                prob.emp=sort(rank(z))/n.pm
+                null.dist[j,3]=max(abs(prob.emp-prob.synt))
+                for (ad in 1:n.pm){
+                  soma.pm[ad,1]=((2*ad)-1)*((log(prob.synt[ad]))+log(1-prob.synt[n.pm+1-ad]))
+                }
+                null.dist[j,6]=-n.pm-((1/n.pm)*sum(soma.pm,na.rm = TRUE))
+              }
+              }
             Goodness[i,2]=quantile(null.dist[,1],sig.level)
             Goodness[i,4]=quantile(null.dist[,2],sig.level)
             Goodness[i,6]=quantile(null.dist[,3],sig.level)
@@ -286,18 +313,35 @@ Consider selecting a longer period between start.date and end.date?")}
                                "AD.Rain","Crit","AD.PEPHarg","Crit","AD.PEPPM","Crit")
           ########Parameter fitting:P-EP
           n.weeks=length(data.at.timescale[,1]);pos=1;SDI=matrix(NA,n.weeks,3)
-          while (pos<=n.weeks){
-            i=data.at.timescale[pos,3]
-            prob=parameters[i,6]+(1-parameters[i,6])*cdfgam(data.at.timescale[pos,4],c(parameters[i,4],parameters[i,5]))
-            if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
-            SDI[pos,1]=qnorm(prob, mean = 0, sd = 1)
-            prob=cdfgev(data.at.timescale[pos,7],c(parameters[i,7],parameters[i,8],parameters[i,9]))
-            if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
-            SDI[pos,2]=qnorm(prob, mean = 0, sd = 1)
-            prob=cdfgev(data.at.timescale[pos,8],c(parameters[i,10],parameters[i,11],parameters[i,12]))
-            if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
-            SDI[pos,3]=qnorm(prob, mean = 0, sd = 1)
-            pos=pos+1
+          if (distribution==1){
+            while (pos<=n.weeks){
+              i=data.at.timescale[pos,3]
+              prob=parameters[i,6]+(1-parameters[i,6])*cdfgam(data.at.timescale[pos,4],c(parameters[i,4],parameters[i,5]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,1]=qnorm(prob, mean = 0, sd = 1)
+              prob=cdfgev(data.at.timescale[pos,7],c(parameters[i,7],parameters[i,8],parameters[i,9]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,2]=qnorm(prob, mean = 0, sd = 1)
+              prob=cdfgev(data.at.timescale[pos,8],c(parameters[i,10],parameters[i,11],parameters[i,12]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,3]=qnorm(prob, mean = 0, sd = 1)
+              pos=pos+1
+            }
+          }
+          if (distribution==2){
+            while (pos<=n.weeks){
+              i=data.at.timescale[pos,3]
+              prob=parameters[i,6]+(1-parameters[i,6])*cdfgam(data.at.timescale[pos,4],c(parameters[i,4],parameters[i,5]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,1]=qnorm(prob, mean = 0, sd = 1)
+              prob=cdfglo(data.at.timescale[pos,7],c(parameters[i,7],parameters[i,8],parameters[i,9]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,2]=qnorm(prob, mean = 0, sd = 1)
+              prob=cdfglo(data.at.timescale[pos,8],c(parameters[i,10],parameters[i,11],parameters[i,12]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,3]=qnorm(prob, mean = 0, sd = 1)
+              pos=pos+1
+            }
           }
           categories=matrix(NA,n.weeks,3)
           for(i in 1:n.weeks){
@@ -397,24 +441,48 @@ Consider selecting a longer period between start.date and end.date?")}
             parameters[i,1:4]=c(i,pelgam(samlmu(rain.nozero)),probzero)
             petp.harg=data.at.timescale[which(data.at.timescale[,3]==i),7]
             petp.pm=data.at.timescale[which(data.at.timescale[,3]==i),8]
-            parameters[i,5:10]=c(pelgev(samlmu(petp.harg)),pelgev(samlmu(petp.pm)))
+            if (distribution==1){
+              parameters[i,5:10]=c(pelgev(samlmu(petp.harg)),pelgev(samlmu(petp.pm)))
+              prob.harg=sort(cdfgev(petp.harg,c(parameters[i,5],parameters[i,6],parameters[i,7])))
+              prob.pm=sort(cdfgev(petp.pm,c(parameters[i,8],parameters[i,9],parameters[i,10])))}
+            if (distribution==2){
+              parameters[i,5:10]=c(pelglo(samlmu(petp.harg)),pelglo(samlmu(petp.pm)))
+              prob.harg=sort(cdfglo(petp.harg,c(parameters[i,5],parameters[i,6],parameters[i,7])))
+              prob.pm=sort(cdfglo(petp.pm,c(parameters[i,8],parameters[i,9],parameters[i,10])))}
           }
           parameters=cbind(lon,lat,parameters)
           colnames(parameters)=c("lon","lat","quart.month","alfa.rain","beta.rain",
                                  "probzero.rain","loc.harg","sc.harg","sh.harg","loc.pm","sc.pm","sh.pm")
           n.weeks=length(data.at.timescale[,1]);pos=1;SDI=matrix(NA,n.weeks,3)
-          while (pos<=n.weeks){
-            i=data.at.timescale[pos,3]
-            prob=parameters[i,6]+(1-parameters[i,6])*cdfgam(data.at.timescale[pos,4],c(parameters[i,4],parameters[i,5]))
-            if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
-            SDI[pos,1]=qnorm(prob, mean = 0, sd = 1)
-            prob=cdfgev(data.at.timescale[pos,7],c(parameters[i,7],parameters[i,8],parameters[i,9]))
-            if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
-            SDI[pos,2]=qnorm(prob, mean = 0, sd = 1)
-            prob=cdfgev(data.at.timescale[pos,8],c(parameters[i,10],parameters[i,11],parameters[i,12]))
-            if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
-            SDI[pos,3]=qnorm(prob, mean = 0, sd = 1)
-            pos=pos+1
+          if (distribution==1){
+            while (pos<=n.weeks){
+              i=data.at.timescale[pos,3]
+              prob=parameters[i,6]+(1-parameters[i,6])*cdfgam(data.at.timescale[pos,4],c(parameters[i,4],parameters[i,5]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,1]=qnorm(prob, mean = 0, sd = 1)
+              prob=cdfgev(data.at.timescale[pos,7],c(parameters[i,7],parameters[i,8],parameters[i,9]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,2]=qnorm(prob, mean = 0, sd = 1)
+              prob=cdfgev(data.at.timescale[pos,8],c(parameters[i,10],parameters[i,11],parameters[i,12]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,3]=qnorm(prob, mean = 0, sd = 1)
+              pos=pos+1
+            }
+          }
+          if (distribution==2){
+            while (pos<=n.weeks){
+              i=data.at.timescale[pos,3]
+              prob=parameters[i,6]+(1-parameters[i,6])*cdfgam(data.at.timescale[pos,4],c(parameters[i,4],parameters[i,5]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,1]=qnorm(prob, mean = 0, sd = 1)
+              prob=cdfglo(data.at.timescale[pos,7],c(parameters[i,7],parameters[i,8],parameters[i,9]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,2]=qnorm(prob, mean = 0, sd = 1)
+              prob=cdfglo(data.at.timescale[pos,8],c(parameters[i,10],parameters[i,11],parameters[i,12]))
+              if (is.na(prob)==FALSE & prob<0.001351){prob=0.001351};if (is.na(prob)==FALSE & prob>0.998649){prob=0.998649}
+              SDI[pos,3]=qnorm(prob, mean = 0, sd = 1)
+              pos=pos+1
+            }
           }
           categories=matrix(NA,n.weeks,3)
           for(i in 1:n.weeks){
