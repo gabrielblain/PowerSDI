@@ -1,15 +1,28 @@
 Package: PowerSDI
 Type: Package
-Title: What the Package Does (Title Case)
+Title: calculates the SPI and SPEI from NASA POWER data
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Gabriel Constantino Blain, Graciela da Rocha Sobierajski and Leticia Lopes Martins
+Maintainer: Gabriel Constantino Blain <gabriel.blain@sp.gov.br>
+Description: The PowerSDI is calculates the SPI and SPEI from NASA POWER data.
+    It calculates these two indices from scientific and operational viewpoints.
+    The functions ScientSDI.R, Accuracy.R and Reference.R verifies
+    If the SPI and SPEI frequency distributions meet the normality assumption.
+    How well NASAPOWER estimates represent “real-world” data.
+    The OperatSDI.R function calculates both SPI and SPEI in an operational mode.
+    The PowerSDI adopts a basic time scale that splits each month into four subperiods.
+    Days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 28, 29, 30, or 31 depending on the month.
+    TS=4 corresponds to a 12-month length moving (calculated 4 times a month).
+    TS=48 corresponds to a 1-month length moving (calculated 4 times a month).
+    This time scale (TS) is referred as to quart.month.
+License: CC0
 Encoding: UTF-8
 LazyData: true
-Imports: 
-    lmom,
-    nasapower
 RoxygenNote: 7.2.3
+Depends: 
+    R (>= 2.10), nasapower, lmom
+URL: https://github.com/gabrielblain/PowerSDI
+BugReports: https://github.com/gabrielblain/PowerSDI/issues
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

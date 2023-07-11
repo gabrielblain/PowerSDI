@@ -34,6 +34,8 @@ ScientSDI(
 
 \item{Good}{A character variable ("Yes" or "No") defining if the goodness-of-fit and normality tests. Default is "Yes".}
 
+\item{sig.level}{A numeric variable (between 0.90 and 0.95) defining the significance level for parameter Good. Default is "0.95".}
+
 \item{RainUplim}{Optional. Upper limit in millimeters from which rainfall values larger than it will be removed. Default is NULL.}
 
 \item{RainLowlim}{Optional. Lower limit in millimeters from which rainfall values smaller than it will be removed. Default is NULL.}
@@ -41,16 +43,16 @@ ScientSDI(
 \item{PEUplim}{Optional. Upper limit in millimeters from which evapotranspiration values larger than it will be removed. Default is NULL.}
 
 \item{PELowlim}{Optional. Lower limit in millimeters from which evapotranspiration values smaller than it will be removed. Default is NULL.}
-
-\item{sig, level}{A numeric variable (between 0.90 and 0.95) defining the significance level for parameter Good. Default is "0.95".}
 }
 \value{
-Four csv files with data calculated at the time scale selected by the user.
-DistPar.csv: The parameters of the distributions (gamma and GEV) used to calculate the indices.
-Goodness.csv: The Lilliefors and Anderson-Darling tests goodness-of-fit tests.
-Normality.csv:  The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015).
-ScientSDI.csv: The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.
-This function also presents other data obtained from the NASAPOWER project, that is:
+A list with data calculated at the time scale selected by the user.
+If Good="Yes", this list includes:
+$ScientSDI: The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.
+$DistPar: The parameters of the distributions (gamma and GEV) used to calculate the indices.
+$Goodness: The Lilliefors and Anderson-Darling tests goodness-of-fit tests.
+$Normality:  The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015).
+If Good="No", this list includes $ScientSDI and $DistPar
+This function also presents other data (in millimiters) calculated from the NASAPOWER project:
 Rainfall amounts (Rain).
 Potential evapotranspitations values estimated through the Hargreaves & Samani method (EPHS).
 Potential evapotranspitations values estimated through the FAO-56 Penman-Monteith method (EPPM).
@@ -60,5 +62,5 @@ The difference between rainfall and potential evapotranspiration (P-EPHS and P-E
 ScientSDI
 }
 \examples{
-ScientSDI(lon=-47.3, lat=-22.87, start.date="1991-01-01", end.date="2022-12-31",TS=4,Good="no",sig.level=0.95,distr="GEV",RainUplim=NULL,RainLowlim=NULL,PEUplim=NULL,PELowlim=NULL)
+Exemp.Scient <- ScientSDI(lon = -47.3, lat = -22.67, start.date = "1991-01-01", end.date = "2022-12-31")
 }
