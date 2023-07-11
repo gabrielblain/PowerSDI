@@ -62,5 +62,6 @@ The difference between rainfall and potential evapotranspiration (P-EPHS and P-E
 ScientSDI
 }
 \examples{
-Exemp.Scient <- ScientSDI(lon = -47.3, lat = -22.67, start.date = "1991-01-01", end.date = "2022-12-31")
+Exemp.Scient <- ScientSDI(lon = -47.3, lat = -22.67, start.date = "1991-01-01",
+end.date = "2022-12-31")
 }

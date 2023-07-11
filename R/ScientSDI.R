@@ -42,7 +42,8 @@
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @importFrom utils install.packages menu write.table
 #' @examples
-#' Exemp.Scient <- ScientSDI(lon = -47.3, lat = -22.67, start.date = "1991-01-01", end.date = "2022-12-31")
+#' Exemp.Scient <- ScientSDI(lon = -47.3, lat = -22.67, start.date = "1991-01-01",
+#' end.date = "2022-12-31")
 ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Good = "Yes", sig.level = 0.95,
                       RainUplim = NULL, RainLowlim = NULL, PEUplim = NULL, PELowlim = NULL) {
   if (distr == "GEV" || distr == "GLO") {

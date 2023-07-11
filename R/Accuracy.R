@@ -12,7 +12,7 @@
 #' @return
 #' Absolute mean error (AME)
 #' Square root of the mean squared error (RMSE)
-#' Willmott's indices of agreemenet: original (dorig)
+#' Willmott's indices of agreement: original (dorig)
 #' Modified (dmod) and refined (dref)
 #' Pearson determination coefficient (R2).
 #' All measures may have their corresponding confidence intervals (CIinf:CIsup) calculated.
@@ -28,7 +28,7 @@ Accuracy <- function(obs_est, conf.int = "Yes", sig.level = 0.95) {
   if (conf.int == "Yes" || conf.int == "YES" || conf.int == "YeS" || conf.int == "YEs" || conf.int == "yes" ||
     conf.int == "NO" || conf.int == "No" || conf.int == "nO" || conf.int == "no") {
     obs_est <- na.omit(obs_est)
-    min.length <- length(as.matrix(obs_est)) / 2
+    min.length <- length(as.matrix(obs_est))/2
     if (min.length >= 10) {
       o <- (obs_est[, 1])
       p <- obs_est[, 2]

@@ -19,7 +19,7 @@ Default is "0.95".}
 \value{
 Absolute mean error (AME)
 Square root of the mean squared error (RMSE)
-Willmott's indices of agreemenet: original (dorig)
+Willmott's indices of agreement: original (dorig)
 Modified (dmod) and refined (dref)
 Pearson determination coefficient (R2).
 All measures may have their corresponding confidence intervals (CIinf:CIsup) calculated.
