@@ -1,29 +1,26 @@
 #' Accuracy
 #'
 #' @param obs_est
-#' A 2-column matrix. 1st and 2nd columns are, respectively the reference/observed and estimated/predicted data.
+#' A 2-column matrix. The reference or observed and the estimated or predicted data.
 #' See ObsEst as example.
 #' @param conf.int
 #' A character variable ("Yes" or "No") defining if the function must calculate confidence intervals.
 #' Default is "Yes".
 #' @param sig.level
 #' A numeric variable (between 0.90 and 0.95) defining the significance level for parameter the confidence intervals.
-#' Default is "0.95".
+#' Default is 0.95.
 #' @return
 #' Absolute mean error (AME)
 #' Square root of the mean squared error (RMSE)
 #' Willmott's indices of agreement: original (dorig)
 #' Modified (dmod) and refined (dref)
 #' Pearson determination coefficient (R2).
-#' All measures may have their corresponding confidence intervals (CIinf:CIsup) calculated.
+#' If conf.int="Yes", confidence intervals are calculated.
 #' @export
 #'
 #' @examples
 #' data("ObsEst")
 #' Accuracy(obs_est = ObsEst, conf.int = "Yes", sig.level = 0.95)
-#' @examples
-#' data("ObsEst")
-#' Accuracy(obs_est = ObsEst, conf.int = "No")
 Accuracy <- function(obs_est, conf.int = "Yes", sig.level = 0.95) {
   if (conf.int == "Yes" || conf.int == "YES" || conf.int == "YeS" || conf.int == "YEs" || conf.int == "yes" ||
     conf.int == "NO" || conf.int == "No" || conf.int == "nO" || conf.int == "no") {
@@ -40,8 +37,8 @@ Accuracy <- function(obs_est, conf.int = "Yes", sig.level = 0.95) {
         if (any(is.na(o)) == TRUE || (any(is.na(p) == TRUE))) {
           print("Missing data is not allowed. Please, remove them from the input file")
         } else {
-          plot(o, p)
-          title("", xlab = "Reference", ylab = "Estimated")
+         # plot(o, p)
+         # title("", xlab = "Reference", ylab = "Estimated")
           databoot <- matrix(NA, N, 2)
           Nboots <- 10000
           dorigboot <- matrix(NA, Nboots, 1)

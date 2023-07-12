@@ -15,13 +15,13 @@ Reference(ref, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS = 4)
 
 \item{PEMethod}{A character variable ("HS" or "PM") defining the potential evapotranspiration method. Default is "HS".}
 
-\item{TS}{Time scale on the "quart.month" basis (integer values between 1 and 96). Default is 4.}
+\item{TS}{Time scale on the quart.month" basis (integer values between 1 and 96). Default is 4.}
 }
 \value{
 A data frame with:
-Rain, Potential evapotranspiration,
+Rain, potential evapotranspiration,
 Difference between rainfall and potential evapotranspiration,
-SPI and SPEI calculated at the times scales selected by the user.
+SPI and SPEI calculated at the time scale selected by the user.
 }
 \description{
 Reference
@@ -29,7 +29,4 @@ Reference
 \examples{
 data("refHS")
 Reference(ref = refHS, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS = 4)
-#' @examples
-data("refPM")
-Reference(ref = refPM, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS = 4)
 }

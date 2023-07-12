@@ -3,9 +3,10 @@
 \docType{data}
 \name{refPM}
 \alias{refPM}
-\title{Another example of the input required by the Reference.R function.}
+\title{Example of the input required by the Reference function.}
 \format{
 A 11-column matrix with 10958 rows and 11 variables
+
 \describe{
 \item{YEAR}{Year}
 \item{MM}{Month}

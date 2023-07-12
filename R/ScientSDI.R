@@ -9,11 +9,11 @@
 #' @param end.date
 #' date at which the indices estimates should end. Format: YYYY-MM-DD".
 #' @param distr
-#' A character variable ("GEV" or "GLO") defining which distribution is used to calculate the SPEI. Default is "GEV".
+#' A character variable ("GEV" or "GLO") defining the distribution to calculate the SPEI. Default is "GEV".
 #' @param TS
-#' Time scale on the "quart.month" basis (integer values between 1 and 96). Default is 4.
+#' Time scale on the quart.month basis (integer values between 1 and 96). Default is 4.
 #' @param Good
-#' A character variable ("Yes" or "No") defining if the goodness-of-fit and normality tests. Default is "Yes".
+#' A character variable ("Yes" or "No") to calculate or not the goodness-of-fit and normality tests. Default is "Yes".
 #' @param sig.level
 #' A numeric variable (between 0.90 and 0.95) defining the significance level for parameter Good. Default is "0.95".
 #' @param RainUplim
@@ -27,14 +27,14 @@
 #' @return
 #' A list with data calculated at the time scale selected by the user.
 #' If Good="Yes", this list includes:
-#' $ScientSDI: The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.
-#' $DistPar: The parameters of the distributions (gamma and GEV) used to calculate the indices.
-#' $Goodness: The Lilliefors and Anderson-Darling tests goodness-of-fit tests.
-#' $Normality:  The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015).
-#' If Good="No", this list includes $ScientSDI and $DistPar
+#' SDI: The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.
+#' DistPar: The parameters of the distributions (gamma and GEV) used to calculate the indices.
+#' GoodFit: The Lilliefors and Anderson-Darling tests goodness-of-fit tests.
+#' Normality:  The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015).
+#' If Good="No", this list includes SDI and DistPar.
 #' This function also presents other data (in millimiters) calculated from the NASAPOWER project:
 #' Rainfall amounts (Rain).
-#' Potential evapotranspitations values estimated through the Hargreaves & Samani method (EPHS).
+#' Potential evapotranspitations values estimated through the Hargreaves and Samani method (EPHS).
 #' Potential evapotranspitations values estimated through the FAO-56 Penman-Monteith method (EPPM).
 #' The difference between rainfall and potential evapotranspiration (P-EPHS and P-EPPM).
 #' @export
@@ -42,8 +42,7 @@
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @importFrom utils install.packages menu write.table
 #' @examples
-#' Exemp.Scient <- ScientSDI(lon = -47.3, lat = -22.67, start.date = "1991-01-01",
-#' end.date = "2022-12-31")
+#' ScientSDI(lon = -47.3, lat = -22.67, start.date = "1991-01-01", end.date = "2022-12-31")
 ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Good = "Yes", sig.level = 0.95,
                       RainUplim = NULL, RainLowlim = NULL, PEUplim = NULL, PELowlim = NULL) {
   if (distr == "GEV" || distr == "GLO") {
@@ -1007,11 +1006,9 @@ Why don't you select a longer period between start.date and end.date?")
             }
             whichTS <- paste("TS is", as.character(TS))
             row.names(SDI.final[1, ]) <- whichTS
-            Result <- list(SDI.final, parameters, Goodness, Norn.check)
+            Result <- list(SDI.final, parameters)
             Result <- list(
-              SDI = SDI.final, DistPar = parameters,
-              GoodFit = Goodness, Normality = Norn.check
-            )
+              SDI = SDI.final, DistPar = parameters)
             return(Result)
             message("Done. See, it didn't take so long.")
             message("The calculations started on:")
@@ -1020,7 +1017,7 @@ Why don't you select a longer period between start.date and end.date?")
           }
         }
       }
-      message("The csv files are in your working directory.")
+
     } else {
       message("Good should be set to either Yes or No.")
     }

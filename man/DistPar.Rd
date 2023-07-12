@@ -55,7 +55,7 @@ Contains parameters of the gamma and GEV distributions and the Pr(Rain=0).
 This data can be provided by the ScientSDI function.
 }
 \examples{
-# data(DistPar)
+data(DistPar)
 data(DistPar)
 }
 \keyword{datasets}

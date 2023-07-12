@@ -3,7 +3,7 @@
 \docType{data}
 \name{ObsEst}
 \alias{ObsEst}
-\title{Example of the input required by the Accuracy.R function.}
+\title{Example of the input required by the Accuracy function.}
 \format{
 A 2-column matrix with 1434 rows
 
@@ -22,6 +22,6 @@ ObsEst
 Contains pairs of reference and estimated data.
 }
 \examples{
-# data(ObsEst)
+data(ObsEst)
 }
 \keyword{datasets}

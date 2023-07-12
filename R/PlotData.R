@@ -5,9 +5,9 @@
 #' @param lat
 #' latitude in decinal degrees: (+) Northern hemispher (-) Southern Hemisphere.
 #' @param start.date
-#' date at which the indices estimates should start. Format: YYYY-MM-DD".
+#' date at which the indices estimates should start ("YYYY-MM-DD").
 #' @param end.date
-#' date at which the indices estimates should end. Format: YYYY-MM-DD".
+#' date at which the indices estimates should end ("YYYY-MM-DD").
 #' @return
 #' Scatter plots of Rainfall and potential evapotranspiration accumulated at the 1-quart.month time scale.
 #' @export

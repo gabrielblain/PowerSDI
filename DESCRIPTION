@@ -1,6 +1,6 @@
 Package: PowerSDI
 Type: Package
-Title: Calculates the SPI and SPEI from NASA POWER data
+Title: CALCULATES the SPI and SPEI from NASA POWER DATA
 Version: 0.1.0
 Author: Gabriel Constantino Blain, Graciela da Rocha Sobierajski and Leticia Lopes Martins
 Maintainer: Gabriel Constantino Blain <gabriel.blain@sp.gov.br>

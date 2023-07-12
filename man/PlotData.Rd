@@ -11,9 +11,9 @@ PlotData(lon, lat, start.date, end.date)
 
 \item{lat}{latitude in decinal degrees: (+) Northern hemispher (-) Southern Hemisphere.}
 
-\item{start.date}{date at which the indices estimates should start. Format: YYYY-MM-DD".}
+\item{start.date}{date at which the indices estimates should start ("YYYY-MM-DD").}
 
-\item{end.date}{date at which the indices estimates should end. Format: YYYY-MM-DD".}
+\item{end.date}{date at which the indices estimates should end ("YYYY-MM-DD").}
 }
 \value{
 Scatter plots of Rainfall and potential evapotranspiration accumulated at the 1-quart.month time scale.

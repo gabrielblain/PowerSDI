@@ -16,13 +16,13 @@ OperatSDI(
 )
 }
 \arguments{
-\item{lon}{longitude in decinal degrees: (+) Estern Hemispher (-) Western Hemisphere.}
+\item{lon}{longitude in decinal degrees.}
 
-\item{lat}{latitude in decinal degrees: (+) Northern hemispher (-) Southern Hemisphere.}
+\item{lat}{latitude in decinal degrees.}
 
-\item{start.date}{Date at each the calculation must star (format; “YYYY-MM-DD").}
+\item{start.date}{Date at each the calculation must start (“YYYY-MM-DD").}
 
-\item{end.date}{Date at each the calculation must end (format; “YYYY-MM-DD").}
+\item{end.date}{Date at each the calculation must end (“YYYY-MM-DD").}
 
 \item{PEMethod}{A character variable ("HS" or "PM") defining the potential evapotranspiration method. Default is "HS".}
 
@@ -33,17 +33,15 @@ OperatSDI(
 \item{TS}{#'Time scale on the "quart.month" basis (integer values between 1 and 96).}
 }
 \value{
-A data frame with Rainfall, potential evapotranspiration (EP; Hargreaves & Samani or FAO-56 Penman-Monteith),
-differences between rainfall and EP (in millimiters), the NASA-SPI and NASA_SPEI,
-and the SPI/SPEI classification (dry/wet categories) corresponding to each indices estimates.
+A data frame with Rainfall, potential evapotranspiration (EP),
+difference between rainfall and EP (in millimiters), the NASA-SPI and NASA_SPEI,
+and the SDI categories corresponding to each indices estimates.
 }
 \description{
 OperatSDI
 }
 \examples{
 data("DistPar")
-OperatMode <- OperatSDI(
-  lon = -47.3, lat = -22.67, start.date = "2023-01-31",
-  end.date = "2023-07-07", parms = DistPar
-)
+ OperatSDI(lon = -47.3, lat = -22.67, start.date = "2023-01-31",
+  end.date = "2023-07-07", parms = DistPar)
 }

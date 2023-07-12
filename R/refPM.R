@@ -1,8 +1,9 @@
-#' Another example of the input required by the Reference.R function.
+#' Example of the input required by the Reference function.
 #'
 #' Contains data for calculating the SPI and SPEI.
 #'
 #' @format A 11-column matrix with 10958 rows and 11 variables
+#'
 #' \describe{
 #' \item{YEAR}{Year}
 #' \item{MM}{Month}

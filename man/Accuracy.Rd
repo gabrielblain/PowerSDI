@@ -7,14 +7,14 @@
 Accuracy(obs_est, conf.int = "Yes", sig.level = 0.95)
 }
 \arguments{
-\item{obs_est}{A 2-column matrix. 1st and 2nd columns are, respectively the reference/observed and estimated/predicted data.
+\item{obs_est}{A 2-column matrix. The reference or observed and the estimated or predicted data.
 See ObsEst as example.}
 
 \item{conf.int}{A character variable ("Yes" or "No") defining if the function must calculate confidence intervals.
 Default is "Yes".}
 
 \item{sig.level}{A numeric variable (between 0.90 and 0.95) defining the significance level for parameter the confidence intervals.
-Default is "0.95".}
+Default is 0.95.}
 }
 \value{
 Absolute mean error (AME)
@@ -22,7 +22,7 @@ Square root of the mean squared error (RMSE)
 Willmott's indices of agreement: original (dorig)
 Modified (dmod) and refined (dref)
 Pearson determination coefficient (R2).
-All measures may have their corresponding confidence intervals (CIinf:CIsup) calculated.
+If conf.int="Yes", confidence intervals are calculated.
 }
 \description{
 Accuracy
@@ -30,6 +30,4 @@ Accuracy
 \examples{
 data("ObsEst")
 Accuracy(obs_est = ObsEst, conf.int = "Yes", sig.level = 0.95)
-data("ObsEst")
-Accuracy(obs_est = ObsEst, conf.int = "No")
 }

@@ -1,13 +1,13 @@
 #' OperatSDI
 #'
 #' @param lon
-#' longitude in decinal degrees: (+) Estern Hemispher (-) Western Hemisphere.
+#' longitude in decinal degrees.
 #' @param lat
-#' latitude in decinal degrees: (+) Northern hemispher (-) Southern Hemisphere.
+#' latitude in decinal degrees.
 #' @param start.date
-#' Date at each the calculation must star (format; “YYYY-MM-DD").
+#' Date at each the calculation must start (“YYYY-MM-DD").
 #' @param end.date
-#' Date at each the calculation must end (format; “YYYY-MM-DD").
+#' Date at each the calculation must end (“YYYY-MM-DD").
 #' @param PEMethod
 #' A character variable ("HS" or "PM") defining the potential evapotranspiration method. Default is "HS".
 #' @param distr
@@ -17,19 +17,17 @@
 #' @param TS
 #' #'Time scale on the "quart.month" basis (integer values between 1 and 96).
 #' @return
-#' A data frame with Rainfall, potential evapotranspiration (EP; Hargreaves & Samani or FAO-56 Penman-Monteith),
-#' differences between rainfall and EP (in millimiters), the NASA-SPI and NASA_SPEI,
-#' and the SPI/SPEI classification (dry/wet categories) corresponding to each indices estimates.
+#' A data frame with Rainfall, potential evapotranspiration (EP),
+#' difference between rainfall and EP (in millimiters), the NASA-SPI and NASA_SPEI,
+#' and the SDI categories corresponding to each indices estimates.
 #' @export
 #' @import lmom nasapower
 #' @importFrom graphics title
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @examples
 #' data("DistPar")
-#' OperatMode <- OperatSDI(
-#'   lon = -47.3, lat = -22.67, start.date = "2023-01-31",
-#'   end.date = "2023-07-07", parms = DistPar
-#' )
+#'  OperatSDI(lon = -47.3, lat = -22.67, start.date = "2023-01-31",
+#'   end.date = "2023-07-07", parms = DistPar)
 OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "GEV", parms, TS = 4) {
   if (PEMethod == "HS" || PEMethod == "PM") {
     if (distr == "GEV" || distr == "GLO") {

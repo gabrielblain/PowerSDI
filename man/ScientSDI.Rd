@@ -28,11 +28,11 @@ ScientSDI(
 
 \item{end.date}{date at which the indices estimates should end. Format: YYYY-MM-DD".}
 
-\item{distr}{A character variable ("GEV" or "GLO") defining which distribution is used to calculate the SPEI. Default is "GEV".}
+\item{distr}{A character variable ("GEV" or "GLO") defining the distribution to calculate the SPEI. Default is "GEV".}
 
-\item{TS}{Time scale on the "quart.month" basis (integer values between 1 and 96). Default is 4.}
+\item{TS}{Time scale on the quart.month basis (integer values between 1 and 96). Default is 4.}
 
-\item{Good}{A character variable ("Yes" or "No") defining if the goodness-of-fit and normality tests. Default is "Yes".}
+\item{Good}{A character variable ("Yes" or "No") to calculate or not the goodness-of-fit and normality tests. Default is "Yes".}
 
 \item{sig.level}{A numeric variable (between 0.90 and 0.95) defining the significance level for parameter Good. Default is "0.95".}
 
@@ -47,14 +47,14 @@ ScientSDI(
 \value{
 A list with data calculated at the time scale selected by the user.
 If Good="Yes", this list includes:
-$ScientSDI: The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.
-$DistPar: The parameters of the distributions (gamma and GEV) used to calculate the indices.
-$Goodness: The Lilliefors and Anderson-Darling tests goodness-of-fit tests.
-$Normality:  The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015).
-If Good="No", this list includes $ScientSDI and $DistPar
+SDI: The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.
+DistPar: The parameters of the distributions (gamma and GEV) used to calculate the indices.
+GoodFit: The Lilliefors and Anderson-Darling tests goodness-of-fit tests.
+Normality:  The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015).
+If Good="No", this list includes SDI and DistPar.
 This function also presents other data (in millimiters) calculated from the NASAPOWER project:
 Rainfall amounts (Rain).
-Potential evapotranspitations values estimated through the Hargreaves & Samani method (EPHS).
+Potential evapotranspitations values estimated through the Hargreaves and Samani method (EPHS).
 Potential evapotranspitations values estimated through the FAO-56 Penman-Monteith method (EPPM).
 The difference between rainfall and potential evapotranspiration (P-EPHS and P-EPPM).
 }
@@ -62,6 +62,5 @@ The difference between rainfall and potential evapotranspiration (P-EPHS and P-E
 ScientSDI
 }
 \examples{
-Exemp.Scient <- ScientSDI(lon = -47.3, lat = -22.67, start.date = "1991-01-01",
-end.date = "2022-12-31")
+ScientSDI(lon = -47.3, lat = -22.67, start.date = "1991-01-01", end.date = "2022-12-31")
 }

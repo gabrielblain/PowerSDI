@@ -9,20 +9,17 @@
 #' @param PEMethod
 #' A character variable ("HS" or "PM") defining the potential evapotranspiration method. Default is "HS".
 #' @param TS
-#' Time scale on the "quart.month" basis (integer values between 1 and 96). Default is 4.
+#' Time scale on the quart.month" basis (integer values between 1 and 96). Default is 4.
 #' @return
 #' A data frame with:
-#' Rain, Potential evapotranspiration,
+#' Rain, potential evapotranspiration,
 #' Difference between rainfall and potential evapotranspiration,
-#' SPI and SPEI calculated at the times scales selected by the user.
+#' SPI and SPEI calculated at the time scale selected by the user.
 #' @export
 #'
 #' @examples
 #' data("refHS")
 #' Reference(ref = refHS, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS = 4)
-#' #' @examples
-#' data("refPM")
-#' Reference(ref = refPM, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS = 4)
 Reference <- function(ref, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS = 4) {
   if (PEMethod == "HS" || PEMethod == "PM") {
     if (distr == "GEV" || distr == "GLO") {
