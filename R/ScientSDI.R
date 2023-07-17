@@ -1,5 +1,7 @@
 #' ScientSDI
 #'
+#' Verifies concepts expected from SDI.
+#'
 #' @param lon
 #' longitude in decinal degrees: (+) Estern Hemispher (-) Western Hemisphere.
 #' @param lat
@@ -34,9 +36,9 @@
 #' If Good="No", this list includes SDI and DistPar.
 #' This function also presents other data (in millimiters) calculated from the NASAPOWER project:
 #' Rainfall amounts (Rain).
-#' Potential evapotranspitations values estimated through the Hargreaves and Samani method (EPHS).
-#' Potential evapotranspitations values estimated through the FAO-56 Penman-Monteith method (EPPM).
-#' The difference between rainfall and potential evapotranspiration (P-EPHS and P-EPPM).
+#' Potential evapotranspitations values estimated through the Hargreaves and Samani method (PEHS).
+#' Potential evapotranspitations values estimated through the FAO-56 Penman-Monteith method (PEPM).
+#' The difference between rainfall and potential evapotranspiration (PPEHS and PPEPM).
 #' @export
 #' @import nasapower lmom
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
@@ -350,7 +352,7 @@ Why don't you select a longer period between start.date and end.date?")
             is.numeric(PEUplim) == FALSE & is.null(PEUplim) == FALSE ||
             is.numeric(PELowlim) == FALSE & is.null(PELowlim) == FALSE) {
             stop("Please, provide appropriate numerical values for RainUplim or RainLowlim (mm)
-              or EPUplim or EPLowlim (Celsious degrees). If there is no suspicions data to be removed set them to NULL.")
+              or PEUplim or PELowlim (Celsious degrees). If there is no suspicions data to be removed set them to NULL.")
           }
           Uplim <- RainUplim
           Lowlim <- RainLowlim
@@ -416,9 +418,8 @@ Why don't you select a longer period between start.date and end.date?")
           if (Good == "Yes" || Good == "YES" || Good == "YeS" || Good == "YEs" || Good == "yes") {
             if (is.numeric(sig.level) == FALSE ||
               sig.level < 0.90 || sig.level > 0.95) {
-              stop("Please provide an appropriate value for the
-                                                 significance level of the goodness-of-fit tests, that is:
-                                                 sig.level may only assume values between 0.9 and 0.95.")
+              stop("Please provide an appropriate significance level, that is:
+          sig.level may only assume values between 0.9 and 0.95.")
             }
             message("Calculating the goodness-of-fit tests. This might take a while.")
             Goodness <- matrix(NA, 48, 12)
@@ -550,8 +551,8 @@ Why don't you select a longer period between start.date and end.date?")
               "probzero.rain", "loc.harg", "sc.harg", "sh.harg", "loc.pm", "sc.pm", "sh.pm", "TS"
             )
             colnames(Goodness) <- c(
-              "Lili.Rain", "Crit", "Lili.PEPHarg", "Crit", "Lili.PEPPM", "Crit",
-              "AD.Rain", "Crit", "AD.PEPHarg", "Crit", "AD.PEPPM", "Crit"
+              "Lili.Rain", "Crit", "Lili.PPEHarg", "Crit", "Lili.PPEPM", "Crit",
+              "AD.Rain", "Crit", "AD.PPEHarg", "Crit", "AD.PPEPM", "Crit"
             )
             ########
             n.weeks <- length(data.at.timescale[, 1])
@@ -755,7 +756,7 @@ Why don't you select a longer period between start.date and end.date?")
             )
             SDI.final <- data.frame(SDI, categories)
             colnames(SDI.final) <- c(
-              "Year", "Month", "quart.month", "Rain", "EP.Harg", "EP.PM", "P-EP.Harg", "P-EP.PM",
+              "Year", "Month", "quart.month", "Rain", "PE.Harg", "PE.PM", "PPE.Harg", "PPE.PM",
               "SPI", "SPEI.Harg", "SPEI.PM", "Categ.SPI", "Categ.SPEI.Harg", "Categ.SPEI.PM"
             )
             if (end.user.month == 1 || end.user.month == 3 || end.user.month == 5 ||
@@ -979,7 +980,7 @@ Why don't you select a longer period between start.date and end.date?")
             SDI <- cbind(data.at.timescale, SDI)
             SDI.final <- data.frame(SDI, categories)
             colnames(SDI.final) <- c(
-              "Year", "Month", "quart.month", "Rain", "EP.Harg", "EP.PM", "P-EP.Harg", "P-EP.PM",
+              "Year", "Month", "quart.month", "Rain", "PE.Harg", "PE.PM", "PPE.Harg", "PPE.PM",
               "SPI", "SPEI.Harg", "SPEI.PM", "Categ.SPI", "Categ.SPEI.Harg", "Categ.SPEI.PM"
             )
             if (end.user.month == 1 || end.user.month == 3 || end.user.month == 5 ||

@@ -1,5 +1,7 @@
 #' Accuracy
 #'
+#' Calculates scalar measures of accuracy.
+#'
 #' @param obs_est
 #' A 2-column matrix. The reference or observed and the estimated or predicted data.
 #' See ObsEst as example.
@@ -70,9 +72,8 @@ Accuracy <- function(obs_est, conf.int = "Yes", sig.level = 0.95) {
           if (conf.int == "Yes" || conf.int == "YES" || conf.int == "YeS" || conf.int == "YEs" || conf.int == "yes") {
             if (is.numeric(sig.level) == FALSE ||
               sig.level < 0.90 || sig.level > 0.95) {
-              stop("Please provide an appropriate value for the
-                                                 significance level of the confidence intervals, that is:
-                                                 sig.level may only assume values between 0.9 and 0.95.")
+              stop("Please provide an appropriate significance level, that is:
+          sig.level may only assume values between 0.9 and 0.95.")
             }
             message("Just a sec")
             # Bootstraping
@@ -127,12 +128,12 @@ Accuracy <- function(obs_est, conf.int = "Yes", sig.level = 0.95) {
               "RQuad_CIinf", "RQuad", "RQuad_CIsup"
             )
             row.names(ModelAcuracy) <- c("")
-            print(ModelAcuracy)
+
           } else {
             ModelAcuracy <- cbind(AME, RMSE, dorig, dmod, dref, RQuad)
             colnames(ModelAcuracy) <- c("AME", "RMSE", "dorig", "dmod", "dref", "RQuad")
             row.names(ModelAcuracy) <- c("")
-            print(ModelAcuracy)
+
           }
           return(ModelAcuracy)
           plot(o, p)
@@ -141,10 +142,10 @@ Accuracy <- function(obs_est, conf.int = "Yes", sig.level = 0.95) {
       }
     } else {
       message("You must have at least 10 pairs of ObsVsEst data.
-                             Please, provide a longer period.")
+    Please, provide a longer period.")
     }
   } else {
     message("conf.int should be set to either Yes or No.
-                If Yes, the sig.level must be defined (avalue between 0.9 and 0.95; default is 0.95).")
+  If Yes, the sig.level must be defined (avalue between 0.9 and 0.95; default is 0.95).")
   }
 }

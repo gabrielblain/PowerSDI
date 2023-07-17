@@ -4,14 +4,12 @@
 \alias{Reference}
 \title{Reference}
 \usage{
-Reference(ref, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS = 4)
+Reference(ref, distr = "GEV", PEMethod = "HS", TS = 4)
 }
 \arguments{
 \item{ref}{A data frame with the variables required for calculating the SDIs. See refHS or refPM as examples.}
 
 \item{distr}{A character variable ("GEV" or "GLO") defining which distribution is used to calculate the SPEI. Default is "GEV".}
-
-\item{plotdata}{A character variable ("Yes" or "No") defining if the function must plot the rainfall and PE data. Default is "Yes".}
 
 \item{PEMethod}{A character variable ("HS" or "PM") defining the potential evapotranspiration method. Default is "HS".}
 
@@ -24,9 +22,9 @@ Difference between rainfall and potential evapotranspiration,
 SPI and SPEI calculated at the time scale selected by the user.
 }
 \description{
-Reference
+Calculates the SPI and SPEI using a reference data source.
 }
 \examples{
 data("refHS")
-Reference(ref = refHS, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS = 4)
+Reference(ref = refHS, distr = "GEV", PEMethod = "HS", TS = 4)
 }

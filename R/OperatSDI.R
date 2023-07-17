@@ -1,5 +1,7 @@
 #' OperatSDI
 #'
+#' Calculates the SPI and SPEI using a NASAPOWER data.
+#'
 #' @param lon
 #' longitude in decinal degrees.
 #' @param lat
@@ -17,8 +19,8 @@
 #' @param TS
 #' #'Time scale on the "quart.month" basis (integer values between 1 and 96).
 #' @return
-#' A data frame with Rainfall, potential evapotranspiration (EP),
-#' difference between rainfall and EP (in millimiters), the NASA-SPI and NASA_SPEI,
+#' A data frame with Rainfall, potential evapotranspiration (PE),
+#' difference between rainfall and PE (in millimiters), the NASA-SPI and NASA_SPEI,
 #' and the SDI categories corresponding to each indices estimates.
 #' @export
 #' @import lmom nasapower
@@ -86,7 +88,7 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
           start.year <- as.numeric(format(start.date.user, format = "%Y"))
           start.month <- as.numeric(format(start.date.user, format = "%m"))
           # question=menu(c("If Hargreaves type 1 ", "If Penman type 2"), title="Please, select the potential evapotranspiration method")
-          message("Calculating. If the number of locals are large, it might take a while.")
+          message("Calculating...")
           # local=1
           # for (local in 1:N.locals){
           # lon=lonlat[local,1]; lat=lonlat[local,2]
@@ -222,16 +224,16 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
             while (year <= final.year || month <= final.month) {
               data.week1 <- colSums(sse_i[which(sse_i$YEAR == year &
                 sse_i$MM == month &
-                sse_i$DD <= 7), 11:12])
+                sse_i$DD <= 7), 14:15])
               data.week2 <- colSums(sse_i[which(sse_i$YEAR == year &
                 sse_i$MM == month &
-                sse_i$DD > 7 & sse_i$DD <= 14), 11:12])
+                sse_i$DD > 7 & sse_i$DD <= 14), 14:15])
               data.week3 <- colSums(sse_i[which(sse_i$YEAR == year &
                 sse_i$MM == month &
-                sse_i$DD > 14 & sse_i$DD <= 21), 11:12])
+                sse_i$DD > 14 & sse_i$DD <= 21), 14:15])
               data.week4 <- colSums(sse_i[which(sse_i$YEAR == year &
                 sse_i$MM == month &
-                sse_i$DD > 21), 11:12])
+                sse_i$DD > 21), 14:15])
               data.week[a, ] <- c(lon, lat, year, month, 1, data.week1)
               data.week[b, ] <- c(lon, lat, year, month, 2, data.week2)
               data.week[c, ] <- c(lon, lat, year, month, 3, data.week3)
@@ -564,7 +566,7 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
             SDI <- cbind(data.at.timescale, SDI)
             SDI.final <- data.frame(SDI, categories)
             colnames(SDI.final) <- c(
-              "Lon", "Lat", "Year", "Month", "quart.month", "Rain", "EP", "P-EP",
+              "Lon", "Lat", "Year", "Month", "quart.month", "Rain", "PE", "PPE",
               "SPI", "SPEI", "Categ.SPI", "Categ.SPEI"
             )
 

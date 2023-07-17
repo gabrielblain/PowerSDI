@@ -25,7 +25,7 @@ Pearson determination coefficient (R2).
 If conf.int="Yes", confidence intervals are calculated.
 }
 \description{
-Accuracy
+Calculates scalar measures of accuracy.
 }
 \examples{
 data("ObsEst")

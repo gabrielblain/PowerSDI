@@ -33,12 +33,12 @@ OperatSDI(
 \item{TS}{#'Time scale on the "quart.month" basis (integer values between 1 and 96).}
 }
 \value{
-A data frame with Rainfall, potential evapotranspiration (EP),
-difference between rainfall and EP (in millimiters), the NASA-SPI and NASA_SPEI,
+A data frame with Rainfall, potential evapotranspiration (PE),
+difference between rainfall and PE (in millimiters), the NASA-SPI and NASA_SPEI,
 and the SDI categories corresponding to each indices estimates.
 }
 \description{
-OperatSDI
+Calculates the SPI and SPEI using a NASAPOWER data.
 }
 \examples{
 data("DistPar")

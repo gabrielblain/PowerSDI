@@ -1,5 +1,7 @@
 #' PlotData
 #'
+#' Plots Rainfall and potential evapotranspiration amounts using NASAPOWER data.
+#'
 #' @param lon
 #' longitude in decinal degrees: (+) Estern Hemispher (-) Western Hemisphere.
 #' @param lat
@@ -25,7 +27,7 @@ PlotData <- function(lon, lat, start.date, end.date) {
     min.period <- end.date.user - start.date.user
     if (min.period < 365) {
       message("The difference between start.date and end.date must be of at least 1 year.
-                                  Please, select a longer period.")
+    Please, select a longer period.")
     } else {
       end.date.user <- as.Date(end.date, "%Y-%m-%d")
       start.date.user <- as.Date(start.date, "%Y-%m-%d")
@@ -301,13 +303,13 @@ PlotData <- function(lon, lat, start.date, end.date) {
       if (first.row > 1) {
         data.week <- data.week[-(1:(first.row - 1)), ]
       }
-      par(mfrow = c(3, 1), mar = c(5, 5, 5, 5) + 0.1)
+      par(mfrow = c(3, 1), mar = c(3, 5, 3, 2))
       ##### Rainfall
       plot(data.week[, 6], xlab = "1-quart.month time scale", ylab = "Rainfall (mm)")
       ##### Potential Evapotranspiration (Hargreaves & Samani)
-      plot(data.week[, 7], xlab = "1-quart.month time scale", ylab = "EP (Hargreaves; mm)")
+      plot(data.week[, 7], xlab = "1-quart.month time scale", ylab = "PE (Hargreaves; mm)")
       ##### Potential Evapotranspiration (FAO-56 Penman-Monteith)
-      plot(data.week[, 8], xlab = "1-quart.month time scale", ylab = "EP (FAO-56/PM; mm)")
+      plot(data.week[, 8], xlab = "1-quart.month time scale", ylab = "PE (FAO-56/PM; mm)")
     }
   }
 }

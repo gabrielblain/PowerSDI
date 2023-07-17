@@ -1,11 +1,11 @@
 #' Reference
 #'
+#' Calculates the SPI and SPEI using a reference data source.
+#'
 #' @param ref
 #' A data frame with the variables required for calculating the SDIs. See refHS or refPM as examples.
 #' @param distr
 #' A character variable ("GEV" or "GLO") defining which distribution is used to calculate the SPEI. Default is "GEV".
-#' @param plotdata
-#' A character variable ("Yes" or "No") defining if the function must plot the rainfall and PE data. Default is "Yes".
 #' @param PEMethod
 #' A character variable ("HS" or "PM") defining the potential evapotranspiration method. Default is "HS".
 #' @param TS
@@ -19,8 +19,8 @@
 #'
 #' @examples
 #' data("refHS")
-#' Reference(ref = refHS, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS = 4)
-Reference <- function(ref, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS = 4) {
+#' Reference(ref = refHS, distr = "GEV", PEMethod = "HS", TS = 4)
+Reference <- function(ref, distr = "GEV", PEMethod = "HS", TS = 4) {
   if (PEMethod == "HS" || PEMethod == "PM") {
     if (distr == "GEV" || distr == "GLO") {
       if (distr == "GEV") {
@@ -29,15 +29,13 @@ Reference <- function(ref, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS 
       if (distr == "GLO") {
         distribution <- 2
       }
-      if (plotdata == "Yes" || plotdata == "YES" || plotdata == "YeS" || plotdata == "YEs" || plotdata == "yes" ||
-        plotdata == "NO" || plotdata == "No" || plotdata == "nO" || plotdata == "no") {
         if (all.equal(TS, as.integer(TS)) != TRUE || is.na(TS) == TRUE ||
           TS < 1 || TS > 96) {
           message("TS must be an interger value ranging between 1 and 96.\n                 Please, choose another TS")
         } else {
           if (PEMethod == "HS") {
-            if (length(ref[1, ]) < 8) {
-              stop("It seems that your input file (ref) does not have all required variables.")
+            if (length(ref[1, ]) != 8) {
+              stop("It seems that your input file (ref) has the wrong number of columns.")
             }
             colnames(ref) <- c(
               "YEAR", "MM", "DD", "tmed", "tmax",
@@ -45,8 +43,8 @@ Reference <- function(ref, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS 
             )
           }
           if (PEMethod == "PM") {
-            if (length(ref[1, ]) < 11) {
-              stop("It seems that your input file (ref) does not have all required variables.")
+            if (length(ref[1, ]) != 11) {
+              stop("It seems that your input file (ref) has the wrong number of columns.")
             }
             colnames(ref) <- c("YEAR", "MM", "DD", "tmed", "tmax", "tmin", "Ra", "Rs", "W", "RH", "Rain")
           }
@@ -246,18 +244,6 @@ Reference <- function(ref, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS 
           }
           if (start.day > 22) {
             data.week <- data.week[c(-1), ]
-          }
-          if (plotdata == "Yes" || plotdata == "YES" || plotdata == "YeS" || plotdata == "YEs" || plotdata == "yes") {
-            par(mfrow = c(2, 1), mar = c(5, 5, 5, 5) + 0.1)
-            plot(data.week[, 4],
-              xlab = "1-quart.month time scale",
-              ylab = "Rainfall (mm)"
-            )
-            plot(data.week[, 5],
-              xlab = "1-quart.month time scale",
-              ylab = "Potential Evapotranspiration (mm)"
-            )
-            message("if you detected suspicious data, they should be removed from the input file.")
           }
           n <- length(data.week[, 1])
           data.at.timescale <- matrix(
@@ -461,7 +447,7 @@ Reference <- function(ref, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS 
           SDI.final <- data.frame(SDI, categories)
           colnames(SDI.final) <- c(
             "Year", "Month", "quart.month",
-            "Rain", "EP", "P-EP", "SPI", "SPEI", "Categ.SPI",
+            "Rain", "PE", "PPE", "SPI", "SPEI", "Categ.SPI",
             "Categ.SPEI"
           )
           if (end.month == 1 || end.month == 3 || end.month ==
@@ -492,15 +478,16 @@ Reference <- function(ref, distr = "GEV", plotdata = "Yes", PEMethod = "HS", TS 
             }
           }
           return(SDI.final)
+          message("It's done.")
         }
-      } else {
-        stop("plotdata should be set to either Yes or No.")
-      }
+
     } else {
       stop("distri should be set to either GEV or GLO.")
     }
+
+    message("Done")
   } else {
     stop("PEMethod should be set to either HS or PM.")
   }
-  message("Done. Make sure that you have a period of at least 30 years of continuous records, ok?")
+
 }
