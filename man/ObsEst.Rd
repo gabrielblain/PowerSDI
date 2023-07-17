@@ -8,8 +8,8 @@
 A 2-column matrix with 1434 rows
 
 \describe{
-\item{ETP_obs}{PE data from a reference weather station}
-\item{ETP_est}{PE data from the NASAPOWER project}
+\item{PE_obs}{PE data from a reference weather station}
+\item{PE_est}{PE data from the NASAPOWER project}
 }
 }
 \source{
