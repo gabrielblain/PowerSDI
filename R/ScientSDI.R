@@ -44,7 +44,7 @@
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @importFrom utils install.packages menu write.table
 #' @examples
-#' ScientSDI(lon=-47.3, lat=-22.87, start.date="2014-01-01", end.date="2022-12-31", TS=1,
+#' ScientSDI(lon=-47.3, lat=-22.87, start.date="2015-01-01", end.date="2022-12-31", TS=1,
 #' Good="no")
 ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Good = "Yes", sig.level = 0.95,
                       RainUplim = NULL, RainLowlim = NULL, PEUplim = NULL, PELowlim = NULL) {
@@ -63,8 +63,8 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
       } else {
         end.date.user <- as.Date(end.date, "%Y-%m-%d")
         start.date.user <- as.Date(start.date, "%Y-%m-%d")
-        mim.date.fit <- as.numeric((end.date.user - start.date.user) / 365.25)
-        if (mim.date.fit < 9) {
+        mim.date.fit <- as.numeric((end.date.user - start.date.user) / 365)
+        if (mim.date.fit < 8) {
           message("Please, select a longer period between start.date and end.date.")
         }
         else {
@@ -410,9 +410,6 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
           }
           data.at.timescale <- cbind(data.at.timescale, (data.at.timescale[, 4] - data.at.timescale[, 5]), (data.at.timescale[, 4] - data.at.timescale[, 6]))
           parameters <- matrix(NA, 48, 11)
-
-          # complete=menu(c("If yes, type 1", "If no, type 2"),
-          # title="Do you wish to calculate the goodness-of-fit and normality-checking tests?")
           if (Good == "Yes" || Good == "YES" || Good == "YeS" || Good == "YEs" || Good == "yes") {
             if (is.numeric(sig.level) == FALSE ||
               sig.level < 0.90 || sig.level > 0.95) {
@@ -713,33 +710,33 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
               Norn.check[j, 7:9] <- c(w$statistic, w$p.value, abs(median((SDI.week[, 3]), na.rm = TRUE)))
               ###### As proposed in Wu et al. (2007)
               if (Norn.check[j, 1] < 0.960 && Norn.check[j, 2] < 0.10 && Norn.check[j, 3] > 0.05) {
-                Norn.check[j, 10] <- "NoNorn"
+                Norn.check[j, 10] <- "NoNornal"
               } else {
                 Norn.check[j, 10] <- "Normal"
               }
               if (Norn.check[j, 4] < 0.960 && Norn.check[j, 5] < 0.10 && Norn.check[j, 6] > 0.05) {
-                Norn.check[j, 11] <- "NoNorn"
+                Norn.check[j, 11] <- "NoNornal"
               } else {
                 Norn.check[j, 11] <- "Normal"
               }
               if (Norn.check[j, 7] < 0.960 && Norn.check[j, 8] < 0.10 && Norn.check[j, 9] > 0.05) {
-                Norn.check[j, 12] <- "NoNorn"
+                Norn.check[j, 12] <- "NoNornal"
               } else {
                 Norn.check[j, 12] <- "Normal"
               }
               ###### As proposed in Stagge et al. (2015)
               if (Norn.check[j, 2] < 0.10) {
-                Norn.check[j, 13] <- "NoNorn"
+                Norn.check[j, 13] <- "NoNornal"
               } else {
                 Norn.check[j, 13] <- "Normal"
               }
               if (Norn.check[j, 5] < 0.10) {
-                Norn.check[j, 14] <- "NoNorn"
+                Norn.check[j, 14] <- "NoNornal"
               } else {
                 Norn.check[j, 14] <- "Normal"
               }
               if (Norn.check[j, 8] < 0.10) {
-                Norn.check[j, 15] <- "NoNorn"
+                Norn.check[j, 15] <- "NoNornal"
               } else {
                 Norn.check[j, 15] <- "Normal"
               }
@@ -787,13 +784,9 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
               GoodFit = Goodness, Normality = Norn.check
             )
             return(Result)
-            message("Done. See, it didn't take so long")
             message("The calculations started on:")
             print(start.date.protocal)
-            message("Remember: the datasets of the POWER project start in 1981 or 1991.")
           }
-
-
           if (Good == "NO" || Good == "No" || Good == "nO" || Good == "no") {
             for (i in 1:48) {
               month.par <- data.at.timescale[i, 3]
@@ -1009,10 +1002,8 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
             Result <- list(
               SDI = SDI.final, DistPar = parameters)
             return(Result)
-            message("Done. See, it didn't take so long.")
             message("The calculations started on:")
             print(start.date.protocal)
-            message("Remember: the datasets of the POWER project start in 1981 or 1991.")
           }
         }
       }
