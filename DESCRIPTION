@@ -5,13 +5,13 @@ Version: 1.0.0
 Author: Gabriel Constantino Blain, Graciela da Rocha Sobierajski and Leticia Lopes Martins
 Maintainer: Gabriel Constantino Blain <gabriel.blain@sp.gov.br>
 Description: A set of functions designed to calculate the standardized precipitation and
-    standardized precipitation evapotranspiration indices using NASA POWER data.
+    standardized precipitation 'evapotranspiration' indices using NASA POWER data.
     It also calculates these indices using a reference data source.
     The functions verify if the indices estimates meet the normality assumption
-    and how well NASA POWER estimates represent “real-world” data.
+    and how well NASA POWER estimates represent real world data.
     It also calculates the indices in a routine mode.
-    The package also estimates potential evapotranspiration amounts and
-    the difference between rainfall and potential evapotranspiration.
+    The package also estimates potential 'evapotranspiration' amounts and
+    the difference between rainfall and potential 'evapotranspiration'.
     The functions adopt a basic time scale that splits each month into four periods.
     Days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 28, 29, 30, or 31.
     TS=4 corresponds to a 12-month length moving (calculated 4 times a month).

@@ -68,10 +68,6 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
           message("Please, select a longer period between start.date and end.date.")
         }
         else {
-          #if (mim.date.fit < 29) {
-           # message("Caution: Ideally, the SPI and SPEI require at least a 30-year period for their calculation.
-#Why don't you select a longer period between start.date and end.date?")
-          #}
           end.date.user <- as.Date(end.date, "%Y-%m-%d")
           start.date.user <- as.Date(start.date, "%Y-%m-%d")
           mim.date.fit <- end.date.user - start.date.user
