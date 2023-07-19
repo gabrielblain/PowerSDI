@@ -62,5 +62,6 @@ The difference between rainfall and potential evapotranspiration (PPEHS and PPEP
 Verifies concepts expected from SDI.
 }
 \examples{
-ScientSDI(lon = -47.3, lat = -22.67, start.date = "1991-01-01", end.date = "2022-12-31")
+ScientSDI(lon=-47.3, lat=-22.87, start.date="2014-01-01", end.date="2022-12-31", TS=1,
+Good="no")
 }

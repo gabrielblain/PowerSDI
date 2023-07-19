@@ -42,6 +42,6 @@ Calculates the SPI and SPEI using a NASAPOWER data.
 }
 \examples{
 data("DistPar")
- OperatSDI(lon = -47.3, lat = -22.67, start.date = "2023-01-31",
-  end.date = "2023-07-07", parms = DistPar)
+ OperatSDI(lon = -47.3, lat = -22.67, start.date = "2023-06-01",
+  end.date = "2023-06-30", parms = DistPar)
 }

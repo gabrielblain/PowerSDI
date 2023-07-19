@@ -22,7 +22,7 @@
 #'
 #' @examples
 #' data("ObsEst")
-#' Accuracy(obs_est = ObsEst, conf.int = "Yes", sig.level = 0.95)
+#' Accuracy(obs_est = ObsEst, conf.int = "No")
 Accuracy <- function(obs_est, conf.int = "Yes", sig.level = 0.95) {
   if (conf.int == "Yes" || conf.int == "YES" || conf.int == "YeS" || conf.int == "YEs" || conf.int == "yes" ||
     conf.int == "NO" || conf.int == "No" || conf.int == "nO" || conf.int == "no") {

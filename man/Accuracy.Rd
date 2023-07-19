@@ -29,5 +29,5 @@ Calculates scalar measures of accuracy.
 }
 \examples{
 data("ObsEst")
-Accuracy(obs_est = ObsEst, conf.int = "Yes", sig.level = 0.95)
+Accuracy(obs_est = ObsEst, conf.int = "No")
 }

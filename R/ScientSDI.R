@@ -44,7 +44,8 @@
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @importFrom utils install.packages menu write.table
 #' @examples
-#' ScientSDI(lon = -47.3, lat = -22.67, start.date = "1991-01-01", end.date = "2022-12-31")
+#' ScientSDI(lon=-47.3, lat=-22.87, start.date="2014-01-01", end.date="2022-12-31", TS=1,
+#' Good="no")
 ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Good = "Yes", sig.level = 0.95,
                       RainUplim = NULL, RainLowlim = NULL, PEUplim = NULL, PELowlim = NULL) {
   if (distr == "GEV" || distr == "GLO") {
@@ -63,13 +64,14 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
         end.date.user <- as.Date(end.date, "%Y-%m-%d")
         start.date.user <- as.Date(start.date, "%Y-%m-%d")
         mim.date.fit <- as.numeric((end.date.user - start.date.user) / 365.25)
-        if (mim.date.fit < 10) {
+        if (mim.date.fit < 9) {
           message("Please, select a longer period between start.date and end.date.")
-        } else {
-          if (mim.date.fit < 29) {
-            message("Caution: Ideally, the SPI and SPEI require at least a 30-year period for their calculation.
-Why don't you select a longer period between start.date and end.date?")
-          }
+        }
+        else {
+          #if (mim.date.fit < 29) {
+           # message("Caution: Ideally, the SPI and SPEI require at least a 30-year period for their calculation.
+#Why don't you select a longer period between start.date and end.date?")
+          #}
           end.date.user <- as.Date(end.date, "%Y-%m-%d")
           start.date.user <- as.Date(start.date, "%Y-%m-%d")
           mim.date.fit <- end.date.user - start.date.user

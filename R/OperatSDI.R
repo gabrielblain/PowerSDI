@@ -28,8 +28,8 @@
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @examples
 #' data("DistPar")
-#'  OperatSDI(lon = -47.3, lat = -22.67, start.date = "2023-01-31",
-#'   end.date = "2023-07-07", parms = DistPar)
+#'  OperatSDI(lon = -47.3, lat = -22.67, start.date = "2023-06-01",
+#'   end.date = "2023-06-30", parms = DistPar)
 OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "GEV", parms, TS = 4) {
   if (PEMethod == "HS" || PEMethod == "PM") {
     if (distr == "GEV" || distr == "GLO") {

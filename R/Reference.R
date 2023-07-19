@@ -98,9 +98,9 @@ Reference <- function(ref, distr = "GEV", PEMethod = "HS", TS = 4) {
             d <- 4
             data.week <- matrix(NA, total.nweeks, 5)
             for (year in start.year:end.year) {
-              gc()
+
               for (month in 1:12) {
-                gc()
+
                 data.week1 <- colSums(ref[
                   which(ref$YEAR ==
                     year & ref$MM == month & ref$DD <= 7),
@@ -175,9 +175,9 @@ Reference <- function(ref, distr = "GEV", PEMethod = "HS", TS = 4) {
             d <- 4
             data.week <- matrix(NA, total.nweeks, 5)
             for (year in start.year:end.year) {
-              gc()
+
               for (month in 1:12) {
-                gc()
+
                 data.week1 <- colSums(ref[
                   which(ref$YEAR ==
                     year & ref$MM == month & ref$DD <= 7),
