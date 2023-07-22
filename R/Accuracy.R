@@ -39,8 +39,6 @@ Accuracy <- function(obs_est, conf.int = "Yes", sig.level = 0.95) {
         if (any(is.na(o)) == TRUE || (any(is.na(p) == TRUE))) {
           print("Missing data is not allowed. Please, remove them from the input file")
         } else {
-         # plot(o, p)
-         # title("", xlab = "Reference", ylab = "Estimated")
           databoot <- matrix(NA, N, 2)
           Nboots <- 10000
           dorigboot <- matrix(NA, Nboots, 1)

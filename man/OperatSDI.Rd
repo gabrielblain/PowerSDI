@@ -38,7 +38,7 @@ difference between rainfall and PE (in millimiters), the NASA-SPI and NASA_SPEI,
 and the SDI categories corresponding to each indices estimates.
 }
 \description{
-Calculates the SPI and SPEI using a NASAPOWER data.
+Calculates the SPI and SPEI using a NASA POWER data.
 }
 \examples{
 data("DistPar")

@@ -1,6 +1,6 @@
 #' OperatSDI
 #'
-#' Calculates the SPI and SPEI using a NASAPOWER data.
+#' Calculates the SPI and SPEI using a NASA POWER data.
 #'
 #' @param lon
 #' longitude in decinal degrees.
@@ -87,15 +87,13 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
           start.day <- as.numeric(format(start.date.user, format = "%d"))
           start.year <- as.numeric(format(start.date.user, format = "%Y"))
           start.month <- as.numeric(format(start.date.user, format = "%m"))
-          # question=menu(c("If Hargreaves type 1 ", "If Penman type 2"), title="Please, select the potential evapotranspiration method")
+
           message("Calculating...")
-          # local=1
-          # for (local in 1:N.locals){
-          # lon=lonlat[local,1]; lat=lonlat[local,2]
+
           if (PEMethod == "HS") {
             sse_i <- as.data.frame(get_power(
               community = "ag", lonlat = c(lon, lat),
-              dates = c(start.date.user, end.date), temporal_api = "daily",
+              dates = c(start.date.user, end.date.user), temporal_api = "daily",
               pars = c("T2M", "T2M_MAX", "T2M_MIN", "PRECTOTCORR")
             ))
 
@@ -171,7 +169,7 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
           if (PEMethod == "PM") {
             sse_i <- as.data.frame(get_power(
               community = "ag", lonlat = c(lon, lat),
-              dates = c(start.date.user, end.date), temporal_api = "daily",
+              dates = c(start.date.user, end.date.user), temporal_api = "daily",
               pars = c(
                 "T2M", "T2M_MAX", "T2M_MIN",
                 "ALLSKY_SFC_SW_DWN", "WS2M", "RH2M", "PRECTOTCORR"
@@ -448,7 +446,7 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
           parameters <- as.data.frame(parms[which(parms[, 1] == lon & parms[, 2] == lat & parms[, 13] == TS), ])
           if (length(parameters[, 1]) == 0) {
             message("It seems that you don't have the distributions' parameters for this local and time scale(TS).
-                                      You must first run Scient.R function.")
+          You must first run Scient.R function.")
           } else {
             if (distr == "GEV") {
               for (pos in 1:n.weeks) {

@@ -19,7 +19,7 @@ PlotData(lon, lat, start.date, end.date)
 Scatter plots of Rainfall and potential evapotranspiration accumulated at the 1-quart.month time scale.
 }
 \description{
-Plots Rainfall and potential evapotranspiration amounts using NASAPOWER data.
+Plots Rainfall and potential evapotranspiration amounts using NASA POWER data.
 }
 \examples{
 PlotData(lon = -47.3, lat = -22.87, start.date = "2021-12-28", end.date = "2022-12-31")

@@ -1,6 +1,6 @@
 #' PlotData
 #'
-#' Plots Rainfall and potential evapotranspiration amounts using NASAPOWER data.
+#' Plots Rainfall and potential evapotranspiration amounts using NASA POWER data.
 #'
 #' @param lon
 #' longitude in decinal degrees: (+) Estern Hemispher (-) Western Hemisphere.
@@ -14,7 +14,6 @@
 #' Scatter plots of Rainfall and potential evapotranspiration accumulated at the 1-quart.month time scale.
 #' @export
 #' @import nasapower
-#' @importFrom nasapower get_power
 #' @importFrom graphics par
 #' @examples
 #' PlotData(lon = -47.3, lat = -22.87, start.date = "2021-12-28", end.date = "2022-12-31")
@@ -29,8 +28,8 @@ PlotData <- function(lon, lat, start.date, end.date) {
       message("The difference between start.date and end.date must be of at least 1 year.
     Please, select a longer period.")
     } else {
-      end.date.user <- as.Date(end.date, "%Y-%m-%d")
-      start.date.user <- as.Date(start.date, "%Y-%m-%d")
+      #end.date.user <- as.Date(end.date, "%Y-%m-%d")
+      #start.date.user <- as.Date(start.date, "%Y-%m-%d")
       start.user.day <- as.numeric(format(start.date.user, format = "%d"))
       end.user.day <- as.numeric(format(end.date.user, format = "%d"))
       end.user.month <- as.numeric(format(end.date.user, format = "%m"))
@@ -53,11 +52,10 @@ PlotData <- function(lon, lat, start.date, end.date) {
         start.week <- 4
       }
       start.date.protocal <- start.date.user - dif
-      start.date.protocal <- format(start.date.protocal, "%Y-%m-%d")
       message("Just a sec. Downloading NASA POWER data and calculating the others parameters.")
       sse_i <- as.data.frame(get_power(
         community = "ag", lonlat = c(lon, lat),
-        dates = c(start.date.protocal, end.date), temporal_api = "daily",
+        dates = c(start.date.protocal, end.date.user), temporal_api = "daily",
         pars = c(
           "T2M", "T2M_MAX", "T2M_MIN",
           "ALLSKY_SFC_SW_DWN", "WS2M", "RH2M", "PRECTOTCORR"

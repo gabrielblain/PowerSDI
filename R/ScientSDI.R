@@ -36,8 +36,8 @@
 #' If Good="No", this list includes SDI and DistPar.
 #' This function also presents other data (in millimiters) calculated from the NASAPOWER project:
 #' Rainfall amounts (Rain).
-#' Potential evapotranspitations values estimated through the Hargreaves and Samani method (PEHS).
-#' Potential evapotranspitations values estimated through the FAO-56 Penman-Monteith method (PEPM).
+#' Potential evapotranspirations values estimated through the Hargreaves and Samani method (PEHS).
+#' Potential evapotranspirations values estimated through the FAO-56 Penman-Monteith method (PEPM).
 #' The difference between rainfall and potential evapotranspiration (PPEHS and PPEPM).
 #' @export
 #' @import nasapower lmom
@@ -49,12 +49,6 @@
 ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Good = "Yes", sig.level = 0.95,
                       RainUplim = NULL, RainLowlim = NULL, PEUplim = NULL, PELowlim = NULL) {
   if (distr == "GEV" || distr == "GLO") {
-    if (distr == "GEV") {
-      distribution <- 1
-    }
-    if (distr == "GLO") {
-      distribution <- 2
-    }
     if (Good == "Yes" || Good == "YES" || Good == "YeS" || Good == "YEs" || Good == "yes" ||
       Good == "NO" || Good == "No" || Good == "nO" || Good == "no") {
       if (is.na(as.Date(end.date, "%Y-%m-%d")) == TRUE || is.na(as.Date(start.date, "%Y-%m-%d")) == TRUE ||
@@ -70,7 +64,6 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
         else {
           end.date.user <- as.Date(end.date, "%Y-%m-%d")
           start.date.user <- as.Date(start.date, "%Y-%m-%d")
-          mim.date.fit <- end.date.user - start.date.user
           start.user.day <- as.numeric(format(start.date.user, format = "%d"))
           end.user.day <- as.numeric(format(end.date.user, format = "%d"))
           end.user.month <- as.numeric(format(end.date.user, format = "%m"))
@@ -93,11 +86,10 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
             start.week <- 4
           }
           start.date.protocal <- start.date.user - dif
-          start.date.protocal <- format(start.date.protocal, "%Y-%m-%d")
           message("Just a sec. Downloading NASA POWER data and calculating the others parameters.")
           sse_i <- as.data.frame(get_power(
             community = "ag", lonlat = c(lon, lat),
-            dates = c(start.date.protocal, end.date), temporal_api = "daily",
+            dates = c(start.date.protocal, end.date.user), temporal_api = "daily",
             pars = c(
               "T2M", "T2M_MAX", "T2M_MIN",
               "ALLSKY_SFC_SW_DWN", "WS2M", "RH2M", "PRECTOTCORR"
@@ -439,12 +431,12 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
               Goodness[i, 1] <- max(abs(prob.emp - prob.rain))
               petp.harg <- (data.at.timescale[which(data.at.timescale[, 3] == month.par), 7])
               petp.pm <- (data.at.timescale[which(data.at.timescale[, 3] == month.par), 8])
-              if (distribution == 1) {
+              if (distr == "GEV") {
                 parameters[i, 5:10] <- c(pelgev(samlmu(petp.harg)), pelgev(samlmu(petp.pm)))
                 prob.harg <- sort(cdfgev(petp.harg, c(parameters[i, 5], parameters[i, 6], parameters[i, 7])))
                 prob.pm <- sort(cdfgev(petp.pm, c(parameters[i, 8], parameters[i, 9], parameters[i, 10])))
               }
-              if (distribution == 2) {
+              if (distr == "GLO") {
                 parameters[i, 5:10] <- c(pelglo(samlmu(petp.harg)), pelglo(samlmu(petp.pm)))
                 prob.harg <- sort(cdfglo(petp.harg, c(parameters[i, 5], parameters[i, 6], parameters[i, 7])))
                 prob.pm <- sort(cdfglo(petp.pm, c(parameters[i, 8], parameters[i, 9], parameters[i, 10])))
@@ -486,7 +478,7 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
                   soma.rain[ad, 1] <- ((2 * ad) - 1) * ((log(prob.synt[ad])) + log(1 - prob.synt[n.nonzero + 1 - ad]))
                 }
                 null.dist[j, 4] <- -n.nonzero - ((1 / n.nonzero) * sum(soma.rain, na.rm = TRUE))
-                if (distribution == 1) {
+                if (distr == "GEV") {
                   y <- sort(quagev(runif(n.harg), c(parameters[i, 5], parameters[i, 6], parameters[i, 7])))
                   prob.synt <- cdfgev(y, pelgev(samlmu(y)))
                   prob.synt[prob.synt < 0.001351] <- 0.001351
@@ -508,7 +500,7 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
                   }
                   null.dist[j, 6] <- -n.pm - ((1 / n.pm) * sum(soma.pm, na.rm = TRUE))
                 }
-                if (distribution == 2) {
+                if (distr == "GLO") {
                   y <- sort(quaglo(runif(n.harg), c(parameters[i, 5], parameters[i, 6], parameters[i, 7])))
                   prob.synt <- cdfglo(y, pelglo(samlmu(y)))
                   prob.synt[prob.synt < 0.001351] <- 0.001351
@@ -553,7 +545,7 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
             n.weeks <- length(data.at.timescale[, 1])
             pos <- 1
             SDI <- matrix(NA, n.weeks, 3)
-            if (distribution == 1) {
+            if (distr == "GEV") {
               while (pos <= n.weeks) {
                 i <- data.at.timescale[pos, 3]
                 prob <- parameters[i, 6] + (1 - parameters[i, 6]) * cdfgam(data.at.timescale[pos, 4], c(parameters[i, 4], parameters[i, 5]))
@@ -583,7 +575,7 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
                 pos <- pos + 1
               }
             }
-            if (distribution == 2) {
+            if (distr == "GLO") {
               while (pos <= n.weeks) {
                 i <- data.at.timescale[pos, 3]
                 prob <- parameters[i, 6] + (1 - parameters[i, 6]) * cdfgam(data.at.timescale[pos, 4], c(parameters[i, 4], parameters[i, 5]))
@@ -803,12 +795,12 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
               parameters[i, 1:4] <- c(data.at.timescale[i, 3], pelgam(samlmu(rain.nozero)), probzero)
               petp.harg <- (data.at.timescale[which(data.at.timescale[, 3] == month.par), 7])
               petp.pm <- (data.at.timescale[which(data.at.timescale[, 3] == month.par), 8])
-              if (distribution == 1) {
+              if (distr == "GEV") {
                 parameters[i, 5:10] <- c(pelgev(samlmu(petp.harg)), pelgev(samlmu(petp.pm)))
                 prob.harg <- sort(cdfgev(petp.harg, c(parameters[i, 5], parameters[i, 6], parameters[i, 7])))
                 prob.pm <- sort(cdfgev(petp.pm, c(parameters[i, 8], parameters[i, 9], parameters[i, 10])))
               }
-              if (distribution == 2) {
+              if (distr == "GLO") {
                 parameters[i, 5:10] <- c(pelglo(samlmu(petp.harg)), pelglo(samlmu(petp.pm)))
                 prob.harg <- sort(cdfglo(petp.harg, c(parameters[i, 5], parameters[i, 6], parameters[i, 7])))
                 prob.pm <- sort(cdfglo(petp.pm, c(parameters[i, 8], parameters[i, 9], parameters[i, 10])))
@@ -824,7 +816,7 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
             n.weeks <- length(data.at.timescale[, 1])
             pos <- 1
             SDI <- matrix(NA, n.weeks, 3)
-            if (distribution == 1) {
+            if (distr == "GEV") {
               while (pos <= n.weeks) {
                 i <- data.at.timescale[pos, 3]
                 prob <- parameters[i, 6] + (1 - parameters[i, 6]) * cdfgam(data.at.timescale[pos, 4], c(parameters[i, 4], parameters[i, 5]))
@@ -854,7 +846,7 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
                 pos <- pos + 1
               }
             }
-            if (distribution == 2) {
+            if (distr == "GLO") {
               while (pos <= n.weeks) {
                 i <- data.at.timescale[pos, 3]
                 prob <- parameters[i, 6] + (1 - parameters[i, 6]) * cdfgam(data.at.timescale[pos, 4], c(parameters[i, 4], parameters[i, 5]))
