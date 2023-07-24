@@ -3,9 +3,9 @@
 #' Verifies concepts expected from SDI.
 #'
 #' @param lon
-#' longitude in decinal degrees: (+) Estern Hemispher (-) Western Hemisphere.
+#' longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.
 #' @param lat
-#' latitude in decinal degrees: (+) Northern hemispher (-) Southern Hemisphere.
+#' latitude in decimal degrees: (+) Northern hemisphere (-) Southern Hemisphere.
 #' @param start.date
 #' date at which the indices estimates should start. Format: YYYY-MM-DD".
 #' @param end.date
@@ -36,23 +36,24 @@
 #' If Good="No", this list includes SDI and DistPar.
 #' This function also presents other data (in millimiters) calculated from the NASAPOWER project:
 #' Rainfall amounts (Rain).
-#' Potential evapotranspirations values estimated through the Hargreaves and Samani method (PEHS).
-#' Potential evapotranspirations values estimated through the FAO-56 Penman-Monteith method (PEPM).
+#' Potential evapotranspitations values estimated through the Hargreaves and Samani method (PEHS).
+#' Potential evapotranspitations values estimated through the FAO-56 Penman-Monteith method (PEPM).
 #' The difference between rainfall and potential evapotranspiration (PPEHS and PPEPM).
 #' @export
-#' @import nasapower lmom
+#' @import lmom
+#' @importFrom nasapower get_power
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @importFrom utils install.packages menu write.table
-#' @examples
+#' @examplesIf interactive()
 #' ScientSDI(lon=-47.3, lat=-22.87, start.date="2015-01-01", end.date="2022-12-31", TS=1,
 #' Good="no")
 ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Good = "Yes", sig.level = 0.95,
                       RainUplim = NULL, RainLowlim = NULL, PEUplim = NULL, PELowlim = NULL) {
   if (distr == "GEV" || distr == "GLO") {
     if (Good == "Yes" || Good == "YES" || Good == "YeS" || Good == "YEs" || Good == "yes" ||
-      Good == "NO" || Good == "No" || Good == "nO" || Good == "no") {
+        Good == "NO" || Good == "No" || Good == "nO" || Good == "no") {
       if (is.na(as.Date(end.date, "%Y-%m-%d")) == TRUE || is.na(as.Date(start.date, "%Y-%m-%d")) == TRUE ||
-        TS < 1 || TS > 96 || all.equal(TS, as.integer(TS)) != TRUE) {
+          TS < 1 || TS > 96 || all.equal(TS, as.integer(TS)) != TRUE) {
         message("Recall Date format should be YYYY-MM-DD and TS must be an interger  value ranging between 1 and 96")
       } else {
         end.date.user <- as.Date(end.date, "%Y-%m-%d")
@@ -62,8 +63,7 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
           message("Please, select a longer period between start.date and end.date.")
         }
         else {
-          end.date.user <- as.Date(end.date, "%Y-%m-%d")
-          start.date.user <- as.Date(start.date, "%Y-%m-%d")
+          mim.date.fit <- end.date.user - start.date.user
           start.user.day <- as.numeric(format(start.date.user, format = "%d"))
           end.user.day <- as.numeric(format(end.date.user, format = "%d"))
           end.user.month <- as.numeric(format(end.date.user, format = "%m"))
@@ -103,7 +103,7 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
           N <- (2 * hn.deg) / 15
           dist.terra.sol <- 1 + (0.033 * cos((pi / 180) * (sse_i$DOY * (360 / 365))))
           Ra <- (37.6 * (dist.terra.sol^2)) * ((pi / 180) * hn.deg * sin(lat.rad) * sin(decli.rad) +
-            (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
+                                                 (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
           ####   Hargreaves&Samani
           ETP.harg.daily <- 0.0023 * (Ra * 0.4081633) * (sse_i$T2M_MAX - sse_i$T2M_MIN)^0.5 * (sse_i$T2M + 17.8)
           ####    Penman- Monteith-FAO
@@ -143,17 +143,17 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
           year <- start.year
           while (year <= final.year || month <= final.month) {
             data.week1 <- colSums(sse_i[which(sse_i$YEAR == year &
-              sse_i$MM == month &
-              sse_i$DD <= 7), 14:16])
+                                                sse_i$MM == month &
+                                                sse_i$DD <= 7), 14:16])
             data.week2 <- colSums(sse_i[which(sse_i$YEAR == year &
-              sse_i$MM == month &
-              sse_i$DD > 7 & sse_i$DD <= 14), 14:16])
+                                                sse_i$MM == month &
+                                                sse_i$DD > 7 & sse_i$DD <= 14), 14:16])
             data.week3 <- colSums(sse_i[which(sse_i$YEAR == year &
-              sse_i$MM == month &
-              sse_i$DD > 14 & sse_i$DD <= 21), 14:16])
+                                                sse_i$MM == month &
+                                                sse_i$DD > 14 & sse_i$DD <= 21), 14:16])
             data.week4 <- colSums(sse_i[which(sse_i$YEAR == year &
-              sse_i$MM == month &
-              sse_i$DD > 21), 14:16])
+                                                sse_i$MM == month &
+                                                sse_i$DD > 21), 14:16])
             data.week[a, ] <- c(lon, lat, year, month, 1, data.week1)
             data.week[b, ] <- c(lon, lat, year, month, 2, data.week2)
             data.week[c, ] <- c(lon, lat, year, month, 3, data.week3)
@@ -338,9 +338,9 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
           ######## removing suspicions data
           ##### Rainfall
           if (is.numeric(RainUplim) == FALSE & is.null(RainUplim) == FALSE ||
-            is.numeric(RainLowlim) == FALSE & is.null(RainLowlim) == FALSE ||
-            is.numeric(PEUplim) == FALSE & is.null(PEUplim) == FALSE ||
-            is.numeric(PELowlim) == FALSE & is.null(PELowlim) == FALSE) {
+              is.numeric(RainLowlim) == FALSE & is.null(RainLowlim) == FALSE ||
+              is.numeric(PEUplim) == FALSE & is.null(PEUplim) == FALSE ||
+              is.numeric(PELowlim) == FALSE & is.null(PELowlim) == FALSE) {
             stop("Please, provide appropriate numerical values for RainUplim or RainLowlim (mm)
               or PEUplim or PELowlim (Celsious degrees). If there is no suspicions data to be removed set them to NULL.")
           }
@@ -404,7 +404,7 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
           parameters <- matrix(NA, 48, 11)
           if (Good == "Yes" || Good == "YES" || Good == "YeS" || Good == "YEs" || Good == "yes") {
             if (is.numeric(sig.level) == FALSE ||
-              sig.level < 0.90 || sig.level > 0.95) {
+                sig.level < 0.90 || sig.level > 0.95) {
               stop("Please provide an appropriate significance level, that is:
           sig.level may only assume values between 0.9 and 0.95.")
             }
@@ -747,23 +747,23 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
               "SPI", "SPEI.Harg", "SPEI.PM", "Categ.SPI", "Categ.SPEI.Harg", "Categ.SPEI.PM"
             )
             if (end.user.month == 1 || end.user.month == 3 || end.user.month == 5 ||
-              end.user.month == 7 || end.user.month == 8 || end.user.month == 10 || end.user.month == 12) {
+                end.user.month == 7 || end.user.month == 8 || end.user.month == 10 || end.user.month == 12) {
               if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-                end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 31) {
+                  end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 31) {
                 message("The latest quart.month period is not complete")
                 SDI.final <- SDI.final[-c(n.weeks), ]
               }
             }
             if (end.user.month == 4 || end.user.month == 6 || end.user.month == 9 || end.user.month == 11) {
               if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-                end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 30) {
+                  end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 30) {
                 message("The latest quart.month period is not complete")
                 SDI.final <- SDI.final[-c(n.weeks), ]
               }
             }
             if (end.user.month == 2) {
               if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-                end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 28) {
+                  end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 28) {
                 message("The latest quart.month period is not complete")
                 SDI.final <- SDI.final[-c(n.weeks), ]
               }
@@ -967,23 +967,23 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
               "SPI", "SPEI.Harg", "SPEI.PM", "Categ.SPI", "Categ.SPEI.Harg", "Categ.SPEI.PM"
             )
             if (end.user.month == 1 || end.user.month == 3 || end.user.month == 5 ||
-              end.user.month == 7 || end.user.month == 8 || end.user.month == 10 || end.user.month == 12) {
+                end.user.month == 7 || end.user.month == 8 || end.user.month == 10 || end.user.month == 12) {
               if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-                end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 31) {
+                  end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 31) {
                 message("The latest quart.month period is not complete")
                 SDI.final <- SDI.final[-c(n.weeks), ]
               }
             }
             if (end.user.month == 4 || end.user.month == 6 || end.user.month == 9 || end.user.month == 11) {
               if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-                end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 30) {
+                  end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 30) {
                 message("The latest quart.month period is not complete")
                 SDI.final <- SDI.final[-c(n.weeks), ]
               }
             }
             if (end.user.month == 2) {
               if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-                end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 28) {
+                  end.user.day > 14 & end.user.day < 22 || end.user.day > 22 & end.user.day < 28) {
                 message("The latest quart.month period is not complete")
                 SDI.final <- SDI.final[-c(n.weeks), ]
               }

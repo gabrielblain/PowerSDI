@@ -8,8 +8,8 @@
 A 13-column matrix with 48 rows
 
 \describe{
-\item{lon}{longitude in decinal degrees}
-\item{lat}{latitude in decinal degrees}
+\item{lon}{longitude in decimal degrees}
+\item{lat}{latitude in decimal degrees}
 \item{quart.month}{The quartile of each month}
 \item{alfa.rain}{Shape parameter of the gamma distribution}
 \item{beta.rain}{Scale parameter of the gamma distribution}

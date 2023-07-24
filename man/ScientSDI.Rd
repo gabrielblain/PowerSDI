@@ -20,9 +20,9 @@ ScientSDI(
 )
 }
 \arguments{
-\item{lon}{longitude in decinal degrees: (+) Estern Hemispher (-) Western Hemisphere.}
+\item{lon}{longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.}
 
-\item{lat}{latitude in decinal degrees: (+) Northern hemispher (-) Southern Hemisphere.}
+\item{lat}{latitude in decimal degrees: (+) Northern hemisphere (-) Southern Hemisphere.}
 
 \item{start.date}{date at which the indices estimates should start. Format: YYYY-MM-DD".}
 
@@ -54,14 +54,16 @@ Normality:  The outcomes of the two normality checking procedures (Wu et al., 20
 If Good="No", this list includes SDI and DistPar.
 This function also presents other data (in millimiters) calculated from the NASAPOWER project:
 Rainfall amounts (Rain).
-Potential evapotranspirations values estimated through the Hargreaves and Samani method (PEHS).
-Potential evapotranspirations values estimated through the FAO-56 Penman-Monteith method (PEPM).
+Potential evapotranspitations values estimated through the Hargreaves and Samani method (PEHS).
+Potential evapotranspitations values estimated through the FAO-56 Penman-Monteith method (PEPM).
 The difference between rainfall and potential evapotranspiration (PPEHS and PPEPM).
 }
 \description{
 Verifies concepts expected from SDI.
 }
 \examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 ScientSDI(lon=-47.3, lat=-22.87, start.date="2015-01-01", end.date="2022-12-31", TS=1,
 Good="no")
+\dontshow{\}) # examplesIf}
 }

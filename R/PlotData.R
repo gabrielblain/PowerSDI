@@ -3,9 +3,9 @@
 #' Plots Rainfall and potential evapotranspiration amounts using NASA POWER data.
 #'
 #' @param lon
-#' longitude in decinal degrees: (+) Estern Hemispher (-) Western Hemisphere.
+#' longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.
 #' @param lat
-#' latitude in decinal degrees: (+) Northern hemispher (-) Southern Hemisphere.
+#' latitude in decimal degrees: (+) Northern Hemisphere (-) Southern Hemisphere.
 #' @param start.date
 #' date at which the indices estimates should start ("YYYY-MM-DD").
 #' @param end.date
@@ -13,9 +13,9 @@
 #' @return
 #' Scatter plots of Rainfall and potential evapotranspiration accumulated at the 1-quart.month time scale.
 #' @export
-#' @import nasapower
+#' @importFrom nasapower get_power
 #' @importFrom graphics par
-#' @examples
+#' @examplesIf interactive()
 #' PlotData(lon = -47.3, lat = -22.87, start.date = "2021-12-28", end.date = "2022-12-31")
 PlotData <- function(lon, lat, start.date, end.date) {
   if (is.na(as.Date(end.date, "%Y-%m-%d")) == TRUE || is.na(as.Date(start.date, "%Y-%m-%d")) == TRUE) {
@@ -28,8 +28,6 @@ PlotData <- function(lon, lat, start.date, end.date) {
       message("The difference between start.date and end.date must be of at least 1 year.
     Please, select a longer period.")
     } else {
-      #end.date.user <- as.Date(end.date, "%Y-%m-%d")
-      #start.date.user <- as.Date(start.date, "%Y-%m-%d")
       start.user.day <- as.numeric(format(start.date.user, format = "%d"))
       end.user.day <- as.numeric(format(end.date.user, format = "%d"))
       end.user.month <- as.numeric(format(end.date.user, format = "%m"))
@@ -69,7 +67,7 @@ PlotData <- function(lon, lat, start.date, end.date) {
       N <- (2 * hn.deg) / 15
       dist.terra.sol <- 1 + (0.033 * cos((pi / 180) * (sse_i$DOY * (360 / 365))))
       Ra <- (37.6 * (dist.terra.sol^2)) * ((pi / 180) * hn.deg * sin(lat.rad) * sin(decli.rad) +
-        (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
+                                             (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
       ####   Hargreaves&Samani
       ETP.harg.daily <- 0.0023 * (Ra * 0.4081633) * (sse_i$T2M_MAX - sse_i$T2M_MIN)^0.5 * (sse_i$T2M + 17.8)
       ###    Penman- Monteith-FAO
@@ -109,17 +107,17 @@ PlotData <- function(lon, lat, start.date, end.date) {
       year <- start.year
       while (year <= final.year || month <= final.month) {
         data.week1 <- colSums(sse_i[which(sse_i$YEAR == year &
-          sse_i$MM == month &
-          sse_i$DD <= 7), 14:16])
+                                            sse_i$MM == month &
+                                            sse_i$DD <= 7), 14:16])
         data.week2 <- colSums(sse_i[which(sse_i$YEAR == year &
-          sse_i$MM == month &
-          sse_i$DD > 7 & sse_i$DD <= 14), 14:16])
+                                            sse_i$MM == month &
+                                            sse_i$DD > 7 & sse_i$DD <= 14), 14:16])
         data.week3 <- colSums(sse_i[which(sse_i$YEAR == year &
-          sse_i$MM == month &
-          sse_i$DD > 14 & sse_i$DD <= 21), 14:16])
+                                            sse_i$MM == month &
+                                            sse_i$DD > 14 & sse_i$DD <= 21), 14:16])
         data.week4 <- colSums(sse_i[which(sse_i$YEAR == year &
-          sse_i$MM == month &
-          sse_i$DD > 21), 14:16])
+                                            sse_i$MM == month &
+                                            sse_i$DD > 21), 14:16])
         data.week[a, ] <- c(lon, lat, year, month, 1, data.week1)
         data.week[b, ] <- c(lon, lat, year, month, 2, data.week2)
         data.week[c, ] <- c(lon, lat, year, month, 3, data.week3)

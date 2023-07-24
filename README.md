@@ -16,7 +16,7 @@ Helps the users to verify if the SPI and SPEI calculated from NASAPOWER data mee
 ScientSDI(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Good = "Yes", sig.level = 0.95, RainUplim = NULL, RainLowlim = NULL, PEUplim = NULL, PELowlim = NULL)
 ## Arguments
 lon: longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.
-Lat: latitude in decimal degrees: (+) Northern hemisphere (-) Southern Hemisphere.
+Lat: latitude in decimal degrees: (+) Northern Hemisphere (-) Southern Hemisphere.
 start.date: date at which the indices estimates should start. Format: YYYY-MM-DD".
 end.date: date at which the indices estimates should end. Format: YYYY-MM-DD".
 Distr: A character variable ("GEV" or "GLO") defining the distribution to calculate the
@@ -54,7 +54,7 @@ obs_est: A 2-column matrix. The reference or observed and the estimated or predi
 conf.int: A character variable ("Yes" or "No") defining if the function must calculate confidence intervals. Default is "Yes".
 sig.level: A numeric variable (between 0.90 and 0.95) defining the significance level for parameter the confidence intervals. Default is 0.95.
 ## Value
-Absolute mean error (AME), Square root of the mean squared error (RMSE), Willmott’s indices of agreement: original (dorig), Modified (dmod) and refined (dref), Pearson determination coefficient (R2). If conf.int="Yes", confidence intervals are calculated.
+Absolute mean error (AME), Square root of the mean squared error (RMSE), Willmott's indices of agreement: original (dorig), Modified (dmod) and refined (dref), Pearson determination coefficient (R2). If conf.int="Yes", confidence intervals are calculated.
 ## Examples
 data("ObsEst")
 Accuracy(obs_est = ObsEst, conf.int = "Yes", sig.level = 0.95)
@@ -114,8 +114,8 @@ Contains parameters of the gamma and GEV distributions and the Pr(Rain=0).
 DistPar
 ## Format
 A 13-column matrix with 48 rows.
-lon: longitude in decinal degrees.
-lat: latitude in decinal degrees.
+lon: longitude in decimal degrees.
+lat: latitude in decimal degrees.
 quart.month: The quartile of each month.
 alfa.rain: Shape parameter of the gamma distribution.
 beta.rain: Scale parameter of the gamma distribution.
@@ -191,7 +191,7 @@ https://github.com/gabrielblain/PowerSDI/issues
 CC0
 https://creativecommons.org/
 ## Authors: 
-Gabriel Constantino Blain, Graciela da Rocha Sobierajski and Leticia Lopes Martins
+Gabriel Constantino Blain, Graciela da Rocha Sobierajski, Leticia Lopes Martins, and Adam H Sparks
 Maintainer: Gabriel Constantino Blain gabriel.blain@sp.gov.br
 ## Acknowledgments:
 The package uses data obtained from the NASA Langley Research Center (LaRC) POWER Project funded through the NASA Earth Science/Applied Science Program. The power project provides data for support several activities including agriculture and energy. 
@@ -202,8 +202,6 @@ Blain, G. C., 2014. Revisiting the critical values of the Lilliefors test: towar
 Hargreaves, G.H.; Samani, Z.A. 1985.Reference crop evapotranspiration from temperature. Appl. Eng. Agric,1, 96–99.
 Mckee, T. B., Doesken, N.J. and Kleist, J., 1993. The relationship of drought frequency and duration to time scales. In: 8th Conference on Applied Climatology. Boston, MA: American Meteorological Society, 179–184.
 Stagge, J. H., Tallaksen, L. M., Gudmundsson, L., Van Loon, A. F. and Stahl, K., 2015. Candidate distribution for climatological drought indices (SPI and SPEI). International Journal of Climatology, 35(13), 4027–4040. https://doi.org/10.1002/joc.4267
-Package ‘lmom’, Version 2.9, Author J. R. M. Hosking. https://CRAN.R-project.org/package=lmom
-Package ‘nasapower’, Version 4.0.10, Author Adam H. Sparks et al., https://CRAN.R-project.org/package=nasapower
+Package ‘lmom', Version 2.9, Author J. R. M. Hosking. https://CRAN.R-project.org/package=lmom
+Package ‘nasapower', Version 4.0.10, Author Adam H. Sparks et al., https://CRAN.R-project.org/package=nasapower
 Wu, H., Svoboda, M. D., Hayes, M. J., Wilhite, D. A. and Wen, F., 2007. Appropriate application of the standardized precipitation index in arid locations and dry seasons. International Journal of Climatology, 27(1), 65–79. https://doi.org/10.1002/joc.1371.
-
-

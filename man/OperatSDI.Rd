@@ -16,9 +16,9 @@ OperatSDI(
 )
 }
 \arguments{
-\item{lon}{longitude in decinal degrees.}
+\item{lon}{longitude in decimal degrees.}
 
-\item{lat}{latitude in decinal degrees.}
+\item{lat}{latitude in decimal degrees.}
 
 \item{start.date}{Date at each the calculation must start (“YYYY-MM-DD").}
 
@@ -38,10 +38,13 @@ difference between rainfall and PE (in millimiters), the NASA-SPI and NASA_SPEI,
 and the SDI categories corresponding to each indices estimates.
 }
 \description{
-Calculates the SPI and SPEI using a NASA POWER data.
+Calculates the SPI and SPEI using a NASAPOWER data.
 }
 \examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+
 data("DistPar")
  OperatSDI(lon = -47.3, lat = -22.67, start.date = "2023-06-01",
   end.date = "2023-06-30", parms = DistPar)
+\dontshow{\}) # examplesIf}
 }

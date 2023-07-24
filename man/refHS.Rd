@@ -11,9 +11,9 @@ A 8-column matrix with 10950 rows and 8 variables
 \item{YEAR}{Year}
 \item{MM}{Month}
 \item{DD}{Day}
-\item{tmed}{Daily average air temperature at 2 meters above the ground (ºC)}
-\item{tmax}{Daily maximum air temperature at 2 meters above the ground (ºC)}
-\item{tmin}{Daily minimum air temperature at 2 meters above the ground (ºC)}
+\item{tmed}{Daily average air temperature at 2 meters above the ground (degrees C)}
+\item{tmax}{Daily maximum air temperature at 2 meters above the ground (degrees C)}
+\item{tmin}{Daily minimum air temperature at 2 meters above the ground (degrees C)}
 \item{Ra}{Daily top of the atmosphere radiation (MJ/m^2/day)}
 \item{Rain}{Daily rainfall amounts (mm)}
 }

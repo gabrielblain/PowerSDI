@@ -2,7 +2,7 @@ Package: PowerSDI
 Type: Package
 Title: CALCULATES STANDARDIZED DROUGHT INDICES USING NASA POWER DATA
 Version: 1.0.0
-Author: Gabriel Constantino Blain, Graciela da Rocha Sobierajski and Leticia Lopes Martins
+Author: Gabriel C Blain, Graciela R Sobierajski, Leticia L Martins, and Adam H Sparks
 Maintainer: Gabriel Constantino Blain <gabriel.blain@sp.gov.br>
 Description: A set of functions designed to calculate the standardized precipitation and
     standardized precipitation 'evapotranspiration' indices using NASA POWER data.

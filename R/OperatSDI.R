@@ -1,11 +1,11 @@
 #' OperatSDI
 #'
-#' Calculates the SPI and SPEI using a NASA POWER data.
+#' Calculates the SPI and SPEI using a NASAPOWER data.
 #'
 #' @param lon
-#' longitude in decinal degrees.
+#' longitude in decimal degrees.
 #' @param lat
-#' latitude in decinal degrees.
+#' latitude in decimal degrees.
 #' @param start.date
 #' Date at each the calculation must start (“YYYY-MM-DD").
 #' @param end.date
@@ -23,10 +23,12 @@
 #' difference between rainfall and PE (in millimiters), the NASA-SPI and NASA_SPEI,
 #' and the SDI categories corresponding to each indices estimates.
 #' @export
-#' @import lmom nasapower
+#' @import lmom
+#' @importFrom nasapower get_power
 #' @importFrom graphics title
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
-#' @examples
+#' @examplesIf interactive()
+#'
 #' data("DistPar")
 #'  OperatSDI(lon = -47.3, lat = -22.67, start.date = "2023-06-01",
 #'   end.date = "2023-06-30", parms = DistPar)
@@ -87,9 +89,7 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
           start.day <- as.numeric(format(start.date.user, format = "%d"))
           start.year <- as.numeric(format(start.date.user, format = "%Y"))
           start.month <- as.numeric(format(start.date.user, format = "%m"))
-
           message("Calculating...")
-
           if (PEMethod == "HS") {
             sse_i <- as.data.frame(get_power(
               community = "ag", lonlat = c(lon, lat),
@@ -106,7 +106,7 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
             N <- (2 * hn.deg) / 15
             dist.terra.sol <- 1 + (0.033 * cos((pi / 180) * (sse_i$DOY * (360 / 365))))
             Ra <- (37.6 * (dist.terra.sol^2)) * ((pi / 180) * hn.deg * sin(lat.rad) * sin(decli.rad) +
-              (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
+                                                   (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
             ETP.harg.daily <- 0.0023 * (Ra * 0.4081633) * (sse_i$T2M_MAX - sse_i$T2M_MIN)^0.5 * (sse_i$T2M + 17.8)
             sse_i <- cbind(sse_i, ETP.harg.daily)
             n.tot <- length(sse_i[, 1])
@@ -137,17 +137,17 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
             year <- start.year
             while (year <= final.year || month <= final.month) {
               data.week1 <- colSums(sse_i[which(sse_i$YEAR == year &
-                sse_i$MM == month &
-                sse_i$DD <= 7), 11:12])
+                                                  sse_i$MM == month &
+                                                  sse_i$DD <= 7), 11:12])
               data.week2 <- colSums(sse_i[which(sse_i$YEAR == year &
-                sse_i$MM == month &
-                sse_i$DD > 7 & sse_i$DD <= 14), 11:12])
+                                                  sse_i$MM == month &
+                                                  sse_i$DD > 7 & sse_i$DD <= 14), 11:12])
               data.week3 <- colSums(sse_i[which(sse_i$YEAR == year &
-                sse_i$MM == month &
-                sse_i$DD > 14 & sse_i$DD <= 21), 11:12])
+                                                  sse_i$MM == month &
+                                                  sse_i$DD > 14 & sse_i$DD <= 21), 11:12])
               data.week4 <- colSums(sse_i[which(sse_i$YEAR == year &
-                sse_i$MM == month &
-                sse_i$DD > 21), 11:12])
+                                                  sse_i$MM == month &
+                                                  sse_i$DD > 21), 11:12])
               data.week[a, ] <- c(lon, lat, year, month, 1, data.week1)
               data.week[b, ] <- c(lon, lat, year, month, 2, data.week2)
               data.week[c, ] <- c(lon, lat, year, month, 3, data.week3)
@@ -169,7 +169,7 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
           if (PEMethod == "PM") {
             sse_i <- as.data.frame(get_power(
               community = "ag", lonlat = c(lon, lat),
-              dates = c(start.date.user, end.date.user), temporal_api = "daily",
+              dates = c(start.date.user, end.date), temporal_api = "daily",
               pars = c(
                 "T2M", "T2M_MAX", "T2M_MIN",
                 "ALLSKY_SFC_SW_DWN", "WS2M", "RH2M", "PRECTOTCORR"
@@ -185,7 +185,7 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
             N <- (2 * hn.deg) / 15
             dist.terra.sol <- 1 + (0.033 * cos((pi / 180) * (sse_i$DOY * (360 / 365))))
             Ra <- (37.6 * (dist.terra.sol^2)) * ((pi / 180) * hn.deg * sin(lat.rad) * sin(decli.rad) +
-              (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
+                                                   (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
             es <- 0.6108 * exp((17.27 * sse_i$T2M) / (sse_i$T2M + 273.3))
             ea <- (sse_i$RH2M * es) / 100
             slope.pressure <- (4098 * es) / ((sse_i$T2M + 237.3)^2)
@@ -221,17 +221,17 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
             year <- start.year
             while (year <= final.year || month <= final.month) {
               data.week1 <- colSums(sse_i[which(sse_i$YEAR == year &
-                sse_i$MM == month &
-                sse_i$DD <= 7), 14:15])
+                                                  sse_i$MM == month &
+                                                  sse_i$DD <= 7), 14:15])
               data.week2 <- colSums(sse_i[which(sse_i$YEAR == year &
-                sse_i$MM == month &
-                sse_i$DD > 7 & sse_i$DD <= 14), 14:15])
+                                                  sse_i$MM == month &
+                                                  sse_i$DD > 7 & sse_i$DD <= 14), 14:15])
               data.week3 <- colSums(sse_i[which(sse_i$YEAR == year &
-                sse_i$MM == month &
-                sse_i$DD > 14 & sse_i$DD <= 21), 14:15])
+                                                  sse_i$MM == month &
+                                                  sse_i$DD > 14 & sse_i$DD <= 21), 14:15])
               data.week4 <- colSums(sse_i[which(sse_i$YEAR == year &
-                sse_i$MM == month &
-                sse_i$DD > 21), 14:15])
+                                                  sse_i$MM == month &
+                                                  sse_i$DD > 21), 14:15])
               data.week[a, ] <- c(lon, lat, year, month, 1, data.week1)
               data.week[b, ] <- c(lon, lat, year, month, 2, data.week2)
               data.week[c, ] <- c(lon, lat, year, month, 3, data.week3)
@@ -446,7 +446,7 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
           parameters <- as.data.frame(parms[which(parms[, 1] == lon & parms[, 2] == lat & parms[, 13] == TS), ])
           if (length(parameters[, 1]) == 0) {
             message("It seems that you don't have the distributions' parameters for this local and time scale(TS).
-          You must first run Scient.R function.")
+                                      You must first run Scient.R function.")
           } else {
             if (distr == "GEV") {
               for (pos in 1:n.weeks) {
@@ -573,8 +573,8 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
           } # }
         }
         if (final.month == 1 || final.month == 3 || final.month == 5 ||
-          final.month == 7 || final.month == 8 || final.month == 10 ||
-          final.month == 12) {
+            final.month == 7 || final.month == 8 || final.month == 10 ||
+            final.month == 12) {
           if (end.user.day == 7 || end.user.day == 14 || end.user.day == 22 || end.user.day == 31) {
             message("Done")
           } else {
@@ -591,7 +591,7 @@ OperatSDI <- function(lon, lat, start.date, end.date, PEMethod = "HS", distr = "
         }
         if (final.month == 2) {
           if (end.user.day == 7 || end.user.day == 14 ||
-            end.user.day == 22 || end.user.day == 28 || end.user.day == 29) {
+              end.user.day == 22 || end.user.day == 28 || end.user.day == 29) {
             message("Done")
           } else {
             message("The latest quart.month period is not complete.")
