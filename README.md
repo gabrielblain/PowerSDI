@@ -19,7 +19,7 @@ lon: longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere
 Lat: latitude in decimal degrees: (+) Northern Hemisphere (-) Southern Hemisphere.
 start.date: date at which the indices estimates should start. Format: YYYY-MM-DD".
 end.date: date at which the indices estimates should end. Format: YYYY-MM-DD".
-Distr: A character variable ("GEV" or "GLO") defining the distribution to calculate the
+distr: A character variable ("GEV" or "GLO") defining the distribution to calculate the
 SPEI. Default is "GEV".
 TS: Time scale on the quart.month basis (integer values between 1 and 96). Default is 4.
 Good: A character variable ("Yes" or "No") to calculate or not the goodness-of-fit and 
@@ -33,7 +33,7 @@ PELowlim: Optional. Lower limit in millimeters from which evapotranspiration val
 A list with data calculated at the time scale selected by the user. 
 If Good="Yes", this list includes:
 SDI: The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM. 
-DistPar: The parameters of the distributions (gamma and GEV) used to calculate the indices. 
+DistPar: The parameters of the distributions (gamma and GEV or GLO) used to calculate the indices. 
 GoodFit: The Lilliefors and Anderson-Darling tests goodness-of-fit tests. 
 Normality: The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015). 
 If Good="No", this list includes SDI and DistPar.
@@ -69,7 +69,7 @@ lat:  latitude in decimal degrees.
 start.date: Date at each the calculation must start (“YYYY-MM-DD").
 end.date: Date at each the calculation must end (“YYYY-MM-DD").
 PEMethod: A character variable ("HS" or "PM") defining the potential evapotranspiration method. Default is "HS".
-Distr: A character variable ("GEV" or "GLO") defining which distribution is used to calculate the SPEI. Default is "GEV".
+distr: A character variable ("GEV" or "GLO") defining which distribution is used to calculate the SPEI. Default is "GEV".
 parms: Parameters required for calculating the SPI and SPEI. It is provided by the ScientSDI function (DistPar).
 TS: Time scale on the "quart.month" basis (integer values between 1 and 96).
 ## Value

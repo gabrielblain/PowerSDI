@@ -702,33 +702,33 @@ ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Goo
               Norn.check[j, 7:9] <- c(w$statistic, w$p.value, abs(median((SDI.week[, 3]), na.rm = TRUE)))
               ###### As proposed in Wu et al. (2007)
               if (Norn.check[j, 1] < 0.960 && Norn.check[j, 2] < 0.10 && Norn.check[j, 3] > 0.05) {
-                Norn.check[j, 10] <- "NoNornal"
+                Norn.check[j, 10] <- "NoNormal"
               } else {
                 Norn.check[j, 10] <- "Normal"
               }
               if (Norn.check[j, 4] < 0.960 && Norn.check[j, 5] < 0.10 && Norn.check[j, 6] > 0.05) {
-                Norn.check[j, 11] <- "NoNornal"
+                Norn.check[j, 11] <- "NoNormal"
               } else {
                 Norn.check[j, 11] <- "Normal"
               }
               if (Norn.check[j, 7] < 0.960 && Norn.check[j, 8] < 0.10 && Norn.check[j, 9] > 0.05) {
-                Norn.check[j, 12] <- "NoNornal"
+                Norn.check[j, 12] <- "NoNormal"
               } else {
                 Norn.check[j, 12] <- "Normal"
               }
               ###### As proposed in Stagge et al. (2015)
-              if (Norn.check[j, 2] < 0.10) {
-                Norn.check[j, 13] <- "NoNornal"
+              if (Norn.check[j, 2] < 0.05) {
+                Norn.check[j, 13] <- "NoNormal"
               } else {
                 Norn.check[j, 13] <- "Normal"
               }
-              if (Norn.check[j, 5] < 0.10) {
-                Norn.check[j, 14] <- "NoNornal"
+              if (Norn.check[j, 5] < 0.05) {
+                Norn.check[j, 14] <- "NoNormal"
               } else {
                 Norn.check[j, 14] <- "Normal"
               }
-              if (Norn.check[j, 8] < 0.10) {
-                Norn.check[j, 15] <- "NoNornal"
+              if (Norn.check[j, 8] < 0.05) {
+                Norn.check[j, 15] <- "NoNormal"
               } else {
                 Norn.check[j, 15] <- "Normal"
               }
