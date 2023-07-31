@@ -302,21 +302,18 @@ PlotData <- function(lon, lat, start.date, end.date) {
       par(mfrow = c(3, 1), mar = c(4, 4, 1.5, 2))
       ##### Rainfall
       plot(
-           data.week[, 6]~data.week[, 9],
-           xlim = c(1, 48),
+           data.week[, 6]~data.week[, 9],xlim = c(1, 48),
            main="Checking suspicious data",
            xlab="quart.month",
            ylab="Rainfall (mm)"
            )
       ##### Potential Evapotranspiration (Hargreaves & Samani)
-      plot(data.week[, 7]~data.week[, 9],
-           xlim=c(1, 48),
+      plot(data.week[, 7]~data.week[, 9],xlim = c(1, 48),
            xlab="quart.month",
            ylab="PE (Hargreaves; mm)"
            )
       ##### Potential Evapotranspiration (FAO-56 Penman-Monteith)
-      plot(data.week[, 8]~data.week[, 9],
-           xlim = c(1, 48),
+      plot(data.week[, 8]~data.week[, 9],xlim = c(1, 48),
            xlab = "quart.month",
            ylab = "PE (FAO-56/PM; mm)"
            )
