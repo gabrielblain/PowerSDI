@@ -16,7 +16,7 @@ Description: A set of functions designed to calculate the standardized precipita
     Days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 28, 29, 30, or 31.
     TS=4 corresponds to a 12-month length moving (calculated 4 times a month).
     TS=48 corresponds to a 1-month length moving (calculated 4 times a month).
-License: CC0
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
