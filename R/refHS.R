@@ -1,8 +1,8 @@
-#' Example of the input required by the Reference function.
+#' Example of the Input Required by the Reference Function
 #'
 #' Contains data for calculating the SPI and SPEI.
 #'
-#' @format A 8-column matrix with 10950 rows and 8 variables
+#' @format A \code{data.frame} with 10950 rows and 8 variables.
 #'
 #' \describe{
 #' \item{YEAR}{Year}
@@ -15,7 +15,7 @@
 #' \item{Rain}{Daily rainfall amounts (mm)}
 #' }
 #'
-#' @source {Agronomic Institute and NASAPOWER}
+#' @source Agronomic Institute and \acronym{NASA} \acronym{POWER}.
 #'
 #' @examples
 #' data(refHS)

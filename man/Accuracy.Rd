@@ -2,32 +2,40 @@
 % Please edit documentation in R/Accuracy.R
 \name{Accuracy}
 \alias{Accuracy}
-\title{Accuracy}
+\title{Calculate Scalar Measures of Accuracy}
 \usage{
 Accuracy(obs_est, conf.int = "Yes", sig.level = 0.95)
 }
 \arguments{
-\item{obs_est}{A 2-column matrix. The reference or observed and the estimated or predicted data.
-See ObsEst as example.}
+\item{obs_est}{A 2-column matrix. The reference or observed and the estimated or predicted
+data. See \code{ObsEst} object as an example.}
 
-\item{conf.int}{A character variable ("Yes" or "No") defining if the function must calculate confidence intervals.
-Default is "Yes".}
+\item{conf.int}{A character variable (\code{Yes} or \code{No}) defining if the function must
+calculate confidence intervals.  Default is \dQuote{Yes}.}
 
-\item{sig.level}{A numeric variable (between 0.90 and 0.95) defining the significance level for parameter the confidence intervals.
-Default is 0.95.}
+\item{sig.level}{A numeric variable (between 0.90 and 0.95) defining the significance level
+for parameter the confidence intervals.  Default is 0.95.}
 }
 \value{
-Absolute mean error (AME)
-Square root of the mean squared error (RMSE)
-Willmott's indices of agreement: original (dorig)
-Modified (dmod) and refined (dref)
-Pearson determination coefficient (R2).
-If conf.int="Yes", confidence intervals are calculated.
+An object of \code{PowerSDI.Accuracy}, a \code{list}, which reports:
+
+\itemize{
+ \item Absolute mean error (AME)
+ \item Square root of the mean squared error (RMSE)
+ \item Willmott's indices of agreement: original (dorig)
+ \item Modified (dmod) and refined (dref)
+ \item Pearson determination coefficient (R2), and
+ \item If \code{conf.int="Yes"}, confidence intervals are calculated
+ }
 }
 \description{
 Calculates scalar measures of accuracy.
 }
 \examples{
 data("ObsEst")
-Accuracy(obs_est = ObsEst, conf.int = "No")
+a <- Accuracy(obs_est = ObsEst, conf.int = "No")
+a
+
+# A generic plotting method is also supplied
+plot(a)
 }

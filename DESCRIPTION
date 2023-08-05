@@ -1,27 +1,53 @@
 Package: PowerSDI
 Type: Package
-Title: CALCULATES STANDARDIZED DROUGHT INDICES USING NASA POWER DATA
+Title: Calculate Standardized Drought Indices Using NASA POWER Data
 Version: 1.0.0
-Author: Gabriel C Blain, Graciela R Sobierajski, Leticia L Martins, and Adam H Sparks
-Maintainer: Gabriel Constantino Blain <gabriel.blain@sp.gov.br>
-Description: A set of functions designed to calculate the standardized precipitation and
-    standardized precipitation 'evapotranspiration' indices using NASA POWER data.
-    It also calculates these indices using a reference data source.
-    The functions verify if the indices estimates meet the normality assumption
-    and how well NASA POWER estimates represent real world data.
-    It also calculates the indices in a routine mode.
-    The package also estimates potential 'evapotranspiration' amounts and
-    the difference between rainfall and potential 'evapotranspiration'.
-    The functions adopt a basic time scale that splits each month into four periods.
-    Days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 28, 29, 30, or 31.
-    TS=4 corresponds to a 12-month length moving (calculated 4 times a month).
-    TS=48 corresponds to a 1-month length moving (calculated 4 times a month).
+Authors@R: c(
+  person(
+    given = "Gabriel Constantino",
+    family = "Blain",
+    role = c("aut", "cre"),
+    email = "gabriel.blain@sp.gov.br"
+  ),
+  person(
+    given = "Graciela R.",
+    family = "Sobierajski",
+    role = c("aut"),
+  ),
+  person(
+    given = "Leticia L.",
+    family = "Martins",
+    role = c("aut"),
+  ),
+  person(
+    given = "Adam H.",
+    family = "Sparks",
+    role = c("aut"),
+    comment = c(ORCID = "0000-0002-0061-8359")))
+Description: A set of functions designed to calculate the standardized
+    precipitation and standardized precipitation evapotranspiration indices
+    using NASA POWER data.  These indices are calculated using a reference
+    data source.  The functions verify if the indices estimates meet the
+    normality assumption and how well NASA POWER estimates represent real world
+    data.  Indices are calculated in a routine mode.  Potential
+    evapotranspiration amounts and the difference between rainfall and potential
+    evapotranspiration are also calculated.  The functions adopt a basic time
+    scale that splits each month into four periods.  Days 1 to 7, days 8 to 14,
+    days 15 to 21, and days 22 to 28, 29, 30, or 31.  Where TS=4 corresponds to
+    a 12-month length moving window (calculated 4 times a month) and TS=48
+    corresponds to a 1-month length moving window (calculated 4 times a month).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
 Depends: 
-    R (>= 2.10), nasapower, lmom
+    R (>= 2.10)
+Imports:
+    graphics,
+    lmom,
+    nasapower,
+    stats,
+    utils
 URL: https://github.com/gabrielblain/PowerSDI
 BugReports: https://github.com/gabrielblain/PowerSDI/issues
 Suggests: 

@@ -1,6 +1,7 @@
 #' OperatSDI
 #'
-#' Calculates the SPI and SPEI using a NASAPOWER data.
+#' Calculates the \acronym{SPI} and \acronym{SPEI} using a \acronym{NASA}
+#'   \acronym{POWER} data.
 #'
 #' @param lon
 #' longitude in decimal degrees.
