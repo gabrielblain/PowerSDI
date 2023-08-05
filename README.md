@@ -299,7 +299,7 @@ Gabriel Constantino Blain, Graciela da Rocha Sobierajski, Leticia Lopes Martins,
 Maintainer: Gabriel Constantino Blain gabriel.blain@sp.gov.br
 
 ## Acknowledgments:
-The package uses data obtained from the NASA Langley Research Center (LaRC) POWER Project funded through the NASA Earth Science/Applied Science Program. The power project provides data for support several activities including agriculture and energy. 
+The package uses data obtained from the NASA Langley Research Center (LaRC) POWER Project funded through the NASA Earth Science/Applied Science Program. The POWER project provides data for support several activities including agriculture and energy. 
 The authors greatly appreciate this initiative.
 
 ## References
