@@ -7,17 +7,20 @@ Authors@R: c(
     given = "Gabriel Constantino",
     family = "Blain",
     role = c("aut", "cre"),
-    email = "gabriel.blain@sp.gov.br"
+    email = "gabriel.blain@sp.gov.br",
+    comment = c(ORCID = "0000-0001-8832-7734")
   ),
   person(
     given = "Graciela R.",
     family = "Sobierajski",
     role = c("aut"),
+    comment = c(ORCID = "0000-0002-7211-9268")
   ),
   person(
     given = "Leticia L.",
     family = "Martins",
     role = c("aut"),
+    comment = c(ORCID = "0000-0002-0299-3005")
   ),
   person(
     given = "Adam H.",
