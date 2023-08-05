@@ -9,7 +9,7 @@ A \code{data.frame} with 2 variables and 1434 rows.
 
 \describe{
 \item{PE_obs}{PE data from a reference weather station}
-\item{PE_est}{PE data from the NASAPOWER project}
+\item{PE_est}{PE data from the \acronym{NASA} \acronym{POWER} project}
 }
 }
 \source{
