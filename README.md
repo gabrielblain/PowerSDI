@@ -7,8 +7,12 @@ The PowerSDI adopts a basic time scale that splits each month into four subperio
 
 The package depends on R (>= 2.10) and R packages nasapower amd lmom
 
-# Installation
+# Installation\
+
+```r
 devtools:: install_github("gabrielblain/PowerSDI")
+```
+
 # Basic Instructions
 ## Function ScientSDI.R
 Helps the users to verify if the SPI and SPEI calculated from NASAPOWER data meet the conceptual assumptions expected from standardized drought indices.
