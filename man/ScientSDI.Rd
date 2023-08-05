@@ -54,8 +54,8 @@ Normality:  The outcomes of the two normality checking procedures (Wu et al., 20
 If Good="No", this list includes SDI and DistPar.
 This function also presents other data (in millimiters) calculated from the NASAPOWER project:
 Rainfall amounts (Rain).
-Potential evapotranspitations values estimated through the Hargreaves and Samani method (PEHS).
-Potential evapotranspitations values estimated through the FAO-56 Penman-Monteith method (PEPM).
+Potential evapotranspitation values estimated through the Hargreaves and Samani method (PEHS).
+Potential evapotranspitation values estimated through the FAO-56 Penman-Monteith method (PEPM).
 The difference between rainfall and potential evapotranspiration (PPEHS and PPEPM).
 }
 \description{

@@ -3,9 +3,9 @@
 \docType{data}
 \name{refPM}
 \alias{refPM}
-\title{Example of the input required by the Reference function.}
+\title{Example of the Input Required by the Reference Function}
 \format{
-A 11-column matrix with 10958 rows and 11 variables
+A \code{data.frame} with 10958 rows and 11 variables.
 
 \describe{
 \item{YEAR}{Year}
@@ -22,13 +22,13 @@ A 11-column matrix with 10958 rows and 11 variables
 }
 }
 \source{
-{Agronomic Institute and NASAPOWER}
+Agronomic Institute and \acronym{NASA} \acronym{POWER}.
 }
 \usage{
 refPM
 }
 \description{
-Contains data for calculating the SPI and SPEI.
+Contains data for calculating the \acronym{SPI} and \acronym{SPEI}.
 }
 \examples{
 data(refPM)
