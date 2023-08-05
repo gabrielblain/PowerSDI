@@ -7,7 +7,7 @@
 \method{print}{PowerSDI.Accuracy}(x, digits = max(3L, getOption("digits") - 3L), ...)
 }
 \arguments{
-\item{x}{a `PowerSDI.Accuracy` object}
+\item{x}{a \code{PowerSDI.Accuracy} object}
 
 \item{digits}{The number of digits to be used after the decimal when
 displaying accuracy values.}
@@ -15,5 +15,5 @@ displaying accuracy values.}
 \item{...}{ignored}
 }
 \description{
-Custom [print()] method for `PowerSDI.Accuracy` objects.
+Custom \code{print()} method for \code{PowerSDI.Accuracy} objects.
 }

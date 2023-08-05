@@ -4,13 +4,13 @@
 #'
 #' @param obs_est
 #' A 2-column matrix. The reference or observed and the estimated or predicted
-#'   data. See ObsEst as example.
+#'   data. See \code{ObsEst} object as an example.
 #' @param conf.int
 #' A character variable (\code{Yes} or \code{No}) defining if the function must
 #'   calculate confidence intervals.  Default is \dQuote{Yes}.
 #' @param sig.level
 #' A numeric variable (between 0.90 and 0.95) defining the significance level
-#'  for parameter the confidence intervals.  Default is 0.95.
+#'   for parameter the confidence intervals.  Default is 0.95.
 #' @return
 #' An object of \code{PowerSDI.Accuracy}, a \code{list}, which reports:
 #'
@@ -28,6 +28,7 @@
 #' @examples
 #' data("ObsEst")
 #' a <- Accuracy(obs_est = ObsEst, conf.int = "No")
+#' a
 #'
 #' # A generic plotting method is also supplied
 #' plot(a)
@@ -254,9 +255,9 @@ Accuracy <- function(obs_est,
 
 #' Prints PowerSDI.Accuracy Objects
 #'
-#' Custom [print()] method for `PowerSDI.Accuracy` objects.
+#' Custom \code{print()} method for \code{PowerSDI.Accuracy} objects.
 #'
-#' @param x a `PowerSDI.Accuracy` object
+#' @param x a \code{PowerSDI.Accuracy} object
 #' @param digits The number of digits to be used after the decimal when
 #'   displaying accuracy values.
 #' @param ... ignored
@@ -271,10 +272,10 @@ print.PowerSDI.Accuracy <- function(x,
 
 #' Plots PowerSDI.Accuracy Objects
 #'
-#' Custom [plot()] method for `PowerSDI.Accuracy` objects.
+#' Custom \code{plot()} method for \code{PowerSDI.Accuracy} objects.
 #'
 #' @param x a `PowerSDI.Accuracy` object
-#' @param ... Other parameters as passed to [`plot()`]
+#' @param ... Other parameters as passed to \code{plot()}
 #' @return Nothing. Side-effect: plots graphs.
 #' @export
 #'

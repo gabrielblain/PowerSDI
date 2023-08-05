@@ -9,11 +9,11 @@
 \arguments{
 \item{x}{a `PowerSDI.Accuracy` object}
 
-\item{...}{Other parameters as passed to [`plot()`]}
+\item{...}{Other parameters as passed to \code{plot()}}
 }
 \value{
 Nothing. Side-effect: plots graphs.
 }
 \description{
-Custom [plot()] method for `PowerSDI.Accuracy` objects.
+Custom \code{plot()} method for \code{PowerSDI.Accuracy} objects.
 }

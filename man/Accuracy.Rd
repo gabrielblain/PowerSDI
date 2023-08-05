@@ -8,7 +8,7 @@ Accuracy(obs_est, conf.int = "Yes", sig.level = 0.95)
 }
 \arguments{
 \item{obs_est}{A 2-column matrix. The reference or observed and the estimated or predicted
-data. See ObsEst as example.}
+data. See \code{ObsEst} object as an example.}
 
 \item{conf.int}{A character variable (\code{Yes} or \code{No}) defining if the function must
 calculate confidence intervals.  Default is \dQuote{Yes}.}
@@ -34,6 +34,7 @@ Calculates scalar measures of accuracy.
 \examples{
 data("ObsEst")
 a <- Accuracy(obs_est = ObsEst, conf.int = "No")
+a
 
 # A generic plotting method is also supplied
 plot(a)
