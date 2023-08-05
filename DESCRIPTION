@@ -43,6 +43,7 @@ RoxygenNote: 7.2.3
 Depends: 
     R (>= 2.10)
 Imports:
+    graphics,
     lmom,
     nasapower,
     stats,
