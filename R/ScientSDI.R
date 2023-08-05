@@ -34,10 +34,10 @@
 #' GoodFit: The Lilliefors and Anderson-Darling tests goodness-of-fit tests.
 #' Normality:  The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015).
 #' If Good="No", this list includes SDI and DistPar.
-#' This function also presents other data (in millimiters) calculated from the NASAPOWER project:
+#' This function also presents other data (in millimiters) calculated from the \acronym{NASA} \acronym{POWER} project:
 #' Rainfall amounts (Rain).
-#' Potential evapotranspitation values estimated through the Hargreaves and Samani method (PEHS).
-#' Potential evapotranspitation values estimated through the FAO-56 Penman-Monteith method (PEPM).
+#' Potential evapotranspiration values estimated through the Hargreaves and Samani method (PEHS).
+#' Potential evapotranspiration values estimated through the FAO-56 Penman-Monteith method (PEPM).
 #' The difference between rainfall and potential evapotranspiration (PPEHS and PPEPM).
 #' @export
 #' @import lmom

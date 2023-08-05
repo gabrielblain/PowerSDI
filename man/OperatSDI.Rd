@@ -38,7 +38,8 @@ difference between rainfall and PE (in millimiters), the NASA-SPI and NASA_SPEI,
 and the SDI categories corresponding to each indices estimates.
 }
 \description{
-Calculates the SPI and SPEI using a NASAPOWER data.
+Calculates the \acronym{SPI} and \acronym{SPEI} using a \acronym{NASA}
+  \acronym{POWER} data.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
