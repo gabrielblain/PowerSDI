@@ -3,9 +3,9 @@
 \docType{data}
 \name{refHS}
 \alias{refHS}
-\title{Example of the input required by the Reference function.}
+\title{Example of the Input Required by the Reference Function}
 \format{
-A 8-column matrix with 10950 rows and 8 variables
+A \code{data.frame} with 10950 rows and 8 variables.
 
 \describe{
 \item{YEAR}{Year}
@@ -19,7 +19,7 @@ A 8-column matrix with 10950 rows and 8 variables
 }
 }
 \source{
-{Agronomic Institute and NASAPOWER}
+Agronomic Institute and \acronym{NASA} \acronym{POWER}.
 }
 \usage{
 refHS

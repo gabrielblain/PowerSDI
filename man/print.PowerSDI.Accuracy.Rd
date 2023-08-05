@@ -9,6 +9,9 @@
 \arguments{
 \item{x}{a `PowerSDI.Accuracy` object}
 
+\item{digits}{The number of digits to be used after the decimal when
+displaying accuracy values.}
+
 \item{...}{ignored}
 }
 \description{

@@ -257,6 +257,8 @@ Accuracy <- function(obs_est,
 #' Custom [print()] method for `PowerSDI.Accuracy` objects.
 #'
 #' @param x a `PowerSDI.Accuracy` object
+#' @param digits The number of digits to be used after the decimal when
+#'   displaying accuracy values.
 #' @param ... ignored
 #' @export
 #'
