@@ -44,7 +44,9 @@ Depends:
     R (>= 2.10)
 Imports:
     lmom,
-    nasapower
+    nasapower,
+    stats,
+    utils
 URL: https://github.com/gabrielblain/PowerSDI
 BugReports: https://github.com/gabrielblain/PowerSDI/issues
 Suggests: 
