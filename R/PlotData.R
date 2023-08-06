@@ -1,6 +1,7 @@
 #' PlotData
 #'
-#' Plots Rainfall and potential evapotranspiration amounts using NASA POWER data.
+#' Plots rainfall and potential evapotranspiration amounts using \acronym{NASA}
+#'   \acronym{POWER} data.
 #'
 #' @param lon
 #' longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.
@@ -11,12 +12,18 @@
 #' @param end.date
 #' date at which the indices estimates should end ("YYYY-MM-DD").
 #' @return
-#' Scatter plots of Rainfall and potential evapotranspiration accumulated at the 1-quart.month time scale.
+#' Scatter plots of Rainfall and potential evapotranspiration accumulated at the
+#'   1-quart.month time scale.
 #' @export
 #' @importFrom nasapower get_power
 #' @importFrom graphics par
 #' @examplesIf interactive()
-#' PlotData(lon = -47.3, lat = -22.87, start.date = "2021-12-28", end.date = "2022-12-31")
+#' PlotData(
+#'   lon = -47.3,
+#'   lat = -22.87,
+#'   start.date = "2021-12-28",
+#'   end.date = "2022-12-31"
+#' )
 PlotData <- function(lon, lat, start.date, end.date) {
   if (is.na(as.Date(end.date, "%Y-%m-%d")) == TRUE || is.na(as.Date(start.date, "%Y-%m-%d")) == TRUE) {
     message("Recall Date format should be YYYY-MM-DD")
@@ -37,11 +44,11 @@ PlotData <- function(lon, lat, start.date, end.date) {
         dif <- start.user.day - 1
         start.week <- 1
       }
-      if (start.user.day > 7 & start.user.day <= 14) {
+      if (start.user.day > 7 && start.user.day <= 14) {
         dif <- start.user.day - 8
         start.week <- 2
       }
-      if (start.user.day > 14 & start.user.day <= 21) {
+      if (start.user.day > 14 && start.user.day <= 21) {
         dif <- start.user.day - 15
         start.week <- 3
       }
@@ -106,24 +113,24 @@ PlotData <- function(lon, lat, start.date, end.date) {
       month <- start.month
       year <- start.year
       while (year <= final.year || month <= final.month) {
-        data.week1 <- colSums(sse_i[which(sse_i$YEAR == year &
-                                            sse_i$MM == month &
+        data.week1 <- colSums(sse_i[which(sse_i$YEAR == year &&
+                                            sse_i$MM == month &&
                                             sse_i$DD <= 7), 14:16])
-        data.week2 <- colSums(sse_i[which(sse_i$YEAR == year &
-                                            sse_i$MM == month &
+        data.week2 <- colSums(sse_i[which(sse_i$YEAR == year &&
+                                            sse_i$MM == month &&
                                             sse_i$DD > 7 & sse_i$DD <= 14), 14:16])
-        data.week3 <- colSums(sse_i[which(sse_i$YEAR == year &
-                                            sse_i$MM == month &
-                                            sse_i$DD > 14 & sse_i$DD <= 21), 14:16])
-        data.week4 <- colSums(sse_i[which(sse_i$YEAR == year &
-                                            sse_i$MM == month &
+        data.week3 <- colSums(sse_i[which(sse_i$YEAR == year &&
+                                            sse_i$MM == month &&
+                                            sse_i$DD > 14 && sse_i$DD <= 21), 14:16])
+        data.week4 <- colSums(sse_i[which(sse_i$YEAR == year &&
+                                            sse_i$MM == month &&
                                             sse_i$DD > 21), 14:16])
         data.week[a, ] <- c(lon, lat, year, month, 1, data.week1)
         data.week[b, ] <- c(lon, lat, year, month, 2, data.week2)
         data.week[c, ] <- c(lon, lat, year, month, 3, data.week3)
         data.week[d, ] <- c(lon, lat, year, month, 4, data.week4)
         month <- month + 1
-        if (year == final.year & month > final.month) {
+        if (year == final.year && month > final.month) {
           break
         }
         if (month > 12) {
@@ -135,12 +142,12 @@ PlotData <- function(lon, lat, start.date, end.date) {
         c <- c + 4
         d <- d + 4
       }
-      rows <- which(data.week[, 3] == final.year & data.week[, 4] > final.month)
+      rows <- which(data.week[, 3] == final.year && data.week[, 4] > final.month)
       n.rows <- length(rows)
       if (n.rows > 0) {
         data.week <- data.week[-c(rows), ]
       }
-      rows <- which(data.week[, 3] == final.year & data.week[, 4] == final.month & data.week[, 5] > final.week)
+      rows <- which(data.week[, 3] == final.year && data.week[, 4] == final.month && data.week[, 5] > final.week)
       n.rows <- length(rows)
       if (n.rows > 0) {
         data.week <- data.week[-c(rows), ]
@@ -149,153 +156,153 @@ PlotData <- function(lon, lat, start.date, end.date) {
       data.week <- data.week[1:n, ]
       quart.month <- matrix(NA, n, 1)
       for (i in 1:n) {
-        if (data.week[i, 4] == 1 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 1 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 1
         }
-        if (data.week[i, 4] == 1 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 1 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 2
         }
-        if (data.week[i, 4] == 1 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 1 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 3
         }
-        if (data.week[i, 4] == 1 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 1 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 4
         }
-        if (data.week[i, 4] == 2 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 2 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 5
         }
-        if (data.week[i, 4] == 2 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 2 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 6
         }
-        if (data.week[i, 4] == 2 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 2 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 7
         }
-        if (data.week[i, 4] == 2 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 2 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 8
         }
-        if (data.week[i, 4] == 3 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 3 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 9
         }
-        if (data.week[i, 4] == 3 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 3 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 10
         }
-        if (data.week[i, 4] == 3 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 3 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 11
         }
-        if (data.week[i, 4] == 3 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 3 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 12
         }
-        if (data.week[i, 4] == 4 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 4 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 13
         }
-        if (data.week[i, 4] == 4 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 4 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 14
         }
-        if (data.week[i, 4] == 4 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 4 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 15
         }
-        if (data.week[i, 4] == 4 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 4 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 16
         }
-        if (data.week[i, 4] == 5 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 5 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 17
         }
-        if (data.week[i, 4] == 5 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 5 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 18
         }
-        if (data.week[i, 4] == 5 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 5 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 19
         }
-        if (data.week[i, 4] == 5 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 5 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 20
         }
-        if (data.week[i, 4] == 6 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 6 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 21
         }
-        if (data.week[i, 4] == 6 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 6 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 22
         }
-        if (data.week[i, 4] == 6 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 6 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 23
         }
-        if (data.week[i, 4] == 6 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 6 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 24
         }
-        if (data.week[i, 4] == 7 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 7 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 25
         }
-        if (data.week[i, 4] == 7 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 7 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 26
         }
-        if (data.week[i, 4] == 7 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 7 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 27
         }
-        if (data.week[i, 4] == 7 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 7 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 28
         }
-        if (data.week[i, 4] == 8 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 8 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 29
         }
-        if (data.week[i, 4] == 8 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 8 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 30
         }
-        if (data.week[i, 4] == 8 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 8 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 31
         }
-        if (data.week[i, 4] == 8 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 8 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 32
         }
-        if (data.week[i, 4] == 9 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 9 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 33
         }
-        if (data.week[i, 4] == 9 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 9 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 34
         }
-        if (data.week[i, 4] == 9 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 9 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 35
         }
-        if (data.week[i, 4] == 9 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 9 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 36
         }
-        if (data.week[i, 4] == 10 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 10 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 37
         }
-        if (data.week[i, 4] == 10 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 10 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 38
         }
-        if (data.week[i, 4] == 10 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 10 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 39
         }
-        if (data.week[i, 4] == 10 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 10 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 40
         }
-        if (data.week[i, 4] == 11 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 11 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 41
         }
-        if (data.week[i, 4] == 11 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 11 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 42
         }
-        if (data.week[i, 4] == 11 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 11 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 43
         }
-        if (data.week[i, 4] == 11 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 11 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 44
         }
-        if (data.week[i, 4] == 12 & data.week[i, 5] == 1) {
+        if (data.week[i, 4] == 12 && data.week[i, 5] == 1) {
           quart.month[i, 1] <- 45
         }
-        if (data.week[i, 4] == 12 & data.week[i, 5] == 2) {
+        if (data.week[i, 4] == 12 && data.week[i, 5] == 2) {
           quart.month[i, 1] <- 46
         }
-        if (data.week[i, 4] == 12 & data.week[i, 5] == 3) {
+        if (data.week[i, 4] == 12 && data.week[i, 5] == 3) {
           quart.month[i, 1] <- 47
         }
-        if (data.week[i, 4] == 12 & data.week[i, 5] == 4) {
+        if (data.week[i, 4] == 12 && data.week[i, 5] == 4) {
           quart.month[i, 1] <- 48
         }
       }
       data.week <- cbind(data.week, quart.month)
-      first.row <- which(data.week[, 3] == start.year & data.week[, 4] == start.month & data.week[, 5] == start.week)
+      first.row <- which(data.week[, 3] == start.year && data.week[, 4] == start.month && data.week[, 5] == start.week)
       if (first.row > 1) {
         data.week <- data.week[-(1:(first.row - 1)), ]
       }

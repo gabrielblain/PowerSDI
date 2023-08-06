@@ -24,18 +24,21 @@ OperatSDI(
 
 \item{end.date}{Date at each the calculation must end (“YYYY-MM-DD").}
 
-\item{PEMethod}{A character variable ("HS" or "PM") defining the potential evapotranspiration method. Default is "HS".}
+\item{PEMethod}{A character variable ("HS" or "PM") defining the potential evapotranspiration
+method. Default is "HS".}
 
-\item{distr}{A character variable ("GEV" or "GLO") defining which distribution is used to calculate the SPEI. Default is "GEV".}
+\item{distr}{A character variable ("GEV" or "GLO") defining which distribution is used to
+calculate the SPEI. Default is "GEV".}
 
-\item{parms}{Parameters required for calculating the SPI and SPEI. It is provided by the ScientSDI function (DistPar).}
+\item{parms}{Parameters required for calculating the SPI and SPEI. It is provided by the
+\code{ScientSDI} function (DistPar).}
 
 \item{TS}{#'Time scale on the "quart.month" basis (integer values between 1 and 96).}
 }
 \value{
 A data frame with Rainfall, potential evapotranspiration (PE),
-difference between rainfall and PE (in millimiters), the NASA-SPI and NASA_SPEI,
-and the SDI categories corresponding to each indices estimates.
+  difference between rainfall and PE (in millimiters), the NASA-SPI and
+  NASA_SPEI, and the SDI categories corresponding to each indices estimates.
 }
 \description{
 Calculates the \acronym{SPI} and \acronym{SPEI} using a \acronym{NASA}

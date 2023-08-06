@@ -14,12 +14,18 @@ A \code{data.frame} with 13 variables and 48 rows.
 \item{alfa.rain}{Shape parameter of the gamma distribution}
 \item{beta.rain}{Scale parameter of the gamma distribution}
 \item{probzero.rain}{Probability of rain=0}
-\item{loc.harg}{Location parameter of the GEV distribution, PE calculated by HS method}
-\item{sc.harg}{Scale parameter of the GEV distribution, PE calculated by HS method}
-\item{sh.harg}{Shape parameter of the GEV distribution, PE calculated by HS method}
-\item{loc.pm}{Location parameter of the GEV distribution, PE calculated by PM method}
-\item{sc.pm}{Scale parameter of the GEV distribution, PE calculated by PM method}
-\item{sh.pm}{Shape parameter of the GEV distribution, PE calculated by PM method}
+\item{loc.harg}{Location parameter of the GEV distribution, PE calculated by
+  HS method}
+\item{sc.harg}{Scale parameter of the GEV distribution, PE calculated by HS
+  method}
+\item{sh.harg}{Shape parameter of the GEV distribution, PE calculated by HS
+  method}
+\item{loc.pm}{Location parameter of the GEV distribution, PE calculated by PM
+  method}
+\item{sc.pm}{Scale parameter of the GEV distribution, PE calculated by PM
+  method}
+\item{sh.pm}{Shape parameter of the GEV distribution, PE calculated by PM
+  method}
 \item{TS}{Time scale at which the SDIs will be calculated}
 }
 }

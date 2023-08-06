@@ -16,13 +16,20 @@ PlotData(lon, lat, start.date, end.date)
 \item{end.date}{date at which the indices estimates should end ("YYYY-MM-DD").}
 }
 \value{
-Scatter plots of Rainfall and potential evapotranspiration accumulated at the 1-quart.month time scale.
+Scatter plots of Rainfall and potential evapotranspiration accumulated at the
+  1-quart.month time scale.
 }
 \description{
-Plots Rainfall and potential evapotranspiration amounts using NASA POWER data.
+Plots rainfall and potential evapotranspiration amounts using \acronym{NASA}
+  \acronym{POWER} data.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-PlotData(lon = -47.3, lat = -22.87, start.date = "2021-12-28", end.date = "2022-12-31")
+PlotData(
+  lon = -47.3,
+  lat = -22.87,
+  start.date = "2021-12-28",
+  end.date = "2022-12-31"
+)
 \dontshow{\}) # examplesIf}
 }
