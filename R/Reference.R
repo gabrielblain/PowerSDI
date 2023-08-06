@@ -31,34 +31,76 @@
 #' @examples
 #' data("refHS")
 #' Reference(ref = refHS, distr = "GEV", PEMethod = "HS", TS = 4)
-Reference <- function(ref, distr = "GEV", PEMethod = "HS", TS = 4) {
-  if (PEMethod == "HS" || PEMethod == "PM") {
-    if (distr == "GEV" || distr == "GLO") {
-      if (distr == "GEV") {
-        distribution <- 1
+Reference <- function(ref,
+                      distr = "GEV",
+                      PEMethod = "HS",
+                      TS = 4L ) {
+
+  PEMethod <- toupper(PEMethod)
+  distr <- toupper(distr)
+
+  if (PEMethod != "HS" && PEMethod != "PM") {
+    stop("`PEMethod` should be set to either 'HS' or 'PM'.",
+         call. = FALSE)
       }
-      if (distr == "GLO") {
-        distribution <- 2
+  if (distr != "GEV" && distr != "GLO") {
+    stop("`distr` should be set to either 'GEV' or 'GLO'.",
+         call. = FALSE)
       }
-        if (all.equal(TS, as.integer(TS)) != TRUE || is.na(TS) == TRUE ||
-          TS < 1 || TS > 96) {
-          message("TS must be an interger value ranging between 1 and 96.\n                 Please, choose another TS")
-        } else {
-          if (PEMethod == "HS") {
-            if (length(ref[1, ]) != 8) {
-              stop("It seems that your input file (ref) has the wrong number of columns.")
+
+  if (!all.equal(TS, as.integer(TS)) ||
+      is.na(TS) ||
+      TS < 1L ||
+      TS > 96) {
+    stop(
+      "TS must be an interger value ranging between 1 and 96.\n
+                  Please, choose another TS between 1 and 96",
+      call. = FALSE
+    )
             }
-            colnames(ref) <- c(
-              "YEAR", "MM", "DD", "tmed", "tmax",
-              "tmin", "Ra", "Rain"
+
+  if (PEMethod == "HS" && length(ref[1,]) != 8) {
+    stop(
+      "It seems that your input file (ref) has the wrong number of
+                   columns. It should be 8",
+      call. = FALSE
             )
           }
-          if (PEMethod == "PM") {
-            if (length(ref[1, ]) != 11) {
-              stop("It seems that your input file (ref) has the wrong number of columns.")
+  if (PEMethod == "PM" && length(ref[1,]) != 11) {
+    stop("It seems that your input file (ref) has the wrong number of
+                   columns. It should be 11")
             }
-            colnames(ref) <- c("YEAR", "MM", "DD", "tmed", "tmax", "tmin", "Ra", "Rs", "W", "RH", "Rain")
-          }
+
+
+  distribution <- switch(distr,
+                         "GEV" = 1,
+                         "GLO" = 2)
+
+  colnames(ref) <- switch(
+    PEMethod,
+    "HS" = c("YEAR",
+             "MM",
+             "DD",
+             "tmed",
+             "tmax",
+             "tmin",
+             "Ra",
+             "Rain"),
+    "PM" = c(
+      "YEAR",
+      "MM",
+      "DD",
+      "tmed",
+      "tmax",
+      "tmin",
+      "Ra",
+      "Rs",
+      "W",
+      "RH",
+      "Rain"
+    )
+  )
+
           n.tot <- length(ref[, 1])
           end.year <- ref$YEAR[n.tot]
           end.month <- ref$MM[n.tot]

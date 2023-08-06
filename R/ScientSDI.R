@@ -66,17 +66,14 @@
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @importFrom utils install.packages menu write.table
 #' @examplesIf interactive()
-#' ScientSDI(lon=-47.3, lat=-22.87, start.date="2015-01-01", end.date="2022-12-31", TS=1,
-#' Good="no")
-ScientSDI <- function(lon, lat, start.date, end.date, distr = "GEV", TS = 4, Good = "Yes", sig.level = 0.95,
-                      RainUplim = NULL, RainLowlim = NULL, PEUplim = NULL, PELowlim = NULL) {
-  if (distr == "GEV" || distr == "GLO") {
-    if (Good == "Yes" || Good == "YES" || Good == "YeS" || Good == "YEs" || Good == "yes" ||
-        Good == "NO" || Good == "No" || Good == "nO" || Good == "no") {
-      if (is.na(as.Date(end.date, "%Y-%m-%d")) == TRUE || is.na(as.Date(start.date, "%Y-%m-%d")) == TRUE ||
-          TS < 1 || TS > 96 || all.equal(TS, as.integer(TS)) != TRUE) {
-        message("Recall Date format should be YYYY-MM-DD and TS must be an interger  value ranging between 1 and 96")
-      } else {
+#' ScientSDI(
+#'   lon = -47.3,
+#'   lat = -22.87,
+#'   start.date = "2015-01-01",
+#'   end.date = "2022-12-31",
+#'   TS = 1,
+#'   Good = "no"
+#' )
         end.date.user <- as.Date(end.date, "%Y-%m-%d")
         start.date.user <- as.Date(start.date, "%Y-%m-%d")
         mim.date.fit <- as.numeric((end.date.user - start.date.user) / 365)
