@@ -44,11 +44,11 @@ PlotData <- function(lon, lat, start.date, end.date) {
         dif <- start.user.day - 1
         start.week <- 1
       }
-      if (start.user.day > 7 & start.user.day <= 14) {
+      if (start.user.day > 7 && start.user.day <= 14) {
         dif <- start.user.day - 8
         start.week <- 2
       }
-      if (start.user.day > 14 & start.user.day <= 21) {
+      if (start.user.day > 14 && start.user.day <= 21) {
         dif <- start.user.day - 15
         start.week <- 3
       }
@@ -113,24 +113,24 @@ PlotData <- function(lon, lat, start.date, end.date) {
       month <- start.month
       year <- start.year
       while (year <= final.year || month <= final.month) {
-        data.week1 <- colSums(sse_i[which(sse_i$YEAR == year &
-                                            sse_i$MM == month &
+        data.week1 <- colSums(sse_i[which(sse_i$YEAR == year &&
+                                            sse_i$MM == month &&
                                             sse_i$DD <= 7), 14:16])
-        data.week2 <- colSums(sse_i[which(sse_i$YEAR == year &
-                                            sse_i$MM == month &
+        data.week2 <- colSums(sse_i[which(sse_i$YEAR == year &&
+                                            sse_i$MM == month &&
                                             sse_i$DD > 7 & sse_i$DD <= 14), 14:16])
-        data.week3 <- colSums(sse_i[which(sse_i$YEAR == year &
-                                            sse_i$MM == month &
-                                            sse_i$DD > 14 & sse_i$DD <= 21), 14:16])
-        data.week4 <- colSums(sse_i[which(sse_i$YEAR == year &
-                                            sse_i$MM == month &
+        data.week3 <- colSums(sse_i[which(sse_i$YEAR == year &&
+                                            sse_i$MM == month &&
+                                            sse_i$DD > 14 && sse_i$DD <= 21), 14:16])
+        data.week4 <- colSums(sse_i[which(sse_i$YEAR == year &&
+                                            sse_i$MM == month &&
                                             sse_i$DD > 21), 14:16])
         data.week[a, ] <- c(lon, lat, year, month, 1, data.week1)
         data.week[b, ] <- c(lon, lat, year, month, 2, data.week2)
         data.week[c, ] <- c(lon, lat, year, month, 3, data.week3)
         data.week[d, ] <- c(lon, lat, year, month, 4, data.week4)
         month <- month + 1
-        if (year == final.year & month > final.month) {
+        if (year == final.year && month > final.month) {
           break
         }
         if (month > 12) {
