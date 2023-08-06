@@ -12,20 +12,24 @@
 #' @param end.date
 #' Date at each the calculation must end (“YYYY-MM-DD").
 #' @param PEMethod
-#' A character variable ("HS" or "PM") defining the potential evapotranspiration method. Default is "HS".
+#' A character variable ("HS" or "PM") defining the potential evapotranspiration
+#'   method. Default is "HS".
 #' @param distr
-#' A character variable ("GEV" or "GLO") defining which distribution is used to calculate the SPEI. Default is "GEV".
+#' A character variable ("GEV" or "GLO") defining which distribution is used to
+#'   calculate the SPEI. Default is "GEV".
 #' @param parms
-#' Parameters required for calculating the SPI and SPEI. It is provided by the ScientSDI function (DistPar).
+#' Parameters required for calculating the SPI and SPEI. It is provided by the
+#'   \code{ScientSDI} function (DistPar).
 #' @param TS
 #' #'Time scale on the "quart.month" basis (integer values between 1 and 96).
 #' @return
 #' A data frame with Rainfall, potential evapotranspiration (PE),
-#' difference between rainfall and PE (in millimiters), the NASA-SPI and NASA_SPEI,
-#' and the SDI categories corresponding to each indices estimates.
+#'   difference between rainfall and PE (in millimiters), the NASA-SPI and
+#'   NASA_SPEI, and the SDI categories corresponding to each indices estimates.
 #' @export
-#' @import lmom
 #' @importFrom nasapower get_power
+#' @importFrom lmom cdfgam cdfgev cdfglo pelgam pelgev pelglo quagev quagam
+#'   quaglo samlmu
 #' @importFrom graphics title
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @examplesIf interactive()

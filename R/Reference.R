@@ -1,20 +1,31 @@
-#' Reference
+#' Calculate the SPI and SPEI Using a Reference Data Source
 #'
-#' Calculates the SPI and SPEI using a reference data source.
+#' Calculates the Standardized Precipitation Index (\acronym{SPI}) and
+#'   Standardised Precipitation-Evapotranspiration Index (\acronym{SPEI}) using
+#'   a reference data source.
 #'
 #' @param ref
-#' A data frame with the variables required for calculating the SDIs. See refHS or refPM as examples.
+#' A data frame with the variables required for calculating the \acronym{SDI}s.
+#'   See \code{refHS} or \code{refPM} as examples.
 #' @param distr
-#' A character variable ("GEV" or "GLO") defining which distribution is used to calculate the SPEI. Default is "GEV".
+#' A character variable ("GEV" or "GLO") defining which distribution is used to
+#'   calculate the \acronym{SPEI}. Default is "GEV".
 #' @param PEMethod
-#' A character variable ("HS" or "PM") defining the potential evapotranspiration method. Default is "HS".
+#' A character variable ("HS" or "PM") defining the potential evapotranspiration
+#'   method.  Default is "HS".
 #' @param TS
-#' Time scale on the quart.month" basis (integer values between 1 and 96). Default is 4.
+#' Time scale on the quart.month" basis (integer values between 1 and 96).
+#'   Default is 4.
 #' @return
-#' A data frame with:
-#' Rain, potential evapotranspiration,
-#' Difference between rainfall and potential evapotranspiration,
-#' SPI and SPEI calculated at the time scale selected by the user.
+#' A \code{data.frame} with:
+#' \itemize{
+#'   \item rain,
+#'   \item potential evapotranspiration,
+#'   \item difference between rainfall and potential evapotranspiration,
+#'   \item \acronym{SPI} calculated at the time scale selected by the user, and
+#'   \item \acronym{SPIE} calculated at the time scale selected by the user
+#'   }
+#'
 #' @export
 #'
 #' @examples

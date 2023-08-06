@@ -28,42 +28,69 @@ ScientSDI(
 
 \item{end.date}{date at which the indices estimates should end. Format: YYYY-MM-DD".}
 
-\item{distr}{A character variable ("GEV" or "GLO") defining the distribution to calculate the SPEI. Default is "GEV".}
+\item{distr}{A character variable ("GEV" or "GLO") defining the distribution to calculate
+the SPEI. Default is "GEV".}
 
-\item{TS}{Time scale on the quart.month basis (integer values between 1 and 96). Default is 4.}
+\item{TS}{Time scale on the quart.month basis (integer values between 1 and 96).
+Default is 4.}
 
-\item{Good}{A character variable ("Yes" or "No") to calculate or not the goodness-of-fit and normality tests. Default is "Yes".}
+\item{Good}{A character variable ("Yes" or "No") to calculate or not the goodness-of-fit
+and normality tests. Default is "Yes".}
 
-\item{sig.level}{A numeric variable (between 0.90 and 0.95) defining the significance level for parameter Good. Default is "0.95".}
+\item{sig.level}{A numeric variable (between 0.90 and 0.95) defining the significance level
+for parameter Good. Default is "0.95".}
 
-\item{RainUplim}{Optional. Upper limit in millimeters from which rainfall values larger than it will be removed. Default is NULL.}
+\item{RainUplim}{Optional. Upper limit in millimeters from which rainfall values larger than
+it will be removed. Default is NULL.}
 
-\item{RainLowlim}{Optional. Lower limit in millimeters from which rainfall values smaller than it will be removed. Default is NULL.}
+\item{RainLowlim}{Optional. Lower limit in millimeters from which rainfall values smaller than
+it will be removed. Default is NULL.}
 
-\item{PEUplim}{Optional. Upper limit in millimeters from which evapotranspiration values larger than it will be removed. Default is NULL.}
+\item{PEUplim}{Optional. Upper limit in millimeters from which evapotranspiration values
+larger than it will be removed. Default is NULL.}
 
-\item{PELowlim}{Optional. Lower limit in millimeters from which evapotranspiration values smaller than it will be removed. Default is NULL.}
+\item{PELowlim}{Optional. Lower limit in millimeters from which evapotranspiration values
+smaller than it will be removed. Default is NULL.}
 }
 \value{
 A list with data calculated at the time scale selected by the user.
-If Good="Yes", this list includes:
-SDI: The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.
-DistPar: The parameters of the distributions (gamma and GEV) used to calculate the indices.
-GoodFit: The Lilliefors and Anderson-Darling tests goodness-of-fit tests.
-Normality:  The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015).
-If Good="No", this list includes SDI and DistPar.
-This function also presents other data (in millimiters) calculated from the \acronym{NASA} \acronym{POWER} project:
-Rainfall amounts (Rain).
-Potential evapotranspiration values estimated through the Hargreaves and Samani method (PEHS).
-Potential evapotranspiration values estimated through the FAO-56 Penman-Monteith method (PEPM).
-The difference between rainfall and potential evapotranspiration (PPEHS and PPEPM).
+If \code{Good="Yes"}, this list includes:
+\describe{
+  \item{SDI}{The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.}
+  \item{DistPar}{The parameters of the distributions (gamma and GEV) used to
+  calculate the indices.}
+  \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
+  tests.}
+  \item{Normality}{The outcomes of the two normality checking procedures (Wu
+  et al., 2007 and Stagge et., 2015).}
+ }
+
+If \code{Good="No"}, this list includes SDI and DistPar.
+
+This function also presents other data (in millimiters) calculated from the
+  \acronym{NASA} \acronym{POWER} project:
+\itemize{
+  \item Rainfall amounts (Rain).
+  \item Potential evapotranspiration values estimated through the Hargreaves
+   and Samani method (PEHS).
+  \item Potential evapotranspiration values estimated through the FAO-56
+   Penman-Monteith method (PEPM).
+  \item The difference between rainfall and potential evapotranspiration
+  (PPEHS and PPEPM).
+  }
 }
 \description{
 Verifies concepts expected from SDI.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-ScientSDI(lon=-47.3, lat=-22.87, start.date="2015-01-01", end.date="2022-12-31", TS=1,
-Good="no")
+ScientSDI(
+  lon = -47.3,
+  lat = -22.87,
+  start.date = "2015-01-01",
+  end.date = "2022-12-31",
+  TS = 1,
+  Good = "no"
+)
 \dontshow{\}) # examplesIf}
 }

@@ -11,34 +11,55 @@
 #' @param end.date
 #' date at which the indices estimates should end. Format: YYYY-MM-DD".
 #' @param distr
-#' A character variable ("GEV" or "GLO") defining the distribution to calculate the SPEI. Default is "GEV".
+#' A character variable ("GEV" or "GLO") defining the distribution to calculate
+#'   the SPEI. Default is "GEV".
 #' @param TS
-#' Time scale on the quart.month basis (integer values between 1 and 96). Default is 4.
+#' Time scale on the quart.month basis (integer values between 1 and 96).
+#'   Default is 4.
 #' @param Good
-#' A character variable ("Yes" or "No") to calculate or not the goodness-of-fit and normality tests. Default is "Yes".
+#' A character variable ("Yes" or "No") to calculate or not the goodness-of-fit
+#'   and normality tests. Default is "Yes".
 #' @param sig.level
-#' A numeric variable (between 0.90 and 0.95) defining the significance level for parameter Good. Default is "0.95".
+#' A numeric variable (between 0.90 and 0.95) defining the significance level
+#'   for parameter Good. Default is "0.95".
 #' @param RainUplim
-#' Optional. Upper limit in millimeters from which rainfall values larger than it will be removed. Default is NULL.
+#' Optional. Upper limit in millimeters from which rainfall values larger than
+#'   it will be removed. Default is NULL.
 #' @param RainLowlim
-#' Optional. Lower limit in millimeters from which rainfall values smaller than it will be removed. Default is NULL.
+#' Optional. Lower limit in millimeters from which rainfall values smaller than
+#'   it will be removed. Default is NULL.
 #' @param PEUplim
-#' Optional. Upper limit in millimeters from which evapotranspiration values larger than it will be removed. Default is NULL.
+#' Optional. Upper limit in millimeters from which evapotranspiration values
+#'   larger than it will be removed. Default is NULL.
 #' @param PELowlim
-#' Optional. Lower limit in millimeters from which evapotranspiration values smaller than it will be removed. Default is NULL.
+#' Optional. Lower limit in millimeters from which evapotranspiration values
+#'   smaller than it will be removed. Default is NULL.
 #' @return
 #' A list with data calculated at the time scale selected by the user.
-#' If Good="Yes", this list includes:
-#' SDI: The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.
-#' DistPar: The parameters of the distributions (gamma and GEV) used to calculate the indices.
-#' GoodFit: The Lilliefors and Anderson-Darling tests goodness-of-fit tests.
-#' Normality:  The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015).
-#' If Good="No", this list includes SDI and DistPar.
-#' This function also presents other data (in millimiters) calculated from the \acronym{NASA} \acronym{POWER} project:
-#' Rainfall amounts (Rain).
-#' Potential evapotranspiration values estimated through the Hargreaves and Samani method (PEHS).
-#' Potential evapotranspiration values estimated through the FAO-56 Penman-Monteith method (PEPM).
-#' The difference between rainfall and potential evapotranspiration (PPEHS and PPEPM).
+#' If \code{Good="Yes"}, this list includes:
+#' \describe{
+#'   \item{SDI}{The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.}
+#'   \item{DistPar}{The parameters of the distributions (gamma and GEV) used to
+#'   calculate the indices.}
+#'   \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
+#'   tests.}
+#'   \item{Normality}{The outcomes of the two normality checking procedures (Wu
+#'   et al., 2007 and Stagge et., 2015).}
+#'  }
+#'
+#' If \code{Good="No"}, this list includes SDI and DistPar.
+#'
+#' This function also presents other data (in millimiters) calculated from the
+#'   \acronym{NASA} \acronym{POWER} project:
+#' \itemize{
+#'   \item Rainfall amounts (Rain).
+#'   \item Potential evapotranspiration values estimated through the Hargreaves
+#'    and Samani method (PEHS).
+#'   \item Potential evapotranspiration values estimated through the FAO-56
+#'    Penman-Monteith method (PEPM).
+#'   \item The difference between rainfall and potential evapotranspiration
+#'   (PPEHS and PPEPM).
+#'   }
 #' @export
 #' @import lmom
 #' @importFrom nasapower get_power
