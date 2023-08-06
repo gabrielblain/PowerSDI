@@ -1,6 +1,7 @@
 #' PlotData
 #'
-#' Plots Rainfall and potential evapotranspiration amounts using NASA POWER data.
+#' Plots rainfall and potential evapotranspiration amounts using \acronym{NASA}
+#'   \acronym{POWER} data.
 #'
 #' @param lon
 #' longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.
@@ -11,12 +12,18 @@
 #' @param end.date
 #' date at which the indices estimates should end ("YYYY-MM-DD").
 #' @return
-#' Scatter plots of Rainfall and potential evapotranspiration accumulated at the 1-quart.month time scale.
+#' Scatter plots of Rainfall and potential evapotranspiration accumulated at the
+#'   1-quart.month time scale.
 #' @export
 #' @importFrom nasapower get_power
 #' @importFrom graphics par
 #' @examplesIf interactive()
-#' PlotData(lon = -47.3, lat = -22.87, start.date = "2021-12-28", end.date = "2022-12-31")
+#' PlotData(
+#'   lon = -47.3,
+#'   lat = -22.87,
+#'   start.date = "2021-12-28",
+#'   end.date = "2022-12-31"
+#' )
 PlotData <- function(lon, lat, start.date, end.date) {
   if (is.na(as.Date(end.date, "%Y-%m-%d")) == TRUE || is.na(as.Date(start.date, "%Y-%m-%d")) == TRUE) {
     message("Recall Date format should be YYYY-MM-DD")
