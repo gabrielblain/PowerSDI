@@ -34,7 +34,7 @@
 Reference <- function(ref,
                       distr = "GEV",
                       PEMethod = "HS",
-                      TS = 4L ) {
+                      TS = 4L) {
 
   PEMethod <- toupper(PEMethod)
   distr <- toupper(distr)
