@@ -11,7 +11,7 @@ The package depends on R (>= 2.10) and R packages nasapower and lmom
 # Installation\
 
 ```r
-devtools:: install_github("gabrielblain/PowerSDI")
+devtools::install_github("gabrielblain/PowerSDI")
 ```
 
 # Basic Instructions
