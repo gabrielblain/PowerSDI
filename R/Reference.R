@@ -452,18 +452,18 @@ Reference <- function(ref,
   if (end.month == 1 || end.month == 3 || end.month ==
       5 || end.month == 7 || end.month == 8 || end.month ==
       10 || end.month == 12) {
-    if (end.day < 7 || end.day > 7 & end.day <
+    if (end.day < 7 || end.day > 7 && end.day <
         14 || end.day > 14 & end.day < 22 || end.day >
-        22 & end.day < 31) {
+        22 && end.day < 31) {
       message("The latest quart.month period is not complete")
       SDI.final <- SDI.final[-c(n.weeks), ]
     }
   }
   if (end.month == 4 || end.month == 6 || end.month ==
       9 || end.month == 11) {
-    if (end.day < 7 || end.day > 7 & end.day <
-        14 || end.day > 14 & end.day < 22 || end.day >
-        22 & end.day < 30) {
+    if (end.day < 7 || end.day > 7 && end.day <
+        14 || end.day > 14 && end.day < 22 || end.day >
+        22 && end.day < 30) {
       message("The latest quart.month period is not complete")
       SDI.final <- SDI.final[-c(n.weeks), ]
     }
