@@ -92,25 +92,15 @@ ScientSDI <-
     start.date.user <- as.Date(start.date, "%Y-%m-%d")
 
     if (distr == "GEV" || distr == "GLO") {
-      stop("`distr` should be set to either 'GEV' or 'GLO.'",
-           call = FALSE)
-    }
 
-    if (Good != "yes" || Good != "no") {
-      stop("`Good` should be set to either 'Yes' or 'No'.",
-           call. = FALSE)
-    }
+      if (Good == "Yes" || Good == "YES" || Good == "YeS" ||
+          Good == "YEs" || Good == "yes" || Good == "NO" ||
+          Good == "No" || Good == "nO" || Good == "no") {
 
     if (is.na(as.Date(end.date, "%Y-%m-%d")) ||
         is.na(as.Date(start.date, "%Y-%m-%d")) ||
         TS < 1 ||
         TS > 96 || all.equal(TS, as.integer(TS))) {
-      stop(
-        "Recall Date format should be YYYY-MM-DD and TS must be an",
-        "interger value ranging between 1 and 96",
-        call. = FALSE
-      )
-    }
 
     mim.date.fit <-
       as.numeric((end.date.user - start.date.user) / 365)
@@ -1349,4 +1339,16 @@ ScientSDI <-
       message("The calculations started on:")
       print(start.date.protocal)
     }
+    } else {stop("`distr` should be set to either 'GEV' or 'GLO.'",
+                 call = FALSE)}
+
+    } else {stop("`Good` should be set to either 'Yes' or 'No'.",
+                 call. = FALSE)}
+    } else{
+    stop(
+      "Recall Date format should be YYYY-MM-DD and TS must be an",
+      "interger value ranging between 1 and 96",
+      call. = FALSE
+    )
+  }
   }
