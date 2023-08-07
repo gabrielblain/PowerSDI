@@ -70,12 +70,6 @@ Reference <- function(ref,
     stop("It seems that your input file (ref) has the wrong number of
                    columns. It should be 11")
   }
-
-
-  #distribution <- switch(distr,
-                       #  "GEV" = 1,
-                       #  "GLO" = 2)
-
   colnames(ref) <- switch(
     PEMethod,
     "HS" = c("YEAR",
