@@ -34,7 +34,7 @@
 Reference <- function(ref,
                       distr = "GEV",
                       PEMethod = "HS",
-                      TS = 4L) {
+                      TS = 4) {
 
   PEMethod <- toupper(PEMethod)
   distr <- toupper(distr)
@@ -50,7 +50,7 @@ Reference <- function(ref,
 
   if (!all.equal(TS, as.integer(TS)) ||
       is.na(TS) ||
-      TS < 1L ||
+      TS < 1 ||
       TS > 96) {
     stop(
       "TS must be an interger value ranging between 1 and 96.\n
@@ -72,9 +72,9 @@ Reference <- function(ref,
   }
 
 
-  distribution <- switch(distr,
-                         "GEV" = 1,
-                         "GLO" = 2)
+  #distribution <- switch(distr,
+                       #  "GEV" = 1,
+                       #  "GLO" = 2)
 
   colnames(ref) <- switch(
     PEMethod,
@@ -153,19 +153,19 @@ Reference <- function(ref,
     for (year in start.year:end.year) {
       for (month in 1:12) {
         data.week1 <- colSums(ref[which(ref$YEAR ==
-                                          year &&
+                                          year &
                                           ref$MM == month & ref$DD <= 7),
                                   8:9])
         data.week2 <- colSums(ref[which(ref$YEAR ==
-                                          year &&
+                                          year &
                                           ref$MM == month & ref$DD > 7 &
                                           ref$DD <= 14), 8:9])
         data.week3 <- colSums(ref[which(ref$YEAR ==
-                                          year &&
+                                          year &
                                           ref$MM == month & ref$DD > 14 &
                                           ref$DD <= 21), 8:9])
         data.week4 <- colSums(ref[which(ref$YEAR ==
-                                          year &&
+                                          year &
                                           ref$MM == month & ref$DD > 21),
                                   8:9])
         data.week[a, ] <- c(year, month, 1, data.week1)
@@ -228,19 +228,19 @@ Reference <- function(ref,
     for (year in start.year:end.year) {
       for (month in 1:12) {
         data.week1 <- colSums(ref[which(ref$YEAR ==
-                                          year &&
+                                          year &
                                           ref$MM == month & ref$DD <= 7),
                                   11:12])
         data.week2 <- colSums(ref[which(ref$YEAR ==
-                                          year &&
+                                          year &
                                           ref$MM == month & ref$DD > 7 &
                                           ref$DD <= 14), 11:12])
         data.week3 <- colSums(ref[which(ref$YEAR ==
-                                          year &&
+                                          year &
                                           ref$MM == month & ref$DD > 14 &
                                           ref$DD <= 21), 11:12])
         data.week4 <- colSums(ref[which(ref$YEAR ==
-                                          year &&
+                                          year &
                                           ref$MM == month & ref$DD > 21),
                                   11:12])
         data.week[a, ] <- c(year, month, 1, data.week1)
@@ -255,14 +255,14 @@ Reference <- function(ref,
     }
   }
   rows <-
-    which(data.week[, 1] == end.year && data.week[, 2] > end.month)
+    which(data.week[, 1] == end.year & data.week[, 2] > end.month)
   n.rows <- length(rows)
   if (n.rows > 0) {
     data.week <- data.week[-c(rows), ]
   }
   rows <-
-    which(data.week[, 1] == end.year && data.week[, 2] ==
-            end.month && data.week[, 3] > end.week)
+    which(data.week[, 1] == end.year & data.week[, 2] ==
+            end.month & data.week[, 3] > end.week)
   n.rows <- length(rows)
   if (n.rows > 0) {
     data.week <- data.week[-c(rows), ]
@@ -331,7 +331,7 @@ Reference <- function(ref,
                             probzero)
     pep <- data.at.timescale[which(data.at.timescale[,
                                                      3] == i), 6]
-    if (distribution == 1) {
+    if (distr == "GEV") {
       parameters[i, 5:7] <- c(pelgev(samlmu(pep)))
     } else {
       parameters[i, 5:7] <- c(pelglo(samlmu(pep)))
@@ -359,7 +359,7 @@ Reference <- function(ref,
       prob <- 0.998649
     }
     SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
-    if (distribution == 1) {
+    if (distr == "GEV") {
       prob <- cdfgev(data.at.timescale[pos, 6],
                      c(parameters[i, 5], parameters[i, 6],
                        parameters[i, 7]))
