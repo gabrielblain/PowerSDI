@@ -15,7 +15,7 @@ test_that("print.PowerSDI.accuracy() returns a proper summary", {
 
 test_that("plot.PowerSDI.Accuracy works properly", {
   accuracy_a <- plot(a)
-  expect_doppelganger("disp-accuracy-a", accuracy_a)
+  vdiffr::expect_doppelganger("disp-accuracy-a", accuracy_a)
 })
 
 rm(a)
