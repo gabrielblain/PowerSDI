@@ -1,39 +1,40 @@
 #' ScientSDI
 #'
-#' Verifies concepts expected from SDI.
+#' Verifies concepts expected from \acronym{SDI}.
 #'
 #' @param lon
 #' longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.
 #' @param lat
 #' latitude in decimal degrees: (+) Northern hemisphere (-) Southern Hemisphere.
 #' @param start.date
-#' date at which the indices estimates should start. Format: YYYY-MM-DD".
+#' date at which the indices estimates should start. Format:
+#'   \dQuote{YYYY-MM-DD}.
 #' @param end.date
-#' date at which the indices estimates should end. Format: YYYY-MM-DD".
+#' date at which the indices estimates should end. Format: \dQuote{YYYY-MM-DD}.
 #' @param distr
-#' A character variable ("GEV" or "GLO") defining the distribution to calculate
-#'   the SPEI. Default is "GEV".
+#' A character variable (\dQuote{GEV} or \dQuote{GLO}) defining the distribution
+#'   to calculate the \acronym{SPEI}. Default is \dQuote{GEV}.
 #' @param TS
 #' Time scale on the quart.month basis (integer values between 1 and 96).
 #'   Default is 4.
 #' @param Good
-#' A character variable ("Yes" or "No") to calculate or not the goodness-of-fit
-#'   and normality tests. Default is "Yes".
+#' A character variable (\dQuote{Yes} or \dQuote{No}) to calculate or not the
+#'   goodness-of-fit and normality tests. Default is \dQuote{Yes}.
 #' @param sig.level
 #' A numeric variable (between 0.90 and 0.95) defining the significance level
-#'   for parameter Good. Default is "0.95".
+#'   for parameter Good. Default is \dQuote{0.95}.
 #' @param RainUplim
 #' Optional. Upper limit in millimeters from which rainfall values larger than
-#'   it will be removed. Default is NULL.
+#'   it will be removed. Default is \code{NULL}.
 #' @param RainLowlim
 #' Optional. Lower limit in millimeters from which rainfall values smaller than
-#'   it will be removed. Default is NULL.
+#'   it will be removed. Default is \code{NULL}.
 #' @param PEUplim
 #' Optional. Upper limit in millimeters from which evapotranspiration values
-#'   larger than it will be removed. Default is NULL.
+#'   larger than it will be removed. Default is \code{NULL}.
 #' @param PELowlim
 #' Optional. Lower limit in millimeters from which evapotranspiration values
-#'   smaller than it will be removed. Default is NULL.
+#'   smaller than it will be removed. Default is \code{NULL}.
 #' @return
 #' A list with data calculated at the time scale selected by the user.
 #' If \code{Good="Yes"}, this list includes:

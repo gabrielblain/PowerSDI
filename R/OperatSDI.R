@@ -8,20 +8,22 @@
 #' @param lat
 #' latitude in decimal degrees.
 #' @param start.date
-#' Date at each the calculation must start (“YYYY-MM-DD").
+#' Date at each the calculation must start (\dQuote{YYYY-MM-DD}).
 #' @param end.date
-#' Date at each the calculation must end (“YYYY-MM-DD").
+#' Date at each the calculation must end (\dQuote{YYYY-MM-DD}).
 #' @param PEMethod
-#' A character variable ("HS" or "PM") defining the potential evapotranspiration
-#'   method. Default is "HS".
+#' A character variable (\dQuote{HS} or \dQuote{PM}) defining the potential
+#'   evapotranspiration method. Default is \dQuote{HS}.
 #' @param distr
-#' A character variable ("GEV" or "GLO") defining which distribution is used to
-#'   calculate the SPEI. Default is "GEV".
+#' A character variable (\dQuote{GEV} or \dQuote{GLO}) defining which
+#'   distribution is used to calculate the \acronym{SPEI}. Default is
+#'   \dQuote{GEV}.
 #' @param parms
-#' Parameters required for calculating the SPI and SPEI. It is provided by the
-#'   \code{ScientSDI} function (DistPar).
+#' Parameters required for calculating the \acronym{SPI} and \acronym{SPEI}. It
+#'   is provided by the \code{ScientSDI} function (DistPar).
 #' @param TS
-#' #'Time scale on the "quart.month" basis (integer values between 1 and 96).
+#' Time scale on the \dQuote{quart.month} basis (integer values between 1 and
+#'   96).
 #' @return
 #' A data frame with Rainfall, potential evapotranspiration (PE),
 #'   difference between rainfall and PE (in millimiters), the NASA-SPI and

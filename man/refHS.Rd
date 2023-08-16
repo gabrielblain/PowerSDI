@@ -28,7 +28,7 @@ Agronomic Institute and \acronym{NASA} \acronym{POWER}.
 refHS
 }
 \description{
-Contains data for calculating the SPI and SPEI.
+Contains data for calculating the \acronym{SPI} and \acronym{SPEI}.
 }
 \examples{
 data(refHS)

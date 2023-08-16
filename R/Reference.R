@@ -8,14 +8,15 @@
 #' A data frame with the variables required for calculating the \acronym{SDI}s.
 #'   See \code{refHS} or \code{refPM} as examples.
 #' @param distr
-#' A character variable ("GEV" or "GLO") defining which distribution is used to
-#'   calculate the \acronym{SPEI}. Default is "GEV".
+#' A character variable (\dQuote{GEV} or \dQuote{GLO}) defining which
+#'   distribution is used to calculate the \acronym{SPEI}. Default is
+#'   \dQuote{GEV}.
 #' @param PEMethod
-#' A character variable ("HS" or "PM") defining the potential evapotranspiration
-#'   method.  Default is "HS".
+#' A character variable (\dQuote{HS} or \dQuote{PM}) defining the potential
+#'   evapotranspiration method.  Default is \dQuote{HS}.
 #' @param TS
-#' Time scale on the quart.month" basis (integer values between 1 and 96).
-#'   Default is 4.
+#' Time scale on the \dQuote{quart.month} basis (integer values between 1 and
+#'   96).  Default is 4.
 #' @return
 #' A \code{data.frame} with:
 #' \itemize{
