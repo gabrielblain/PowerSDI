@@ -1,6 +1,6 @@
 #' Example of the Input Required by the Reference Function
 #'
-#' Contains data for calculating the SPI and SPEI.
+#' Contains data for calculating the \acronym{SPI} and \acronym{SPEI}.
 #'
 #' @format A \code{data.frame} with 10950 rows and 8 variables.
 #'

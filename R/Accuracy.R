@@ -59,31 +59,24 @@ Accuracy <- function(obs_est,
     }
   }
 
-    obs_est <- na.omit(obs_est)
-    min.length <- length(as.matrix(obs_est)) / 2
+  o <- (obs_est[, 1])
+  p <- obs_est[, 2]
+  N <- length(o)
 
-    if (min.length < 10) {
-      stop(
-        "You must have at least 10 pairs of ObsVsEst data.
+  if (any(is.na(o)) || (any(is.na(p)))) {
+    stop("Missing data are not allowed.
+         Please, remove them from the input file",
+         call. = FALSE)
+  }
+  min.length <- length(as.matrix(obs_est)) / 2
+
+  if (min.length < 10) {
+    stop(
+      "You must have at least 10 pairs of ObsVsEst data.
     Please, provide a longer period.",
     call. = FALSE
-      )
-    }
-
-    o <- (obs_est[, 1])
-    p <- obs_est[, 2]
-    N <- length(o)
-    N1 <- length(p)
-    if (N != N1) {
-      stop(
-        "Observed/reference and estimated/predicted data must have the same length",
-        call. = FALSE
-      )
-    }
-    if (any(is.na(o)) || (any(is.na(p)))) {
-      stop("Missing data is not allowed. Please, remove them from the input file",
-           call. = FALSE)
-    }
+    )
+  }
 
     databoot <- matrix(NA, N, 2)
     Nboots <- 10000

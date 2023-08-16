@@ -155,7 +155,7 @@ PlotData <- function(lon, lat, start.date, end.date) {
       n <- length(which(data.week[, 3] <= final.year))
       data.week <- data.week[1:n, ]
       quart.month <- matrix(NA, n, 1)
-      for (i in 1:n) {
+      for (i in seq_along(1:n)) {
         if (data.week[i, 4] == 1 & data.week[i, 5] == 1) {
           quart.month[i, 1] <- 1
         }
