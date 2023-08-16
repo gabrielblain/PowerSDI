@@ -1,5 +1,5 @@
 # PowerSDI
-Calculates the Standardized Precipitation (SPI) and Standardized Precipitation-Evapotranspiration (SPEI) indices using NASA POWER data.
+Calculates the Standardised Precipitation (SPI) and Standardised Precipitation-Evapotranspiration (SPEI) indices using NASA POWER data.
 
 # Basic Description
 The PowerSDI is an R package capable of calculating the SPI and SPEI using NASA POWER data. The package is based on five R-functions designed to calculate these two standardized drought indices (SDI) in scientific and operational/routine modes. The functions `ScientSDI()`, `Accuracy()`, `Reference()` and, `PlotData()` may be used to assess, among other features, the ability of the SPI and SPEI frequency distributions to meet the normality assumption and how well NASA POWER estimates represent “real-world” data. The `OperatSDI()` function calculates both SPI and SPEI in an operational mode.

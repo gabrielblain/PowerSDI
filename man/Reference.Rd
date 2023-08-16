@@ -30,7 +30,7 @@ A \code{data.frame} with:
   }
 }
 \description{
-Calculates the Standardized Precipitation Index (\acronym{SPI}) and
+Calculates the Standardised Precipitation Index (\acronym{SPI}) and
   Standardised Precipitation-Evapotranspiration Index (\acronym{SPEI}) using
   a reference data source.
 }

@@ -1,6 +1,6 @@
 Package: PowerSDI
 Type: Package
-Title: Calculate Standardized Drought Indices Using NASA POWER Data
+Title: Calculate Standardised Drought Indices Using NASA POWER Data
 Version: 1.0.0
 Authors@R: c(
   person(
