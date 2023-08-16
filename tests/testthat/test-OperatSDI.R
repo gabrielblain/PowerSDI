@@ -1,4 +1,4 @@
-test_that("multiplication works", {
+test_that("OperatSDI works as expected in example", {
   data("DistPar")
   osdi <- OperatSDI(
     lon = -47.3,
@@ -92,4 +92,41 @@ test_that("multiplication works", {
                c("Normal", "Normal", "Normal", "Normal", "Normal", "Normal"))
   expect_equal(osdi[, "Categ.SPEI"],
                c("Normal", "Normal", "Normal", "Normal", "Normal", "Normal"))
+})
+
+test_that("OperatSDI fails w/ bad distr", {
+  data("DistPar")
+  expect_error(OperatSDI(
+    lon = -47.3,
+    lat = -22.67,
+    start.date = "2023-06-01",
+    end.date = "2023-06-30",
+    parms = DistPar,
+    distr = "bad"
+  ))
+})
+
+test_that("OperatSDI fails w/ bad PEMethod", {
+  data("DistPar")
+  expect_error(OperatSDI(
+    lon = -47.3,
+    lat = -22.67,
+    start.date = "2023-06-01",
+    end.date = "2023-06-30",
+    parms = DistPar,
+    PEMethod = "AM"
+  ))
+})
+
+# this fails but because {nasapower} catches it, not because this package does...
+test_that("OperatSDI fails w/ bad date format", {
+  data("DistPar")
+  expect_error(OperatSDI(
+    lon = -47.3,
+    lat = -22.67,
+    start.date = "06-01-2023",
+    end.date = "2023-06-30",
+    parms = DistPar,
+    distr = "GEV"
+  ))
 })
