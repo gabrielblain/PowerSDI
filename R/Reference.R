@@ -15,7 +15,7 @@
 #' A character variable (\dQuote{HS} or \dQuote{PM}) defining the potential
 #'   evapotranspiration method.  Default is \dQuote{HS}.
 #' @param TS
-#' Time scale on the \dQuote{quart.month} basis (integer values between 1 and
+#' Time scale on the \dQuote{quart.month} basis (whole values between 1 and
 #'   96).  Default is 4.
 #' @return
 #' A \code{data.frame} with:
