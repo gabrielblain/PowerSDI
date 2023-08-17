@@ -229,7 +229,7 @@ OperatSDI <-
           get_power(
             community = "ag",
             lonlat = c(lon, lat),
-            dates = c(start.date.user, end.date),
+            dates = c(start.date.user, end.date.user),
             temporal_api = "daily",
             pars = c(
               "T2M",
@@ -504,6 +504,7 @@ OperatSDI <-
         data.week <-
           as.matrix(data.week[-c(1:(first.row - 1)), , drop = FALSE])
       }
+      if (is.matrix(data.week)==FALSE){data.week=as.matrix(t(data.week))}
       n <- length(data.week[, 1])
       data.at.timescale <- matrix(NA, (n - (TS - 1)), 7)
       final.point <- n - (TS - 1)
