@@ -15,7 +15,7 @@
 #' A character variable (\dQuote{HS} or \dQuote{PM}) defining the potential
 #'   evapotranspiration method.  Default is \dQuote{HS}.
 #' @param TS
-#' Time scale on the \dQuote{quart.month} basis (integer values between 1 and
+#' Time scale on the \dQuote{quart.month} basis (whole values between 1 and
 #'   96).  Default is 4.
 #' @return
 #' A \code{data.frame} with:
@@ -37,28 +37,9 @@ Reference <- function(ref,
                       PEMethod = "HS",
                       TS = 4) {
 
-  PEMethod <- toupper(PEMethod)
-  distr <- toupper(distr)
-
-  if (PEMethod != "HS" && PEMethod != "PM") {
-    stop("`PEMethod` should be set to either 'HS' or 'PM'.",
-         call. = FALSE)
-  }
-  if (distr != "GEV" && distr != "GLO") {
-    stop("`distr` should be set to either 'GEV' or 'GLO'.",
-         call. = FALSE)
-  }
-
-  if (!all.equal(TS, as.integer(TS)) ||
-      is.na(TS) ||
-      TS < 1 ||
-      TS > 96) {
-    stop(
-      "TS must be an interger value ranging between 1 and 96.\n
-                  Please, choose another TS between 1 and 96",
-      call. = FALSE
-    )
-  }
+  distr <- check.distr(distr)
+  PEMethod <- check.PEMethod(PEMethod)
+  check.TS(TS)
 
   if (PEMethod == "HS" && length(ref[1,]) != 8) {
     stop(
@@ -472,5 +453,4 @@ Reference <- function(ref,
     }
   }
   return(SDI.final)
-  message("It's done.")
 }
