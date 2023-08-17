@@ -7,3 +7,9 @@ test_that(".check_dates corrects backwards dates", {
   expect_equal(dates[[1]], end)
   expect_equal(dates[[2]], start)
 })
+
+test_that(".check_dates stops with too small time step", {
+  start <- as.Date("2020-01-01")
+  end <- as.Date("2020-01-31")
+  expect_error(.check_dates(user.dates = c(start, end)))
+})
