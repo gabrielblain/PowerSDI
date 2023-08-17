@@ -229,7 +229,7 @@ OperatSDI <-
           get_power(
             community = "ag",
             lonlat = c(lon, lat),
-            dates = c(start.date.user, end.date),
+            dates = c(start.date.user, end.date.user),
             temporal_api = "daily",
             pars = c(
               "T2M",
