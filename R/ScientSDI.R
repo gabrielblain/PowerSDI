@@ -88,29 +88,18 @@ ScientSDI <-
            PEUplim = NULL,
            PELowlim = NULL) {
     Good <- tolower(Good)
-    distr <- toupper(distr)
-    end.date.user <- as.Date(end.date, "%Y-%m-%d")
-    start.date.user <- as.Date(start.date, "%Y-%m-%d")
+    distr <- check.distr(distr)
+    check.TS(TS)
 
-    if (distr == "GEV" || distr == "GLO") {
-
-      if (Good == "Yes" || Good == "YES" || Good == "YeS" ||
-          Good == "YEs" || Good == "yes" || Good == "NO" ||
-          Good == "No" || Good == "nO" || Good == "no") {
-
-    if (is.na(as.Date(end.date, "%Y-%m-%d")) ||
-        is.na(as.Date(start.date, "%Y-%m-%d")) ||
-        TS < 1 ||
-        TS > 96 || all.equal(TS, as.integer(TS))) {
-
-    mim.date.fit <-
-      as.numeric((end.date.user - start.date.user) / 365)
-    if (mim.date.fit < 8) {
-      stop("Please select a longer period between start.date and end.date.",
+    if (Good != "yes" && Good != "no") {
+      stop("`Good` should be set to either 'Yes' or 'No'.",
            call. = FALSE)
     }
 
-    mim.date.fit <- end.date.user - start.date.user
+    dates <- .check_dates(user.dates = c(start.date, end.date))
+    start.date.user <- dates[[1]]
+    end.date.user <- dates[[2]]
+
     start.user.day <-
       as.numeric(format(start.date.user, format = "%d"))
     end.user.day <-
@@ -138,7 +127,7 @@ ScientSDI <-
       start.week <- 4
     }
     start.date.protocal <- start.date.user - dif
-    message("Just a sec. Downloading NASA POWER data and calculating the others parameters.")
+    message("Just a sec. Downloading NASA POWER data and calculating the other parameters.")
     sse_i <- as.data.frame(get_power(
       community = "ag",
       lonlat = c(lon, lat),
@@ -436,8 +425,9 @@ ScientSDI <-
         is.null(PELowlim) == FALSE) {
       stop(
         "Please, provide appropriate numerical values for RainUplim or
-                RainLowlim (mm) or PEUplim or PELowlim (Celsious degrees).
-                If there is no suspicions data to be removed set them to NULL.",
+                RainLowlim (mm) or PEUplim or PELowlim (degrees Celsius).
+                If there are no suspicious data to be removed,
+                set them to `NULL`.",
         call. = FALSE
       )
     }
@@ -1340,16 +1330,4 @@ ScientSDI <-
       message("The calculations started on:")
       print(start.date.protocal)
     }
-    } else {stop("`distr` should be set to either 'GEV' or 'GLO.'",
-                 call = FALSE)}
-
-    } else {stop("`Good` should be set to either 'Yes' or 'No'.",
-                 call. = FALSE)}
-    } else{
-    stop(
-      "Recall Date format should be YYYY-MM-DD and TS must be an",
-      "interger value ranging between 1 and 96",
-      call. = FALSE
-    )
-  }
   }
