@@ -344,7 +344,7 @@ OperatSDI <-
                 data.week[, 5] > final.week)
       n.rows <- length(rows)
       if (n.rows > 0) {
-        data.week <- data.week[-c(rows), ]
+        data.week <- as.matrix(data.week[-c(rows), , drop = FALSE ])
       }
       ########
       n <- length(data.week[, 1])
@@ -504,7 +504,6 @@ OperatSDI <-
         data.week <-
           as.matrix(data.week[-c(1:(first.row - 1)), , drop = FALSE])
       }
-      if (is.matrix(data.week)==FALSE){data.week=as.matrix(t(data.week))}
       n <- length(data.week[, 1])
       data.at.timescale <- matrix(NA, (n - (TS - 1)), 7)
       final.point <- n - (TS - 1)
