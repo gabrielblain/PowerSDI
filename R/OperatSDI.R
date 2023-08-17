@@ -229,7 +229,7 @@ OperatSDI <-
           get_power(
             community = "ag",
             lonlat = c(lon, lat),
-            dates = c(start.date.user, end.date),
+            dates = c(start.date.user, end.date.user),
             temporal_api = "daily",
             pars = c(
               "T2M",
@@ -336,7 +336,7 @@ OperatSDI <-
                 data.week[, 4] > final.month)
       n.rows <- length(rows)
       if (n.rows > 0) {
-        data.week <- data.week[-c(rows), ]
+        data.week <- as.matrix(data.week[-c(rows), , drop = FALSE ])
       }
       rows <-
         which(data.week[, 3] == final.year &
@@ -344,7 +344,7 @@ OperatSDI <-
                 data.week[, 5] > final.week)
       n.rows <- length(rows)
       if (n.rows > 0) {
-        data.week <- data.week[-c(rows), ]
+        data.week <- as.matrix(data.week[-c(rows), , drop = FALSE ])
       }
       ########
       n <- length(data.week[, 1])
