@@ -336,7 +336,7 @@ OperatSDI <-
                 data.week[, 4] > final.month)
       n.rows <- length(rows)
       if (n.rows > 0) {
-        data.week <- data.week[-c(rows), ]
+        data.week <- as.matrix(data.week[-c(rows), , drop = FALSE ])
       }
       rows <-
         which(data.week[, 3] == final.year &
