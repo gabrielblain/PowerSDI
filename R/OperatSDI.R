@@ -644,36 +644,6 @@ OperatSDI <-
       return(SDI.final)
     }
   }
-  if (final.month == 1 || final.month == 3 || final.month == 
-      5 || final.month == 7 || final.month == 8 || final.month == 
-      10 || final.month == 12) {
-    if (end.user.day == 7 || end.user.day == 14 || end.user.day == 
-        22 || end.user.day == 31) {
-      message("Done")
-    }
-    else {
-      message("The latest quart.month period is not complete.")
-    }
-  }
-  if (final.month == 4 || final.month == 6 || final.month == 
-      9 || final.month == 11) {
-    if (end.user.day == 7 || end.user.day == 14 || end.user.day == 
-        22 || end.user.day == 30) {
-      message("Done")
-    }
-    else {
-      message("The latest quart.month period is not complete.")
-    }
-  }
-  if (final.month == 2) {
-    if (end.user.day == 7 || end.user.day == 14 || end.user.day == 
-        22 || end.user.day == 28 || end.user.day == 29) {
-      message("Done")
-    }
-    else {
-      message("The latest quart.month period is not complete.")
-    }
-  }
   if (is.na(sum(SDI.final[, 10])) == TRUE) {
     message("Check the original data, it might have gaps")
   }
