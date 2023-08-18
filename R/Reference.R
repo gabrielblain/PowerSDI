@@ -127,7 +127,7 @@ Reference <- function(ref,
     d <- 4
     data.week <- matrix(NA, total.nweeks, 5)
     for (year in start.year:end.year) {
-      for (month in 1:12) {
+      for (month in seq_along(1:12)) {
         data.week1 <- colSums(ref[which(ref$YEAR ==
                                           year &
                                           ref$MM == month & ref$DD <= 7),
@@ -202,7 +202,7 @@ Reference <- function(ref,
     d <- 4
     data.week <- matrix(NA, total.nweeks, 5)
     for (year in start.year:end.year) {
-      for (month in 1:12) {
+      for (month in seq_along(1:12)) {
         data.week1 <- colSums(ref[which(ref$YEAR ==
                                           year &
                                           ref$MM == month & ref$DD <= 7),
@@ -295,7 +295,7 @@ Reference <- function(ref,
                              (data.at.timescale[, 4] - data.at.timescale[,
                                                                          5]))
   parameters <- matrix(NA, 48, 7)
-  for (i in 1:48) {
+  for (i in seq_along(1:48)) {
     rain <- data.at.timescale[which(data.at.timescale[,
                                                       3] == i), 4]
     rain.nozero <- rain[rain > 0]
@@ -354,7 +354,7 @@ Reference <- function(ref,
     pos <- pos + 1
   }
   categories <- matrix(NA, n.weeks, 2)
-  for (i in 1:n.weeks) {
+  for (i in seq_along(1:n.weeks)) {
     if (SDI[i, 1] <= -2 && !is.na(SDI[i, 1])) {
       categories[i, 1] <- "ext.dry"
     } else {
