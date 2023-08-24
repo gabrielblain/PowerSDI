@@ -1,40 +1,39 @@
 #' ScientSDI
 #'
-#' Verifies concepts expected from \acronym{SDI}.
+#' Verifies concepts expected from SDI.
 #'
 #' @param lon
 #' longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.
 #' @param lat
 #' latitude in decimal degrees: (+) Northern hemisphere (-) Southern Hemisphere.
 #' @param start.date
-#' date at which the indices estimates should start. Format:
-#'   \dQuote{YYYY-MM-DD}.
+#' date at which the indices estimates should start. Format: YYYY-MM-DD".
 #' @param end.date
-#' date at which the indices estimates should end. Format: \dQuote{YYYY-MM-DD}.
+#' date at which the indices estimates should end. Format: YYYY-MM-DD".
 #' @param distr
-#' A character variable (\dQuote{GEV} or \dQuote{GLO}) defining the distribution
-#'   to calculate the \acronym{SPEI}. Default is \dQuote{GEV}.
+#' A character variable ("GEV" or "GLO") defining the distribution to calculate
+#'   the SPEI. Default is "GEV".
 #' @param TS
-#' Time scale on the quart.month basis (teger values between 1 and 96).
+#' Time scale on the quart.month basis (integer values between 1 and 96).
 #'   Default is 4.
 #' @param Good
-#' A character variable (\dQuote{Yes} or \dQuote{No}) to calculate or not the
-#'   goodness-of-fit and normality tests. Default is \dQuote{Yes}.
+#' A character variable ("Yes" or "No") to calculate or not the goodness-of-fit
+#'   and normality tests. Default is "No".
 #' @param sig.level
 #' A numeric variable (between 0.90 and 0.95) defining the significance level
-#'   for parameter Good. Default is \dQuote{0.95}.
+#'   for parameter Good. Default is "0.95".
 #' @param RainUplim
 #' Optional. Upper limit in millimeters from which rainfall values larger than
-#'   it will be removed. Default is \code{NULL}.
+#'   it will be removed. Default is NULL.
 #' @param RainLowlim
 #' Optional. Lower limit in millimeters from which rainfall values smaller than
-#'   it will be removed. Default is \code{NULL}.
+#'   it will be removed. Default is NULL.
 #' @param PEUplim
 #' Optional. Upper limit in millimeters from which evapotranspiration values
-#'   larger than it will be removed. Default is \code{NULL}.
+#'   larger than it will be removed. Default is NULL.
 #' @param PELowlim
 #' Optional. Lower limit in millimeters from which evapotranspiration values
-#'   smaller than it will be removed. Default is \code{NULL}.
+#'   smaller than it will be removed. Default is NULL.
 #' @return
 #' A list with data calculated at the time scale selected by the user.
 #' If \code{Good="Yes"}, this list includes:
@@ -81,25 +80,36 @@ ScientSDI <-
            end.date,
            distr = "GEV",
            TS = 4,
-           Good = "Yes",
+           Good = "No",
            sig.level = 0.95,
            RainUplim = NULL,
            RainLowlim = NULL,
            PEUplim = NULL,
            PELowlim = NULL) {
     Good <- tolower(Good)
-    distr <- check.distr(distr)
-    check.TS(TS)
+    distr <- toupper(distr)
+    end.date.user <- as.Date(end.date, "%Y-%m-%d")
+    start.date.user <- as.Date(start.date, "%Y-%m-%d")
 
-    if (Good != "yes" && Good != "no") {
-      stop("`Good` should be set to either 'Yes' or 'No'.",
+    if (distr == "GEV" || distr == "GLO") {
+
+      if (Good == "Yes" || Good == "YES" || Good == "YeS" ||
+          Good == "YEs" || Good == "yes" || Good == "NO" ||
+          Good == "No" || Good == "nO" || Good == "no") {
+
+    if (is.na(as.Date(end.date, "%Y-%m-%d")) ||
+        is.na(as.Date(start.date, "%Y-%m-%d")) ||
+        TS < 1 ||
+        TS > 96 || all.equal(TS, as.integer(TS))) {
+
+    mim.date.fit <-
+      as.numeric((end.date.user - start.date.user) / 365)
+    if (mim.date.fit < 8) {
+      stop("Please select a longer period between start.date and end.date.",
            call. = FALSE)
     }
 
-    dates <- .check_dates(user.dates = c(start.date, end.date))
-    start.date.user <- dates[[1]]
-    end.date.user <- dates[[2]]
-
+    mim.date.fit <- end.date.user - start.date.user
     start.user.day <-
       as.numeric(format(start.date.user, format = "%d"))
     end.user.day <-
@@ -127,7 +137,7 @@ ScientSDI <-
       start.week <- 4
     }
     start.date.protocal <- start.date.user - dif
-    message("Just a sec. Downloading NASA POWER data and calculating the other parameters.")
+    message("Just a sec. Downloading NASA POWER data and calculating the others parameters.")
     sse_i <- as.data.frame(get_power(
       community = "ag",
       lonlat = c(lon, lat),
@@ -259,7 +269,7 @@ ScientSDI <-
     n <- length(which(data.week[, 3] <= final.year))
     data.week <- data.week[1:n,]
     quart.month <- matrix(NA, n, 1)
-    for (i in seq_along(1:n)) {
+    for (i in 1:n) {
       if (data.week[i, 4] == 1 & data.week[i, 5] == 1) {
         quart.month[i, 1] <- 1
       }
@@ -425,9 +435,8 @@ ScientSDI <-
         is.null(PELowlim) == FALSE) {
       stop(
         "Please, provide appropriate numerical values for RainUplim or
-                RainLowlim (mm) or PEUplim or PELowlim (degrees Celsius).
-                If there are no suspicious data to be removed,
-                set them to `NULL`.",
+                RainLowlim (mm) or PEUplim or PELowlim (Celsious degrees).
+                If there is no suspicions data to be removed set them to NULL.",
         call. = FALSE
       )
     }
@@ -511,7 +520,7 @@ ScientSDI <-
       }
       message("Calculating the goodness-of-fit tests. This might take a while.")
       Goodness <- matrix(NA, 48, 12)
-      for (i in seq_along(1:48)) {
+      for (i in 1:48) {
         month.par <- data.at.timescale[i, 3]
         rain <-
           (data.at.timescale[which(data.at.timescale[, 3] == month.par), 4])
@@ -592,19 +601,19 @@ ScientSDI <-
             ties.method = c("first")
           )) / n.pm
         Goodness[i, 5] <- max(abs(prob.emp - prob.pm))
-        for (ad in seq_along(1:n.nonzero)) {
+        for (ad in 1:n.nonzero) {
           soma.rain[ad, 1] <-
             ((2 * ad) - 1) * ((log(prob.rain[ad])) + log(1 - prob.rain[n.nonzero + 1 - ad]))
         }
         Goodness[i, 7] <-
           -n.nonzero - ((1 / n.nonzero) * sum(soma.rain, na.rm = TRUE))
-        for (ad in seq_along(1:n.harg)) {
+        for (ad in 1:n.harg) {
           soma.harg[ad, 1] <-
             ((2 * ad) - 1) * ((log(prob.harg[ad])) + log(1 - prob.harg[n.harg + 1 - ad]))
         }
         Goodness[i, 9] <-
           -n.harg - ((1 / n.harg) * sum(soma.harg, na.rm = TRUE))
-        for (ad in seq_along(1:n.pm)) {
+        for (ad in 1:n.pm) {
           soma.pm[ad, 1] <-
             ((2 * ad) - 1) * ((log(prob.pm[ad])) + log(1 - prob.pm[n.pm + 1 - ad]))
         }
@@ -612,7 +621,7 @@ ScientSDI <-
           -n.pm - ((1 / n.pm) * sum(soma.pm, na.rm = TRUE))
         #### Critical values
         null.dist <- matrix(NA, 2000, 6)
-        for (j in seq_along(1:2000)) {
+        for (j in 1:2000) {
           x <-
             sort(quagam(runif(n.nonzero),
                         c(parameters[i, 2], parameters[i, 3])))
@@ -621,7 +630,7 @@ ScientSDI <-
           prob.synt[prob.synt > 0.998649] <- 0.998649
           prob.emp <- sort(rank(x)) / n.nonzero
           null.dist[j, 1] <- max(abs(prob.emp - prob.synt))
-          for (ad in seq_along(1:n.nonzero)) {
+          for (ad in 1:n.nonzero) {
             soma.rain[ad, 1] <-
               ((2 * ad) - 1) * ((log(prob.synt[ad])) + log(1 - prob.synt[n.nonzero + 1 - ad]))
           }
@@ -639,7 +648,7 @@ ScientSDI <-
             prob.emp <- sort(rank(y)) / n.harg
             null.dist[j, 2] <-
               max(abs(prob.emp - prob.synt))
-            for (ad in seq_along(1:n.harg)) {
+            for (ad in 1:n.harg) {
               soma.harg[ad, 1] <-
                 ((2 * ad) - 1) * ((log(prob.synt[ad])) + log(1 - prob.synt[n.harg + 1 - ad]))
             }
@@ -656,7 +665,7 @@ ScientSDI <-
             prob.emp <- sort(rank(z)) / n.pm
             null.dist[j, 3] <-
               max(abs(prob.emp - prob.synt))
-            for (ad in seq_along(1:n.pm)) {
+            for (ad in 1:n.pm) {
               soma.pm[ad, 1] <-
                 ((2 * ad) - 1) * ((log(prob.synt[ad])) + log(1 - prob.synt[n.pm + 1 - ad]))
             }
@@ -675,7 +684,7 @@ ScientSDI <-
             prob.emp <- sort(rank(y)) / n.harg
             null.dist[j, 2] <-
               max(abs(prob.emp - prob.synt))
-            for (ad in seq_along(1:n.harg)) {
+            for (ad in 1:n.harg) {
               soma.harg[ad, 1] <-
                 ((2 * ad) - 1) * ((log(prob.synt[ad])) + log(1 - prob.synt[n.harg + 1 - ad]))
             }
@@ -692,7 +701,7 @@ ScientSDI <-
             prob.emp <- sort(rank(z)) / n.pm
             null.dist[j, 3] <-
               max(abs(prob.emp - prob.synt))
-            for (ad in seq_along(1:n.pm)) {
+            for (ad in 1:n.pm) {
               soma.pm[ad, 1] <-
                 ((2 * ad) - 1) * ((log(prob.synt[ad])) + log(1 - prob.synt[n.pm + 1 - ad]))
             }
@@ -822,7 +831,7 @@ ScientSDI <-
         }
       }
       categories <- matrix(NA, n.weeks, 3)
-      for (i in seq_along(1:n.weeks)) {
+      for (i in 1:n.weeks) {
         if (SDI[i, 1] <= -2.0 & !is.na(SDI[i, 1])) {
           categories[i, 1] <- "ext.dry"
         } else {
@@ -908,7 +917,7 @@ ScientSDI <-
       SDI <- cbind(data.at.timescale, SDI)
       ##### Normality checking procedures
       Norn.check <- matrix(NA, 48, 15)
-      for (j in seq_along(1:48)) {
+      for (j in 1:48) {
         SDI.week <- as.matrix(SDI[which(SDI[, 3] == j), 9:11])
         w <- shapiro.test(SDI.week[, 1])
         Norn.check[j, 1:3] <-
@@ -1041,7 +1050,7 @@ ScientSDI <-
       print(start.date.protocal)
     }
     if (Good == "no") {
-      for (i in seq_along(1:48)) {
+      for (i in 1:48) {
         month.par <- data.at.timescale[i, 3]
         rain <-
           (data.at.timescale[which(data.at.timescale[, 3] == month.par), 4])
@@ -1189,7 +1198,7 @@ ScientSDI <-
         }
       }
       categories <- matrix(NA, n.weeks, 3)
-      for (i in seq_along(1:n.weeks)) {
+      for (i in 1:n.weeks) {
         if (SDI[i, 1] <= -2.0 & !is.na(SDI[i, 1])) {
           categories[i, 1] <- "ext.dry"
         } else {
@@ -1330,4 +1339,16 @@ ScientSDI <-
       message("The calculations started on:")
       print(start.date.protocal)
     }
+    } else {stop("`distr` should be set to either 'GEV' or 'GLO.'",
+                 call = FALSE)}
+
+    } else {stop("`Good` should be set to either 'Yes' or 'No'.",
+                 call. = FALSE)}
+    } else{
+    stop(
+      "Recall Date format should be YYYY-MM-DD and TS must be an",
+      "interger value ranging between 1 and 96",
+      call. = FALSE
+    )
+  }
   }
