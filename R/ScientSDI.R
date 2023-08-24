@@ -920,12 +920,15 @@ ScientSDI <-
       for (j in 1:48) {
         SDI.week <- as.matrix(SDI[which(SDI[, 3] == j), 9:11])
         w <- shapiro.test(SDI.week[, 1])
+        if (w$p.value<0.01){w$p.value <- 0.01}
         Norn.check[j, 1:3] <-
           c(w$statistic, w$p.value, abs(median((SDI.week[, 1]), na.rm = TRUE)))
         w <- shapiro.test(SDI.week[, 2])
+        if (w$p.value<0.01){w$p.value <- 0.01}
         Norn.check[j, 4:6] <-
           c(w$statistic, w$p.value, abs(median((SDI.week[, 2]), na.rm = TRUE)))
         w <- shapiro.test(SDI.week[, 3])
+        if (w$p.value<0.01){w$p.value <- 0.01}
         Norn.check[j, 7:9] <-
           c(w$statistic, w$p.value, abs(median((SDI.week[, 3]), na.rm = TRUE)))
         ###### As proposed in Wu et al. (2007)
