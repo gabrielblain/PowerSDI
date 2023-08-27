@@ -98,10 +98,11 @@ ScientSDI <-
 
 
 
-
     # Removing suspicious data for Rainfall and Temperature limits
-    if (!grepl("^[-]{0,1}[0-9]{0,}.{0,1}[0-9]{1,}$",
-               c(RainUplim, RainLowlim, PEUplim, PELowlim))) {
+    rain.pe <- list(RainUplim, RainLowlim, PEUplim, PELowlim)
+    if (!all(vapply(rain.pe, is.null, TRUE)) &&
+        any(unlist(rain.pe) <= 0))
+         {
       stop(
         "Please, provide appropriate numerical values for RainUplim or
                 RainLowlim (mm) or PEUplim or PELowlim (degrees Celsius).
