@@ -143,6 +143,7 @@ ScientSDI <-
         "PRECTOTCORR"
       )
     ))
+
     decli <-
       23.45 * sin((360 * (sse_i$DOY - 80) / 365) * (pi / 180))
     lat.rad <- lat * (pi / 180)
@@ -257,155 +258,17 @@ ScientSDI <-
       data.week <- data.week[-c(rows),]
     }
     n <- length(which(data.week[, 3] <= final.year))
-    data.week <- data.week[1:n,]
-    quart.month <- matrix(NA, n, 1)
-    for (i in 1:n) {
-      if (data.week[i, 4] == 1 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 1
-      }
-      if (data.week[i, 4] == 1 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 2
-      }
-      if (data.week[i, 4] == 1 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 3
-      }
-      if (data.week[i, 4] == 1 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 4
-      }
-      if (data.week[i, 4] == 2 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 5
-      }
-      if (data.week[i, 4] == 2 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 6
-      }
-      if (data.week[i, 4] == 2 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 7
-      }
-      if (data.week[i, 4] == 2 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 8
-      }
-      if (data.week[i, 4] == 3 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 9
-      }
-      if (data.week[i, 4] == 3 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 10
-      }
-      if (data.week[i, 4] == 3 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 11
-      }
-      if (data.week[i, 4] == 3 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 12
-      }
-      if (data.week[i, 4] == 4 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 13
-      }
-      if (data.week[i, 4] == 4 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 14
-      }
-      if (data.week[i, 4] == 4 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 15
-      }
-      if (data.week[i, 4] == 4 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 16
-      }
-      if (data.week[i, 4] == 5 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 17
-      }
-      if (data.week[i, 4] == 5 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 18
-      }
-      if (data.week[i, 4] == 5 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 19
-      }
-      if (data.week[i, 4] == 5 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 20
-      }
-      if (data.week[i, 4] == 6 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 21
-      }
-      if (data.week[i, 4] == 6 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 22
-      }
-      if (data.week[i, 4] == 6 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 23
-      }
-      if (data.week[i, 4] == 6 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 24
-      }
-      if (data.week[i, 4] == 7 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 25
-      }
-      if (data.week[i, 4] == 7 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 26
-      }
-      if (data.week[i, 4] == 7 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 27
-      }
-      if (data.week[i, 4] == 7 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 28
-      }
-      if (data.week[i, 4] == 8 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 29
-      }
-      if (data.week[i, 4] == 8 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 30
-      }
-      if (data.week[i, 4] == 8 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 31
-      }
-      if (data.week[i, 4] == 8 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 32
-      }
-      if (data.week[i, 4] == 9 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 33
-      }
-      if (data.week[i, 4] == 9 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 34
-      }
-      if (data.week[i, 4] == 9 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 35
-      }
-      if (data.week[i, 4] == 9 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 36
-      }
-      if (data.week[i, 4] == 10 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 37
-      }
-      if (data.week[i, 4] == 10 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 38
-      }
-      if (data.week[i, 4] == 10 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 39
-      }
-      if (data.week[i, 4] == 10 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 40
-      }
-      if (data.week[i, 4] == 11 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 41
-      }
-      if (data.week[i, 4] == 11 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 42
-      }
-      if (data.week[i, 4] == 11 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 43
-      }
-      if (data.week[i, 4] == 11 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 44
-      }
-      if (data.week[i, 4] == 12 & data.week[i, 5] == 1) {
-        quart.month[i, 1] <- 45
-      }
-      if (data.week[i, 4] == 12 & data.week[i, 5] == 2) {
-        quart.month[i, 1] <- 46
-      }
-      if (data.week[i, 4] == 12 & data.week[i, 5] == 3) {
-        quart.month[i, 1] <- 47
-      }
-      if (data.week[i, 4] == 12 & data.week[i, 5] == 4) {
-        quart.month[i, 1] <- 48
-      }
-    }
-    data.week <- cbind(data.week, quart.month)
+    data.week <- cbind(data.week[1:n,], id = seq_along(1:n))
+
+    data.week <- merge(cbind(
+      V4 = rep(1:12, each = 4),
+      V5 = rep(1:4, length.out = 48),
+      V9 = rep(1:48)
+    ), data.week)
+    data.week <- data.week[order(data.week$id), ]
+    data.week <- data.week[, colnames(data.week) != c("id")]
+    data.week <- data.week[sprintf("V%s", 1:9)]
+
     first.row <-
       which(data.week[, 3] == start.year &
               data.week[, 4] == start.month &
