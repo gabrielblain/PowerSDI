@@ -297,11 +297,11 @@ ScientSDI <-
     lowremov <- which(data.week[, 6] < RainLowlim)
     if (length(upremov) > 0) {
       data.week <- data.week[-c(upremov), ]
-      cat("removed rows for rainfall: " upremov)
+      cat("removed rows for rainfall: ", upremov)
     }
     if (length(lowremov) > 0) {
       data.week <- data.week[-c(lowremov), ]
-      cat("removed rows for rainfall: " lowremov)
+      cat("removed rows for rainfall: ", lowremov)
     }
 
     ##### Potential Evapotranspiration (Hargreaves & Samani)
@@ -309,7 +309,7 @@ ScientSDI <-
     lowremov <- which(data.week[, 7] < PELowlim)
     if (length(upremov) > 0) {
       data.week <- data.week[-c(upremov),]
-      cat("removed rows for PE: " upremov)
+      cat("removed rows for PE: ", upremov)
     }
     if (length(lowremov) > 0) {
       data.week <- data.week[-c(lowremov),]
