@@ -317,7 +317,6 @@ ScientSDI <-
     }
 
     #########
-    n <- dim(data.week)[1]
     data.at.timescale <- matrix(NA, (n - (TS - 1)), 6)
     final.point <- n - (TS - 1)
     if (TS > 1) {
