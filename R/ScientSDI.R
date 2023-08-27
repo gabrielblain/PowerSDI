@@ -96,6 +96,21 @@ ScientSDI <-
            call. = FALSE)
     }
 
+
+
+
+    # Removing suspicious data for Rainfall and Temperature limits
+    if (!grepl("^[-]{0,1}[0-9]{0,}.{0,1}[0-9]{1,}$",
+               c(RainUplim, RainLowlim, PEUplim, PELowlim))) {
+      stop(
+        "Please, provide appropriate numerical values for RainUplim or
+                RainLowlim (mm) or PEUplim or PELowlim (degrees Celsius).
+                If there are no suspicious data to be removed,
+                leave set them to `NULL`, the default value",
+        call. = FALSE
+      )
+    }
+
     dates <- .check_dates(user.dates = c(start.date, end.date))
     start.date.user <- dates[[1]]
     end.date.user <- dates[[2]]
@@ -276,55 +291,33 @@ ScientSDI <-
     if (first.row > 1) {
       data.week <- data.week[-(1:(first.row - 1)),]
     }
-    ######## removing suspicions data
+
     ##### Rainfall
-    if (is.numeric(RainUplim) == FALSE &
-        is.null(RainUplim) == FALSE ||
-        is.numeric(RainLowlim) == FALSE &
-        is.null(RainLowlim) == FALSE ||
-        is.numeric(PEUplim) == FALSE &
-        is.null(PEUplim) == FALSE ||
-        is.numeric(PELowlim) == FALSE &
-        is.null(PELowlim) == FALSE) {
-      stop(
-        "Please, provide appropriate numerical values for RainUplim or
-                RainLowlim (mm) or PEUplim or PELowlim (degrees Celsius).
-                If there are no suspicious data to be removed,
-                set them to `NULL`.",
-        call. = FALSE
-      )
-    }
-    Uplim <- RainUplim
-    Lowlim <- RainLowlim
-    upremov <- which(data.week[, 6] > Uplim)
-    lowremov <- which(data.week[, 6] < Lowlim)
+    upremov <- which(data.week[, 6] > RainUplim)
+    lowremov <- which(data.week[, 6] < RainLowlim)
     if (length(upremov) > 0) {
-      data.week <- data.week[-c(upremov),]
-      message("removed rowns:")
-      print(upremov)
+      data.week <- data.week[-c(upremov), ]
+      cat("removed rows for rainfall: " upremov)
     }
     if (length(lowremov) > 0) {
-      data.week <- data.week[-c(lowremov),]
-      message("removed rowns:")
-      print(lowremov)
+      data.week <- data.week[-c(lowremov), ]
+      cat("removed rows for rainfall: " lowremov)
     }
+
     ##### Potential Evapotranspiration (Hargreaves & Samani)
-    Uplim <- PEUplim
-    Lowlim <- PELowlim
-    upremov <- which(data.week[, 7] > Uplim)
-    lowremov <- which(data.week[, 7] < Lowlim)
+    upremov <- which(data.week[, 7] > PEUplim)
+    lowremov <- which(data.week[, 7] < PELowlim)
     if (length(upremov) > 0) {
       data.week <- data.week[-c(upremov),]
-      message("removed rowns:")
-      print(upremov)
+      cat("removed rows for PE: " upremov)
     }
     if (length(lowremov) > 0) {
       data.week <- data.week[-c(lowremov),]
-      message("removed rowns:")
-      print(lowremov)
+      cat("removed rows for PE: ", lowremov)
     }
+
     #########
-    n <- length(data.week[, 1])
+    n <- dim(data.week)[1]
     data.at.timescale <- matrix(NA, (n - (TS - 1)), 6)
     final.point <- n - (TS - 1)
     if (TS > 1) {
