@@ -87,16 +87,15 @@ ScientSDI <-
            RainLowlim = NULL,
            PEUplim = NULL,
            PELowlim = NULL) {
-    Good <- tolower(Good)
+
     distr <- check.distr(distr)
     check.TS(TS)
 
+    Good <- tolower(Good)
     if (Good != "yes" && Good != "no") {
       stop("`Good` should be set to either 'Yes' or 'No'.",
            call. = FALSE)
     }
-
-
 
     # Removing suspicious data for Rainfall and Temperature limits
     rain.pe <- list(RainUplim, RainLowlim, PEUplim, PELowlim)
@@ -173,10 +172,12 @@ ScientSDI <-
       (37.6 * (dist.terra.sol ^ 2)) *
       ((pi / 180) * hn.deg * sin(lat.rad) * sin(decli.rad) +
          (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
+
     ####   Hargreaves&Samani
     ETP.harg.daily <-
       0.0023 * (Ra * 0.4081633) *
       (sse_i$T2M_MAX - sse_i$T2M_MIN) ^ 0.5 * (sse_i$T2M + 17.8)
+
     ####    Penman- Monteith-FAO
     es <-
       0.6108 * exp((17.27 * sse_i$T2M) / (sse_i$T2M + 273.3))
@@ -212,6 +213,7 @@ ScientSDI <-
         }
       }
     }
+
     n.years <- 1 + (final.year - initial.year)
     total.nweeks <- 48 * n.years
     a <- 1
