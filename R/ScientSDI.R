@@ -626,7 +626,7 @@ ScientSDI <-
                   sort(quagam(runif(n.nonzero),
                               c(parameters[i, 2], parameters[i, 3])))
                 prob.synt <- try(cdfgam(x, pelgam(samlmu(x))))
-                if (length(prob.synt) !=n.nonzero){
+                if (length(prob.synt) != n.nonzero){
                   prob.synt <- try(cdfgam(x, c(parameters[i,2],parameters[i,3])))
                   message("Using original parameters")
                 }
