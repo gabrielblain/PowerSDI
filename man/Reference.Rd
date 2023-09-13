@@ -17,7 +17,7 @@ distribution is used to calculate the \acronym{SPEI}. Default is
 \item{PEMethod}{A character variable (\dQuote{HS} or \dQuote{PM}) defining the potential
 evapotranspiration method.  Default is \dQuote{HS}.}
 
-\item{TS}{Time scale on the \dQuote{quart.month} basis (integer values between 1 and
+\item{TS}{Time scale on the \dQuote{quart.month} basis (whole values between 1 and
 96).  Default is 4.}
 }
 \value{

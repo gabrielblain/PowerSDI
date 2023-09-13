@@ -8,8 +8,6 @@ vignette: >
 bibliography: bibliography.bib
 ---
 
-
-
 # Introduction
 
 The 'PowerSDI' R-package calculates the Standardized Precipitation (SPI; @mckee1993) and Standardized Precipitation-Evapotranspiration (SPEI; @VicenteSerrano2010) indices using gridded-data from the NASA-POWER project.
@@ -145,7 +143,6 @@ Compare_PE_Cps <- Accuracy(obs_est = ObsEst, conf.int = "No")
 Compare_PE_Cps
 #>       AME     RMSE     dorig      dmod     dref     RQuad
 #>  2.470223 3.144231 0.9718557 0.8386579 0.838266 0.9590222
-```
 
 ## OperatSDI(): Generating routine operational NASA-SPI and NASA-SPEI estimates
 
@@ -381,3 +378,35 @@ Compare_PE_Cps_withCI
 ```
 
 # References
+
+Anderson, T.W., and Darling, D. A., 1954. A Test of Goodness of Fit. Journal of the American Statistical Association, 49:268, 765-769.  https://doi.org/10.2307/2281537
+
+Beguería S., Vicente-Serrano S. M., Reig F., Latorre B., 2014. Standardized precipitation evapotranspiration index (SPEI) revisited: parameter fitting, evapotranspiration models, tools, datasets and drought monitoring. International Journal of Climatology, 34(10): 3001–3023. https://doi.org/10.1002/joc.3887
+
+Blain, G. C., De Avila, A. M. H. and Pereira, V. R., 2018. Using the normality assumption to calculate probability based standardized drought indices: selection criteria with emphases on typical events. International Journal of Climatology, 38(S1), e418–e436. https://doi.org/10.1002/joc.5381
+
+Guttman, N. B., 1999. Accepting the Standardized Precipitation Index: a calculation algorithm. Journal of the American Water Resources Association, 35, 311–322. https://doi.org/10.1111/j.1752-1688.1999.tb03592.x 
+
+Hosking JRM (2022). L-Moments. R package, version 2.9, https://CRAN.R-project.org/package=lmom.
+
+Lilliefors, H.W., 1967. On the Kolmogorov-Smirnov test for normality with mean and variance unknown. Journal of the American Statistical Association, 62, 399-402. http://dx.doi.org/10.1080/01621459.1967.10482916
+
+Mckee, T. B., Doesken, N. J. and Kleist, J., 1993. The relationship of drought frequency and duration to time scales. In: 8th Conference on Applied Climatology. Boston, MA: American Meteorological Society, 179–184.
+
+Sparks A (2023). nasapower: NASA-POWER Data from R. doi:10.5281/zenodo.1040727, R package version 4.0.10, https://CRAN.R-project.org/package=nasapower.
+
+Sparks A (2018). “nasapower: A NASA POWER Global Meteorology, Surface Solar Energy and Climatology Data Client for R.” The Journal of Open Source Software, 3(30), 1035. doi:10.21105/joss.01035.
+
+Stagge, J. H., Tallaksen, L. M., Gudmundsson, L., Van Loon, A. F. and Stahl, K., 2015. Candidate distribution for climatological drought indices (SPI and SPEI). International Journal of Climatology, 35:13, 4027–4040. https://doi.org/10.1002/joc.4267.
+
+Stagge, J. H., Tallaksen, L. M., Gudmundsson, L., Van Loon, A. F., Sthal K., 2016. Response to comment on ‘Candidate Distributions for Climatological Drought Indices (SPI and SPEI)’. International Journal of Climatology, 36:4, 2132-2136. https://doi.org/10.1002/joc.4564
+
+Vicente-Serrano S. M. and Beguería S., 2016. Comment on ‘candidate distributions
+for climatological drought indices (SPI and SPEI)’ by James
+H. Stagge et al. International Journal of Climatology, 36:4, 2120–2131. https://doi.org/10.1002/joc.4474.
+
+Vicente-Serrano, S. M., Beguería, S. and Lopez-Moreno, J. I., 2010. A multiscalar drought index sensitive to global warming: the standardized precipitation evapotranspiration index. Journal of Climate, 23, 1696–1718.  https://doi.org/10.1175/2009JCLI2909.1.
+
+Willmott, C. J., Ackleson, S. G., Davis, R. E., Feddema, J. J., Klink, K. M., Legates, D. R., O’donnell, J. and Rowe, C. M., 1985. Statistics for the evaluation of model performance. Journal of Geophysical Research, 90, 8995-9005. https://dx.doi.org/10.1029/JC090iC05p08995
+
+Wu, H., Svoboda, M. D., Hayes, M. J., Wilhite, D. A., Wen, F., 2007. Appropriate application of the standardized precipitation index in arid locations and dry seasons. International Journal of Climatology, 27:1, 65–79. https://doi.org/10.1002/joc.1371.
