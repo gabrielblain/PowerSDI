@@ -445,12 +445,12 @@ ScientSDI <-
           upremov <- which(data.week[, 6] > Uplim)
           lowremov <- which(data.week[, 6] < Lowlim)
           if (length(upremov) > 0) {
-            data.week <- data.week[-c(upremov),]
+            data.week[c(upremov),6]=NA
             message("removed rowns:")
             print(upremov)
           }
           if (length(lowremov) > 0) {
-            data.week <- data.week[-c(lowremov),]
+            data.week[c(lowremov),6]=NA
             message("removed rowns:")
             print(lowremov)
           }
@@ -460,12 +460,12 @@ ScientSDI <-
           upremov <- which(data.week[, 7] > Uplim)
           lowremov <- which(data.week[, 7] < Lowlim)
           if (length(upremov) > 0) {
-            data.week <- data.week[-c(upremov),]
+            data.week[c(upremov),7]=NA
             message("removed rowns:")
             print(upremov)
           }
           if (length(lowremov) > 0) {
-            data.week <- data.week[-c(lowremov),]
+            data.week[c(lowremov),7]=NA
             message("removed rowns:")
             print(lowremov)
           }
@@ -492,7 +492,7 @@ ScientSDI <-
               if (is.na(data.at.timescale[c, 4]) == TRUE ||
                   is.na(data.at.timescale[c, 5]) == TRUE ||
                   is.na(data.at.timescale[c, 6] == TRUE)) {
-                message("I found a gap in the original data.")
+                message("Gaps in the original data.")
               }
               point <- point + 1
               a <- a + 1
