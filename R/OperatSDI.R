@@ -564,7 +564,11 @@ OperatSDI <-
     parameters <- as.data.frame(parms[which(parms[, 1] ==
                                               lon & parms[, 2] == lat & parms[, 13] == TS), ])
     if (length(parameters[, 1]) == 0) {
-      message("It seems that you don't have the distributions' parameters for this local and time scale(TS).\n                                      You must first run Scient.R function.")
+      stop(
+        "It seems that you don't have the distributions' parameters for this",
+        "local and time scale(TS).\n",
+        "You must first run `ScientSDI()` function.",
+        call. = FALSE)
     }
     else {
       if (distr == "GEV") {
