@@ -2,7 +2,7 @@
 % Please edit documentation in R/Accuracy.R
 \name{Accuracy}
 \alias{Accuracy}
-\title{Calculate Scalar Measures of Accuracy}
+\title{Verify how well NASA-POWER Data Represent Observed Data}
 \usage{
 Accuracy(obs_est, conf.int = "Yes", sig.level = 0.95)
 }

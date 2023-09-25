@@ -1,18 +1,25 @@
-#' ScientSDI
+#' Estimate parameters of Gamma, Generalized Extreme Value, or Generalized Logistic Distributions
 #'
-#' Verifies concepts expected from SDI.
+#' Verifies concepts expected from SDI.  The first step of the \acronym{SPI} and
+#'   \acronym{SPEI} algorithms is to calculate the cumulative probabilities of
+#'   their input variables (Guttman 1999).  Function estimates the parameters of
+#'   the gamma, generalized extreme value (GEV), or generalized logistic
+#'   distributions (GLO) through the L-moments method are provided.  This
+#'   function also allows users to remove suspicious values from the data
+#'   sample.
 #'
 #' @param lon
-#' longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.
+#' longitude in decimal degrees: (+) Eastern Hemisphere, (-) Western Hemisphere.
 #' @param lat
-#' latitude in decimal degrees: (+) Northern hemisphere (-) Southern Hemisphere.
+#' latitude in decimal degrees: (+) Northern hemisphere, (-) Southern
+#'   Hemisphere.
 #' @param start.date
-#' date at which the indices estimates should start. Format: YYYY-MM-DD".
+#' date at which the indices estimates should start. Format: "YYYY-MM-DD".
 #' @param end.date
-#' date at which the indices estimates should end. Format: YYYY-MM-DD".
+#' date at which the indices estimates should end. Format: "YYYY-MM-DD".
 #' @param distr
 #' A character variable ("GEV" or "GLO") defining the distribution to calculate
-#'   the SPEI. Default is "GEV".
+#'   the \acronym{SPEI}. Default is "GEV".
 #' @param TS
 #' Time scale on the quart.month basis (integer values between 1 and 96).
 #'   Default is 4.
@@ -24,16 +31,16 @@
 #'   for parameter Good. Default is "0.95".
 #' @param RainUplim
 #' Optional. Upper limit in millimeters from which rainfall values larger than
-#'   it will be removed. Default is NULL.
+#'   it will be removed. Default is \code{NULL}.
 #' @param RainLowlim
 #' Optional. Lower limit in millimeters from which rainfall values smaller than
-#'   it will be removed. Default is NULL.
+#'   it will be removed. Default is \code{NULL}.
 #' @param PEUplim
 #' Optional. Upper limit in millimeters from which evapotranspiration values
-#'   larger than it will be removed. Default is NULL.
+#'   larger than it will be removed. Default is \code{NULL}.
 #' @param PELowlim
 #' Optional. Lower limit in millimeters from which evapotranspiration values
-#'   smaller than it will be removed. Default is NULL.
+#'   smaller than it will be removed. Default is \code{NULL}.
 #' @return
 #' A list with data calculated at the time scale selected by the user.
 #' If \code{Good="Yes"}, this list includes:
@@ -44,10 +51,10 @@
 #'   \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
 #'   tests.}
 #'   \item{Normality}{The outcomes of the two normality checking procedures (Wu
-#'   et al., 2007 and Stagge et., 2015).}
+#'   et al., 2007 and Stagge et al., 2015).}
 #'  }
 #'
-#' If \code{Good="No"}, this list includes SDI and DistPar.
+#' If \code{Good="No"}, this list includes \acronym{SDI} and DistPar.
 #'
 #' This function also presents other data (in millimiters) calculated from the
 #'   \acronym{NASA} \acronym{POWER} project:
@@ -73,6 +80,21 @@
 #'   TS = 1,
 #'   Good = "no"
 #' )
+#'
+#' @references
+#'  Guttman, N.B., 1999. Accepting the standardized precipitation
+#'    index: a calculation algorithm 1. JAWRA Journal of the American Water
+#'    Resources Association, 35(2), pp.311-322.
+#'
+#'  Stagge, J.H., Tallaksen, L.M., Gudmundsson, L., Van Loon, A.F. and Stahl,
+#'    K., 2015. Candidate distributions for climatological drought indices (SPI
+#'    and SPEI). International Journal of Climatology, 35(13), pp.4027-4040.
+#'
+#'  Wu, H., Svoboda, M.D., Hayes, M.J., Wilhite, D.A. and Wen, F., 2007.
+#'   Appropriate application of the standardized precipitation index in arid
+#'   locations and dry seasons. International Journal of Climatology: A Journal
+#'   of the Royal Meteorological Society, 27(1), pp.65-79.
+
 ScientSDI <-
   function(lon,
            lat,
@@ -120,22 +142,10 @@ ScientSDI <-
             as.numeric(format(start.date.user, format = "%Y"))
           start.month <-
             as.numeric(format(start.date.user, format = "%m"))
-          if (start.user.day <= 7) {
-            dif <- start.user.day - 1
-            start.week <- 1
-          }
-          if (start.user.day > 7 & start.user.day <= 14) {
-            dif <- start.user.day - 8
-            start.week <- 2
-          }
-          if (start.user.day > 14 & start.user.day <= 21) {
-            dif <- start.user.day - 15
-            start.week <- 3
-          }
-          if (start.user.day >= 22) {
-            dif <- start.user.day - 22
-            start.week <- 4
-          }
+
+          start.week <- calculate.week(start.user.day) # see internal_functions.R
+          dif <- calculate.dif(start.week, start.user.day) # see internal_functions.R
+
           start.date.protocal <- start.date.user - dif
           message("Just a sec. Downloading NASA POWER data and calculating the others parameters.")
           sse_i <- as.data.frame(get_power(
@@ -154,17 +164,17 @@ ScientSDI <-
             )
           ))
           decli <-
-            23.45 * sin((360 * (sse_i$DOY - 80) / 365) * (pi / 180))
-          lat.rad <- lat * (pi / 180)
-          decli.rad <- decli * (pi / 180)
+            23.45 * sin((360 * (sse_i$DOY - 80) / 365) * (0.01745329))
+          lat.rad <- lat * (0.01745329)
+          decli.rad <- decli * (0.01745329)
           hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
-          hn.deg <- hn.rad * (180 / pi)
+          hn.deg <- hn.rad * (57.29578)
           N <- (2 * hn.deg) / 15
           dist.terra.sol <-
-            1 + (0.033 * cos((pi / 180) * (sse_i$DOY * (360 / 365))))
+            1 + (0.033 * cos((0.01745329) * (sse_i$DOY * (0.9863014))))
           Ra <-
             (37.6 * (dist.terra.sol ^ 2)) *
-            ((pi / 180) * hn.deg * sin(lat.rad) * sin(decli.rad) +
+            ((0.01745329) * hn.deg * sin(lat.rad) * sin(decli.rad) +
                (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
           ####   Hargreaves&Samani
           ETP.harg.daily <-
@@ -425,14 +435,14 @@ ScientSDI <-
           }
           ######## removing suspicions data
           ##### Rainfall
-          if (is.numeric(RainUplim) == FALSE &
-              is.null(RainUplim) == FALSE ||
-              is.numeric(RainLowlim) == FALSE &
-              is.null(RainLowlim) == FALSE ||
-              is.numeric(PEUplim) == FALSE &
-              is.null(PEUplim) == FALSE ||
-              is.numeric(PELowlim) == FALSE &
-              is.null(PELowlim) == FALSE) {
+          if (!is.numeric(RainUplim) &
+              !is.null(RainUplim) ||
+              !is.numeric(RainLowlim) &
+              !is.null(RainLowlim) ||
+              !is.numeric(PEUplim) &
+              !is.null(PEUplim) ||
+              !is.numeric(PELowlim) &
+              !is.null(PELowlim)) {
             stop(
               "Please, provide appropriate numerical values for RainUplim or
                 RainLowlim (mm) or PEUplim or PELowlim (Celsious degrees).
@@ -489,9 +499,9 @@ ScientSDI <-
               data.at.timescale[c,] <-
                 c(data.week[b, 3:4], data.week[b, 9],
                   colSums(data.week[a:b, 6:8]))
-              if (is.na(data.at.timescale[c, 4]) == TRUE ||
-                  is.na(data.at.timescale[c, 5]) == TRUE ||
-                  is.na(data.at.timescale[c, 6] == TRUE)) {
+              if (is.na(data.at.timescale[c, 4]) ||
+                  is.na(data.at.timescale[c, 5]) ||
+                  is.na(data.at.timescale[c, 6] )) {
                 message("Gaps in the original data.")
               }
               point <- point + 1
@@ -511,13 +521,8 @@ ScientSDI <-
             )
           parameters <- matrix(NA, 48, 11)
           if (Good == "yes") {
-            if (is.numeric(sig.level) == FALSE ||
-                sig.level < 0.90 || sig.level > 0.95) {
-              stop(
-                "Please provide an appropriate significance level, that is:
-          sig.level may only assume values between 0.9 and 0.95."
-              )
-            }
+            check.sig.level(sig.level)
+
             message("Calculating the goodness-of-fit tests. This might take a while.")
             Goodness <- matrix(NA, 48, 12)
             for (i in 1:48) {
@@ -768,30 +773,30 @@ ScientSDI <-
                 prob <-
                   parameters[i, 6] + (1 - parameters[i, 6]) * cdfgam(data.at.timescale[pos, 4],
                                                                      c(parameters[i, 4], parameters[i, 5]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob) & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
                 prob <-
                   cdfgev(data.at.timescale[pos, 7],
                          c(parameters[i, 7], parameters[i, 8], parameters[i, 9]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
                 prob <-
                   cdfgev(data.at.timescale[pos, 8],
                          c(parameters[i, 10], parameters[i, 11], parameters[i, 12]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
@@ -804,30 +809,30 @@ ScientSDI <-
                 prob <-
                   parameters[i, 6] + (1 - parameters[i, 6]) * cdfgam(data.at.timescale[pos, 4],
                                                                      c(parameters[i, 4], parameters[i, 5]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
                 prob <-
                   cdfglo(data.at.timescale[pos, 7],
                          c(parameters[i, 7], parameters[i, 8], parameters[i, 9]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
                 prob <-
                   cdfglo(data.at.timescale[pos, 8],
                          c(parameters[i, 10], parameters[i, 11], parameters[i, 12]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
@@ -1133,10 +1138,10 @@ ScientSDI <-
                   parameters[i, 6] + (1 - parameters[i, 6]) *
                   cdfgam(data.at.timescale[pos, 4],
                          c(parameters[i, 4], parameters[i, 5]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
@@ -1144,10 +1149,10 @@ ScientSDI <-
                   cdfgev(data.at.timescale[pos, 7],
                          c(parameters[i, 7], parameters[i, 8],
                            parameters[i, 9]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
@@ -1155,10 +1160,10 @@ ScientSDI <-
                   cdfgev(data.at.timescale[pos, 8],
                          c(parameters[i, 10], parameters[i, 11],
                            parameters[i, 12]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
@@ -1172,10 +1177,10 @@ ScientSDI <-
                   parameters[i, 6] + (1 - parameters[i, 6]) *
                   cdfgam(data.at.timescale[pos, 4],
                          c(parameters[i, 4], parameters[i, 5]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
@@ -1183,10 +1188,10 @@ ScientSDI <-
                   cdfglo(data.at.timescale[pos, 7],
                          c(parameters[i, 7], parameters[i, 8],
                            parameters[i, 9]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
@@ -1194,10 +1199,10 @@ ScientSDI <-
                   cdfglo(data.at.timescale[pos, 8],
                          c(parameters[i, 10], parameters[i, 11],
                            parameters[i, 12]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)

@@ -1,6 +1,7 @@
 #' Parameters for Calculating the SDIs Provided by the ScientSDI Function
 #'
-#' Contains parameters of the gamma and GEV distributions and the Pr(Rain=0).
+#' Contains parameters of the gamma and GEV distributions and the
+#'  \code{Pr(Rain = 0)}, "probzero.rain".
 #'
 #' @format A \code{data.frame} with 13 variables and 48 rows.
 #'

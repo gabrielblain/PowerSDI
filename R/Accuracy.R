@@ -1,4 +1,4 @@
-#' Calculate Scalar Measures of Accuracy
+#' Verify how well NASA-POWER Data Represent Observed Data
 #'
 #' Calculates scalar measures of accuracy.
 #'
@@ -38,36 +38,18 @@ Accuracy <- function(obs_est,
   # convert conf.int to lowercase for easy checking
   conf.int <- tolower(conf.int)
 
-  # fail early
-  if (conf.int != "yes" && conf.int != "no") {
-    stop(
-      "`conf.int` should be set to either 'Yes' or 'No'.\n
-  If 'Yes', the `sig.level` must be defined (a value between 0.9 and 0.95;
-  default is 0.95).",
-  call. = FALSE
-    )
-  }
-
-  if (conf.int == "yes") {
-    if (isFALSE(is.numeric(sig.level)) ||
-        sig.level < 0.90 || sig.level > 0.95) {
-      stop(
-        "Please provide an appropriate significance level, that is:
-          `sig.level` may only assume values between 0.9 and 0.95.",
-        call. = FALSE
-      )
-    }
-  }
+  check.confint(conf.int, sig.level)
 
   o <- (obs_est[, 1])
   p <- obs_est[, 2]
   N <- length(o)
 
   if (any(is.na(o)) || (any(is.na(p)))) {
-    stop("Missing data are not allowed.
-         Please, remove them from the input file",
+    stop("Missing data are not allowed.",
+         "Please, remove them from the input file object, `obs_est`.",
          call. = FALSE)
   }
+
   min.length <- length(as.matrix(obs_est)) / 2
 
   if (min.length < 10) {
@@ -280,4 +262,20 @@ plot.PowerSDI.Accuracy <- function(x, ...) {
     xlab = "Reference",
     ylab = "Estimated"
   )
+}
+
+check.confint <- function(conf.int, sig.level) {
+  # fail early
+  if (conf.int != "yes" && conf.int != "no") {
+    stop(
+      "`conf.int` should be set to either 'Yes' or 'No'.\n
+  If 'Yes', the `sig.level` must be defined (a value between 0.9 and 0.95;
+  default is 0.95).",
+  call. = FALSE
+    )
+  }
+
+  if (conf.int == "yes") {
+    check.sig.level(sig.level)
+  }
 }

@@ -3,7 +3,6 @@
 S3method(plot,PowerSDI.Accuracy)
 S3method(print,PowerSDI.Accuracy)
 export(Accuracy)
-export(OperatSDI)
 export(PlotData)
 export(Reference)
 export(ScientSDI)
