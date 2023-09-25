@@ -115,42 +115,36 @@ OperatSDI <-
       message("Time difference between end.date and start.date must be equal to or longer than 7 days")
     }
     else {
-      if (start.day <= 7) {
-        dif <- start.day - 1
-        start.week <- 1
-      }
-      if (start.day > 7 & start.day <= 14) {
-        dif <- start.day - 8
-        start.week <- 2
-      }
-      if (start.day > 14 & start.day <= 21) {
-        dif <- start.day - 15
-        start.week <- 3
-      }
-      if (start.day >= 22) {
-        dif <- start.day - 22
-        start.week <- 4
-      }
+      start.week <- calculate.week(start.day)
+      dif <- calculate.dif(start.week, start.day)
+
       start.date.user <- start.date.user - dif
       start.day <- as.numeric(format(start.date.user, format = "%d"))
       start.year <- as.numeric(format(start.date.user, format = "%Y"))
       start.month <- as.numeric(format(start.date.user, format = "%m"))
       message("Calculating...")
       if (PEMethod == "HS") {
-        sse_i <- as.data.frame(get_power(community = "ag",
-                                         lonlat = c(lon, lat), dates = c(start.date.user,
-                                                                         end.date.user), temporal_api = "daily", pars = c("T2M",
-                                                                                                                          "T2M_MAX", "T2M_MIN", "PRECTOTCORR")))
-        decli <- 23.45 * sin((360 * (sse_i$DOY - 80)/365) *
-                               (pi/180))
-        lat.rad <- lat * (pi/180)
-        decli.rad <- decli * (pi/180)
+        sse_i <- as.data.frame(get_power(
+          community = "ag",
+          lonlat = c(lon, lat),
+          dates = c(start.date.user,
+                    end.date.user),
+          temporal_api = "daily",
+          pars = c("T2M",
+                   "T2M_MAX",
+                   "T2M_MIN",
+                   "PRECTOTCORR")
+        ))
+        decli <- 23.45 * sin((360 * (sse_i$DOY - 80) / 365) *
+                               (0.01745329))
+        lat.rad <- lat * (0.01745329)
+        decli.rad <- decli * (0.01745329)
         hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
         hn.deg <- hn.rad * (180/pi)
         N <- (2 * hn.deg)/15
-        dist.terra.sol <- 1 + (0.033 * cos((pi/180) * (sse_i$DOY *
-                                                         (360/365))))
-        Ra <- (37.6 * (dist.terra.sol^2)) * ((pi/180) *
+        dist.terra.sol <- 1 + (0.033 * cos((0.01745329) * (sse_i$DOY *
+                                                         (0.9863014))))
+        Ra <- (37.6 * (dist.terra.sol^2)) * ((0.01745329) *
                                                hn.deg * sin(lat.rad) * sin(decli.rad) + (cos(lat.rad) *
                                                                                            cos(decli.rad) * sin(hn.rad)))
         ETP.harg.daily <- 0.0023 * (Ra * 0.4081633) * (sse_i$T2M_MAX -
