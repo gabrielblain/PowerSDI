@@ -58,19 +58,21 @@ OperatSDI <-
     if (distr != "GEV" && distr != "GLO") {
       stop("distri should be set to either GEV or GLO.", call. = FALSE)
     }
-    if (is.na(as.Date(start.date, "%Y-%m-%d")) == TRUE || is.na(as.Date(end.date,
-                                                                        "%Y-%m-%d")) == TRUE || TS < 1 || TS > 96 || all.equal(TS,
-                                                                                                                               as.integer(TS)) != TRUE) {
-      stop("Date format should be YYYY-MM-DD and\n           TS must be an integer value ranging between 1 and 96",
-           call. = FALSE)
+    if (is.na(as.Date(start.date, "%Y-%m-%d")) == TRUE ||
+        is.na(as.Date(end.date,
+                      "%Y-%m-%d")) == TRUE ||
+        TS < 1 || TS > 96 || all.equal(TS,
+                                       as.integer(TS)) != TRUE) {
+      stop(
+        "Date format should be YYYY-MM-DD and\n",
+        "TS must be an integer value ranging between 1 and 96",
+        call. = FALSE
+      )
     }
     end.date.user <- as.Date(end.date, "%Y-%m-%d")
     start.date.user <- as.Date(start.date, "%Y-%m-%d")
     actual.start.day <- as.numeric(format(start.date.user, format = "%d"))
-    actual.start.year <- as.numeric(format(start.date.user,
-                                           format = "%Y"))
-    actual.start.month <- as.numeric(format(start.date.user,
-                                            format = "%m"))
+
     final.year <- as.numeric(format(end.date.user, format = "%Y"))
     final.month <- as.numeric(format(end.date.user, format = "%m"))
     final.day <- as.numeric(format(end.date.user, format = "%d"))
@@ -117,7 +119,7 @@ OperatSDI <-
       start.date.user <- start.date.user - (10 * TS)
     }
     start.day <- as.numeric(format(start.date.user, format = "%d"))
-    end.user.day <- as.numeric(format(end.date.user, format = "%d"))
+
     start.year <- as.numeric(format(start.date.user, format = "%Y"))
     start.month <- as.numeric(format(start.date.user, format = "%m"))
     if (mim.date.fit < 7) {
