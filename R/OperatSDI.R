@@ -135,18 +135,20 @@ OperatSDI <-
                    "T2M_MIN",
                    "PRECTOTCORR")
         ))
-        decli <- 23.45 * sin((360 * (sse_i$DOY - 80) / 365) *
-                               (0.01745329))
-        lat.rad <- lat * (0.01745329)
-        decli.rad <- decli * (0.01745329)
+        decli <- 23.45 * sin((360 * (sse_i$DOY - 80) / 365) * 0.01745329)
+        lat.rad <- lat * 0.01745329
+        decli.rad <- decli * 0.01745329
         hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
-        hn.deg <- hn.rad * (180/pi)
+        hn.deg <- hn.rad * 57.29578
         N <- (2 * hn.deg)/15
-        dist.terra.sol <- 1 + (0.033 * cos((0.01745329) * (sse_i$DOY *
-                                                         (0.9863014))))
-        Ra <- (37.6 * (dist.terra.sol^2)) * ((0.01745329) *
-                                               hn.deg * sin(lat.rad) * sin(decli.rad) + (cos(lat.rad) *
-                                                                                           cos(decli.rad) * sin(hn.rad)))
+        dist.terra.sol <- 1 + (0.033 * cos((0.01745329) *
+                                             (sse_i$DOY * 0.9863014)))
+        Ra <- (37.6 * (dist.terra.sol^2)) *
+          (0.01745329 *
+             hn.deg *
+             sin(lat.rad) *
+             sin(decli.rad) +
+             (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
         ETP.harg.daily <- 0.0023 * (Ra * 0.4081633) * (sse_i$T2M_MAX -
                                                          sse_i$T2M_MIN)^0.5 * (sse_i$T2M + 17.8)
         sse_i <- cbind(sse_i, ETP.harg.daily)
