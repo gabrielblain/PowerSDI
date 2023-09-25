@@ -205,7 +205,8 @@ OperatSDI <-
   start.year <- as.numeric(format(start.date.user, format = "%Y"))
   start.month <- as.numeric(format(start.date.user, format = "%m"))
   if (mim.date.fit < 7) {
-    message("Time difference between end.date and start.date must be equal to or longer than 7 days")
+    stop("Time difference between end.date and start.date must be equal to or longer than 7 days",
+         call. = FALSE)
   }
   else {
     if (start.day <= 7) {
