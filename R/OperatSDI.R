@@ -39,6 +39,7 @@
 #'   end.date = "2023-06-30",
 #'   parms = DistPar
 #' )
+#' @export
 
 OperatSDI <-
   function(lon,
