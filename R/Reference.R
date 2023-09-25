@@ -85,7 +85,7 @@ Reference <- function(ref,
   start.month <- ref$MM[1]
   start.day <- ref$DD[1]
 
-  start.week <- calculate.week(user.start.day = start.day)
+  start.week <- calculate.week(start.day)
 
   if (PEMethod == "HS") {
     tmed <- ref$tmed
