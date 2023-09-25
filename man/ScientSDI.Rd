@@ -2,7 +2,7 @@
 % Please edit documentation in R/ScientSDI.R
 \name{ScientSDI}
 \alias{ScientSDI}
-\title{ScientSDI}
+\title{Estimate parameters of Gamma, Generalized Extreme Value, or Generalized Logistic Distributions}
 \usage{
 ScientSDI(
   lon,
@@ -20,16 +20,17 @@ ScientSDI(
 )
 }
 \arguments{
-\item{lon}{longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.}
+\item{lon}{longitude in decimal degrees: (+) Eastern Hemisphere, (-) Western Hemisphere.}
 
-\item{lat}{latitude in decimal degrees: (+) Northern hemisphere (-) Southern Hemisphere.}
+\item{lat}{latitude in decimal degrees: (+) Northern hemisphere, (-) Southern
+Hemisphere.}
 
-\item{start.date}{date at which the indices estimates should start. Format: YYYY-MM-DD".}
+\item{start.date}{date at which the indices estimates should start. Format: "YYYY-MM-DD".}
 
-\item{end.date}{date at which the indices estimates should end. Format: YYYY-MM-DD".}
+\item{end.date}{date at which the indices estimates should end. Format: "YYYY-MM-DD".}
 
 \item{distr}{A character variable ("GEV" or "GLO") defining the distribution to calculate
-the SPEI. Default is "GEV".}
+the \acronym{SPEI}. Default is "GEV".}
 
 \item{TS}{Time scale on the quart.month basis (integer values between 1 and 96).
 Default is 4.}
@@ -41,16 +42,16 @@ and normality tests. Default is "No".}
 for parameter Good. Default is "0.95".}
 
 \item{RainUplim}{Optional. Upper limit in millimeters from which rainfall values larger than
-it will be removed. Default is NULL.}
+it will be removed. Default is \code{NULL}.}
 
 \item{RainLowlim}{Optional. Lower limit in millimeters from which rainfall values smaller than
-it will be removed. Default is NULL.}
+it will be removed. Default is \code{NULL}.}
 
 \item{PEUplim}{Optional. Upper limit in millimeters from which evapotranspiration values
-larger than it will be removed. Default is NULL.}
+larger than it will be removed. Default is \code{NULL}.}
 
 \item{PELowlim}{Optional. Lower limit in millimeters from which evapotranspiration values
-smaller than it will be removed. Default is NULL.}
+smaller than it will be removed. Default is \code{NULL}.}
 }
 \value{
 A list with data calculated at the time scale selected by the user.
@@ -62,10 +63,10 @@ If \code{Good="Yes"}, this list includes:
   \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
   tests.}
   \item{Normality}{The outcomes of the two normality checking procedures (Wu
-  et al., 2007 and Stagge et., 2015).}
+  et al., 2007 and Stagge et al., 2015).}
  }
 
-If \code{Good="No"}, this list includes SDI and DistPar.
+If \code{Good="No"}, this list includes \acronym{SDI} and DistPar.
 
 This function also presents other data (in millimiters) calculated from the
   \acronym{NASA} \acronym{POWER} project:
@@ -80,7 +81,13 @@ This function also presents other data (in millimiters) calculated from the
   }
 }
 \description{
-Verifies concepts expected from SDI.
+Verifies concepts expected from SDI.  The first step of the \acronym{SPI} and
+  \acronym{SPEI} algorithms is to calculate the cumulative probabilities of
+  their input variables (Guttman 1999).  Function estimates the parameters of
+  the gamma, generalized extreme value (GEV), or generalized logistic
+  distributions (GLO) through the L-moments method are provided.  This
+  function also allows users to remove suspicious values from the data
+  sample.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
@@ -93,4 +100,18 @@ ScientSDI(
   Good = "no"
 )
 \dontshow{\}) # examplesIf}
+}
+\references{
+Guttman, N.B., 1999. Accepting the standardized precipitation
+   index: a calculation algorithm 1. JAWRA Journal of the American Water
+   Resources Association, 35(2), pp.311-322.
+
+ Stagge, J.H., Tallaksen, L.M., Gudmundsson, L., Van Loon, A.F. and Stahl,
+   K., 2015. Candidate distributions for climatological drought indices (SPI
+   and SPEI). International Journal of Climatology, 35(13), pp.4027-4040.
+
+ Wu, H., Svoboda, M.D., Hayes, M.J., Wilhite, D.A. and Wen, F., 2007.
+  Appropriate application of the standardized precipitation index in arid
+  locations and dry seasons. International Journal of Climatology: A Journal
+  of the Royal Meteorological Society, 27(1), pp.65-79.
 }
