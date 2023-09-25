@@ -103,18 +103,7 @@ OperatSDI <-
       }
     }
     mim.date.fit <- (end.date.user - start.date.user) + 1
-    if (actual.start.day <= 7) {
-      actual.start.week <- 1
-    }
-    if (actual.start.day > 7 & actual.start.day <= 14) {
-      actual.start.week <- 2
-    }
-    if (actual.start.day > 14 & actual.start.day <= 21) {
-      actual.start.week <- 3
-    }
-    if (actual.start.day >= 22) {
-      actual.start.week <- 4
-    }
+
     if (TS > 1) {
       start.date.user <- start.date.user - (10 * TS)
     }
