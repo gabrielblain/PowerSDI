@@ -4,22 +4,22 @@
 #' Given a user-supplied \code{user.start.day} value, calculate the start.week
 #'   value.
 #'
-#' @param user.start.day User provided value for the start date of the day of
+#' @param x User provided value for the start date of the day of
 #'   month.
 #'
 #' @examples
 #' # start.week 1
-#' calculate.start.week(7)
+#' calculate.week(7)
 #'
 #' # start.week 3
-#' calculate.start.week(17)
+#' calculate.week(17)
 #'
 #' @keywords Internal
 #' @noRd
 
-calculate.start.week <- function(user.start.day) {
+calculate.week <- function(x) {
   return(cut(
-    x = user.start.day,
+    x = x,
     breaks = c(1, 7, 14, 21, 31),
     include.lowest = TRUE,
     labels = FALSE
@@ -29,31 +29,31 @@ calculate.start.week <- function(user.start.day) {
 #' Calculate dif Value
 #'
 #' Given a user-supplied \code{user.start.day} value and a \code{start.week}
-#'   value from \code{calculate.start.week}, calculate the \code{dif} value.
-#' @param start.week A value calculated from \code{calculate.start.week}.
-#' @param user.start.day User provided value for the start date of the day of
+#'   value from \code{calculate.week}, calculate the \code{dif} value.
+#' @param x A value calculated from \code{calculate.week}.
+#' @param y User provided value for the start date of the day of
 #'   month.
 #'
 #' @examples
 #' # start.week 1
 #' start.user.day <- 7
-#' start.week <- calculate.start.week(start.user.day)
+#' start.week <- calculate.week(start.user.day)
 #' calculate.dif(start.week, start.user.day)
 #'
 #' # start.week 3
-#' calculate.start.week(17)
+#' calculate.week(17)
 #'
 #' @keywords Internal
 #' @noRd
-calculate.dif <- function(start.week, start.user.day) {
-  if (start.week == 1) {
-    dif <- start.user.day - 1
-  } else if (start.week == 2) {
-    dif <- start.user.day - 8
-  } else if (start.week == 3) {
-    dif <- start.user.day - 15
+calculate.dif <- function(x, y) {
+  if (x == 1) {
+    dif <- y - 1
+  } else if (x == 2) {
+    dif <- y - 8
+  } else if (x == 3) {
+    dif <- y - 15
   } else {
-    dif <- start.user.day - 22
+    dif <- y - 22
   }
   return(dif)
 }

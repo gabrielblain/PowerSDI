@@ -49,7 +49,7 @@ PlotData <- function(lon, lat, start.date, end.date) {
   start.year <-
     as.numeric(format(start.date.user, format = "%Y"))
 
-  start.week <- calculate.start.week(start.user.day) # see internal_functions.R
+  start.week <- calculate.week(start.user.day) # see internal_functions.R
   dif <- calculate.dif(start.week, start.user.day) # see internal_functions.R
 
   start.date.protocal <- start.date.user - dif
