@@ -1,4 +1,4 @@
-#' Calculate Scalar Measures of Accuracy
+#' Verify how well NASA-POWER Data Represent Observed Data
 #'
 #' Calculates scalar measures of accuracy.
 #'
