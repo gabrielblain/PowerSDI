@@ -1,34 +1,29 @@
-#' OperatSDI
+#' Calculate Routine NASA-SPI and NASA-SPEI Estimates
 #'
-#' Calculates the \acronym{SPI} and \acronym{SPEI} using a \acronym{NASA}
-#'   \acronym{POWER} data.
+#' Calculates the \acronym{SPI} (Standardized Precipitation Index) and
+#'   \acronym{SPEI} (Standardized Precipitation-Evapotranspiration Index) using
+#'   \acronym{NASA} \acronym{POWER} data.
 #'
-#' @param lon
-#' longitude in decimal degrees.
-#' @param lat
-#' latitude in decimal degrees.
-#' @param start.date
-#' Date at each the calculation must start (\dQuote{YYYY-MM-DD}).
-#' @param end.date
-#' Date at each the calculation must end (\dQuote{YYYY-MM-DD}).
-#' @param PEMethod
-#' A character variable (\dQuote{HS} or \dQuote{PM}) defining the potential
-#'   evapotranspiration method. Default is \dQuote{HS}.
-#' @param distr
-#' A character variable (\dQuote{GEV} or \dQuote{GLO}) defining which
-#'   distribution is used to calculate the \acronym{SPEI}. Default is
-#'   \dQuote{GEV}.
-#' @param parms
-#' Parameters required for calculating the \acronym{SPI} and \acronym{SPEI}. It
-#'   is provided by the \code{ScientSDI} function (DistPar).
-#' @param TS
-#' Time scale on the \dQuote{quart.month} basis (integer values between 1 and
-#'   96).
+#' @param lon longitude in decimal degrees.
+#' @param lat latitude in decimal degrees.
+#' @param start.date Date at each the calculation must start
+#'  (\dQuote{YYYY-MM-DD}).
+#' @param end.date Date at each the calculation must end (\dQuote{YYYY-MM-DD}).
+#' @param PEMethod A character variable (\dQuote{HS} or \dQuote{PM}) defining
+#'   the potential evapotranspiration method. Default is \dQuote{HS}.
+#' @param distr A character variable (\dQuote{GEV} or \dQuote{GLO}) defining
+#'   which distribution is used to calculate the \acronym{SPEI}. Default is
+#'   \dQuote{GEV} (generalized extreme value) with \dQuote{GLO} (generalized
+#'   logistic distributions) as an option.
+#' @param parms Parameters required for calculating the \acronym{SPI} and
+#'   \acronym{SPEI}.  It is provided by the \code{ScientSDI} function (DistPar).
+#' @param TS Time scale on the \dQuote{quart.month} basis (integer values
+#'   between 1 and 96).
+#'
 #' @return
-#' A data frame with Rainfall, potential evapotranspiration (PE),
+#' A data frame with rainfall, potential evapotranspiration (PE),
 #'   difference between rainfall and PE (in millimiters), the NASA-SPI and
 #'   NASA_SPEI, and the SDI categories corresponding to each indices estimates.
-#' @export
 #' @importFrom nasapower get_power
 #' @importFrom lmom cdfgam cdfgev cdfglo pelgam pelgev pelglo quagev quagam
 #'   quaglo samlmu
@@ -37,8 +32,14 @@
 #' @examplesIf interactive()
 #'
 #' data("DistPar")
-#'  OperatSDI(lon = -47.3, lat = -22.67, start.date = "2023-06-01",
-#'   end.date = "2023-06-30", parms = DistPar)
+#' OperatSDI(
+#'   lon = -47.3,
+#'   lat = -22.67,
+#'   start.date = "2023-06-01",
+#'   end.date = "2023-06-30",
+#'   parms = DistPar
+#' )
+
 OperatSDI <-
   function(lon,
            lat,
@@ -57,18 +58,18 @@ OperatSDI <-
   if (distr != "GEV" && distr != "GLO") {
     stop("distri should be set to either GEV or GLO.", call. = FALSE)
   }
-  if (is.na(as.Date(start.date, "%Y-%m-%d")) == TRUE || is.na(as.Date(end.date, 
-                                                                      "%Y-%m-%d")) == TRUE || TS < 1 || TS > 96 || all.equal(TS, 
+  if (is.na(as.Date(start.date, "%Y-%m-%d")) == TRUE || is.na(as.Date(end.date,
+                                                                      "%Y-%m-%d")) == TRUE || TS < 1 || TS > 96 || all.equal(TS,
                                                                                                                              as.integer(TS)) != TRUE) {
-    stop("Date format should be YYYY-MM-DD and\n           TS must be an integer value ranging between 1 and 96", 
+    stop("Date format should be YYYY-MM-DD and\n           TS must be an integer value ranging between 1 and 96",
          call. = FALSE)
   }
   end.date.user <- as.Date(end.date, "%Y-%m-%d")
   start.date.user <- as.Date(start.date, "%Y-%m-%d")
   actual.start.day <- as.numeric(format(start.date.user, format = "%d"))
-  actual.start.year <- as.numeric(format(start.date.user, 
+  actual.start.year <- as.numeric(format(start.date.user,
                                          format = "%Y"))
-  actual.start.month <- as.numeric(format(start.date.user, 
+  actual.start.month <- as.numeric(format(start.date.user,
                                           format = "%m"))
   final.year <- as.numeric(format(end.date.user, format = "%Y"))
   final.month <- as.numeric(format(end.date.user, format = "%m"))
@@ -145,23 +146,23 @@ OperatSDI <-
     start.month <- as.numeric(format(start.date.user, format = "%m"))
     message("Calculating...")
     if (PEMethod == "HS") {
-      sse_i <- as.data.frame(get_power(community = "ag", 
-                                       lonlat = c(lon, lat), dates = c(start.date.user, 
-                                                                       end.date.user), temporal_api = "daily", pars = c("T2M", 
+      sse_i <- as.data.frame(get_power(community = "ag",
+                                       lonlat = c(lon, lat), dates = c(start.date.user,
+                                                                       end.date.user), temporal_api = "daily", pars = c("T2M",
                                                                                                                         "T2M_MAX", "T2M_MIN", "PRECTOTCORR")))
-      decli <- 23.45 * sin((360 * (sse_i$DOY - 80)/365) * 
+      decli <- 23.45 * sin((360 * (sse_i$DOY - 80)/365) *
                              (pi/180))
       lat.rad <- lat * (pi/180)
       decli.rad <- decli * (pi/180)
       hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
       hn.deg <- hn.rad * (180/pi)
       N <- (2 * hn.deg)/15
-      dist.terra.sol <- 1 + (0.033 * cos((pi/180) * (sse_i$DOY * 
+      dist.terra.sol <- 1 + (0.033 * cos((pi/180) * (sse_i$DOY *
                                                        (360/365))))
-      Ra <- (37.6 * (dist.terra.sol^2)) * ((pi/180) * 
-                                             hn.deg * sin(lat.rad) * sin(decli.rad) + (cos(lat.rad) * 
+      Ra <- (37.6 * (dist.terra.sol^2)) * ((pi/180) *
+                                             hn.deg * sin(lat.rad) * sin(decli.rad) + (cos(lat.rad) *
                                                                                          cos(decli.rad) * sin(hn.rad)))
-      ETP.harg.daily <- 0.0023 * (Ra * 0.4081633) * (sse_i$T2M_MAX - 
+      ETP.harg.daily <- 0.0023 * (Ra * 0.4081633) * (sse_i$T2M_MAX -
                                                        sse_i$T2M_MIN)^0.5 * (sse_i$T2M + 17.8)
       sse_i <- cbind(sse_i, ETP.harg.daily)
       n.tot <- length(sse_i[, 1])
@@ -178,25 +179,25 @@ OperatSDI <-
       month <- start.month
       year <- start.year
       while (year <= final.year || month <= final.month) {
-        data.week1 <- colSums(sse_i[which(sse_i$YEAR == 
-                                            year & sse_i$MM == month & sse_i$DD <= 7), 
+        data.week1 <- colSums(sse_i[which(sse_i$YEAR ==
+                                            year & sse_i$MM == month & sse_i$DD <= 7),
                                     11:12])
-        data.week2 <- colSums(sse_i[which(sse_i$YEAR == 
-                                            year & sse_i$MM == month & sse_i$DD > 7 & 
+        data.week2 <- colSums(sse_i[which(sse_i$YEAR ==
+                                            year & sse_i$MM == month & sse_i$DD > 7 &
                                             sse_i$DD <= 14), 11:12])
-        data.week3 <- colSums(sse_i[which(sse_i$YEAR == 
-                                            year & sse_i$MM == month & sse_i$DD > 14 & 
+        data.week3 <- colSums(sse_i[which(sse_i$YEAR ==
+                                            year & sse_i$MM == month & sse_i$DD > 14 &
                                             sse_i$DD <= 21), 11:12])
-        data.week4 <- colSums(sse_i[which(sse_i$YEAR == 
-                                            year & sse_i$MM == month & sse_i$DD > 21), 
+        data.week4 <- colSums(sse_i[which(sse_i$YEAR ==
+                                            year & sse_i$MM == month & sse_i$DD > 21),
                                     11:12])
-        data.week[a, ] <- c(lon, lat, year, month, 1, 
+        data.week[a, ] <- c(lon, lat, year, month, 1,
                             data.week1)
-        data.week[b, ] <- c(lon, lat, year, month, 2, 
+        data.week[b, ] <- c(lon, lat, year, month, 2,
                             data.week2)
-        data.week[c, ] <- c(lon, lat, year, month, 3, 
+        data.week[c, ] <- c(lon, lat, year, month, 3,
                             data.week3)
-        data.week[d, ] <- c(lon, lat, year, month, 4, 
+        data.week[d, ] <- c(lon, lat, year, month, 4,
                             data.week4)
         month <- month + 1
         if (year == final.year & month > final.month) {
@@ -213,35 +214,35 @@ OperatSDI <-
       }
     }
     if (PEMethod == "PM") {
-      sse_i <- as.data.frame(get_power(community = "ag", 
-                                       lonlat = c(lon, lat), dates = c(start.date.user, 
-                                                                       end.date.user), temporal_api = "daily", pars = c("T2M", 
-                                                                                                                        "T2M_MAX", "T2M_MIN", "ALLSKY_SFC_SW_DWN", 
+      sse_i <- as.data.frame(get_power(community = "ag",
+                                       lonlat = c(lon, lat), dates = c(start.date.user,
+                                                                       end.date.user), temporal_api = "daily", pars = c("T2M",
+                                                                                                                        "T2M_MAX", "T2M_MIN", "ALLSKY_SFC_SW_DWN",
                                                                                                                         "WS2M", "RH2M", "PRECTOTCORR")))
-      decli <- 23.45 * sin((360 * (sse_i$DOY - 80)/365) * 
+      decli <- 23.45 * sin((360 * (sse_i$DOY - 80)/365) *
                              (pi/180))
       lat.rad <- lat * (pi/180)
       decli.rad <- decli * (pi/180)
       hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
       hn.deg <- hn.rad * (180/pi)
       N <- (2 * hn.deg)/15
-      dist.terra.sol <- 1 + (0.033 * cos((pi/180) * (sse_i$DOY * 
+      dist.terra.sol <- 1 + (0.033 * cos((pi/180) * (sse_i$DOY *
                                                        (360/365))))
-      Ra <- (37.6 * (dist.terra.sol^2)) * ((pi/180) * 
-                                             hn.deg * sin(lat.rad) * sin(decli.rad) + (cos(lat.rad) * 
+      Ra <- (37.6 * (dist.terra.sol^2)) * ((pi/180) *
+                                             hn.deg * sin(lat.rad) * sin(decli.rad) + (cos(lat.rad) *
                                                                                          cos(decli.rad) * sin(hn.rad)))
-      es <- 0.6108 * exp((17.27 * sse_i$T2M)/(sse_i$T2M + 
+      es <- 0.6108 * exp((17.27 * sse_i$T2M)/(sse_i$T2M +
                                                 273.3))
       ea <- (sse_i$RH2M * es)/100
       slope.pressure <- (4098 * es)/((sse_i$T2M + 237.3)^2)
       Q0.ajust <- 0.75 * Ra
-      Rn <- (1 - 0.2) * sse_i$ALLSKY_SFC_SW_DWN - (1.35 * 
-                                                     (sse_i$ALLSKY_SFC_SW_DWN/Q0.ajust) - 0.35) * 
-        (0.35 - (0.14 * sqrt(ea))) * (5.67 * 10^-8) * 
+      Rn <- (1 - 0.2) * sse_i$ALLSKY_SFC_SW_DWN - (1.35 *
+                                                     (sse_i$ALLSKY_SFC_SW_DWN/Q0.ajust) - 0.35) *
+        (0.35 - (0.14 * sqrt(ea))) * (5.67 * 10^-8) *
         (((sse_i$T2M^4) + (sse_i$T2M_MIN^4))/2)
-      ETP.pm.daily <- (0.408 * slope.pressure * (Rn - 
-                                                   0.8) + 0.063 * (900/(sse_i$T2M + 273)) * sse_i$WS2M * 
-                         (es - ea))/(slope.pressure + 0.063 * (1 + 0.34 * 
+      ETP.pm.daily <- (0.408 * slope.pressure * (Rn -
+                                                   0.8) + 0.063 * (900/(sse_i$T2M + 273)) * sse_i$WS2M *
+                         (es - ea))/(slope.pressure + 0.063 * (1 + 0.34 *
                                                                  sse_i$WS2M))
       sse_i <- cbind(sse_i, ETP.pm.daily)
       n.tot <- length(sse_i[, 1])
@@ -258,25 +259,25 @@ OperatSDI <-
       month <- start.month
       year <- start.year
       while (year <= final.year || month <= final.month) {
-        data.week1 <- colSums(sse_i[which(sse_i$YEAR == 
-                                            year & sse_i$MM == month & sse_i$DD <= 7), 
+        data.week1 <- colSums(sse_i[which(sse_i$YEAR ==
+                                            year & sse_i$MM == month & sse_i$DD <= 7),
                                     14:15])
-        data.week2 <- colSums(sse_i[which(sse_i$YEAR == 
-                                            year & sse_i$MM == month & sse_i$DD > 7 & 
+        data.week2 <- colSums(sse_i[which(sse_i$YEAR ==
+                                            year & sse_i$MM == month & sse_i$DD > 7 &
                                             sse_i$DD <= 14), 14:15])
-        data.week3 <- colSums(sse_i[which(sse_i$YEAR == 
-                                            year & sse_i$MM == month & sse_i$DD > 14 & 
+        data.week3 <- colSums(sse_i[which(sse_i$YEAR ==
+                                            year & sse_i$MM == month & sse_i$DD > 14 &
                                             sse_i$DD <= 21), 14:15])
-        data.week4 <- colSums(sse_i[which(sse_i$YEAR == 
-                                            year & sse_i$MM == month & sse_i$DD > 21), 
+        data.week4 <- colSums(sse_i[which(sse_i$YEAR ==
+                                            year & sse_i$MM == month & sse_i$DD > 21),
                                     14:15])
-        data.week[a, ] <- c(lon, lat, year, month, 1, 
+        data.week[a, ] <- c(lon, lat, year, month, 1,
                             data.week1)
-        data.week[b, ] <- c(lon, lat, year, month, 2, 
+        data.week[b, ] <- c(lon, lat, year, month, 2,
                             data.week2)
-        data.week[c, ] <- c(lon, lat, year, month, 3, 
+        data.week[c, ] <- c(lon, lat, year, month, 3,
                             data.week3)
-        data.week[d, ] <- c(lon, lat, year, month, 4, 
+        data.week[d, ] <- c(lon, lat, year, month, 4,
                             data.week4)
         month <- month + 1
         if (month > 12) {
@@ -293,13 +294,13 @@ OperatSDI <-
       }
     }
     data.week <- na.omit(data.week)
-    rows <- which(data.week[, 3] == final.year & data.week[, 
+    rows <- which(data.week[, 3] == final.year & data.week[,
                                                            4] > final.month)
     n.rows <- length(rows)
     if (n.rows > 0) {
       data.week <- as.matrix(data.week[-c(rows), , drop = FALSE])
     }
-    rows <- which(data.week[, 3] == final.year & data.week[, 
+    rows <- which(data.week[, 3] == final.year & data.week[,
                                                            4] == final.month & data.week[, 5] > final.week)
     n.rows <- length(rows)
     if (n.rows > 0) {
@@ -454,10 +455,10 @@ OperatSDI <-
       }
     }
     data.week <- cbind(data.week, quart.month)
-    first.row <- which(data.week[, 3] == start.year & data.week[, 
+    first.row <- which(data.week[, 3] == start.year & data.week[,
                                                                 4] == start.month & data.week[, 5] == start.week)
     if (first.row > 1) {
-      data.week <- as.matrix(data.week[-c(1:(first.row - 
+      data.week <- as.matrix(data.week[-c(1:(first.row -
                                                1)), , drop = FALSE])
     }
     n <- length(data.week[, 1])
@@ -468,14 +469,14 @@ OperatSDI <-
       a <- 1
       b <- TS
       c <- 1
-      data.at.timescale[c, ] <- c(data.week[b, 1:4], data.week[b, 
+      data.at.timescale[c, ] <- c(data.week[b, 1:4], data.week[b,
                                                                8], colSums(data.week[a:b, 6:7]))
       point <- point + 1
       a <- a + 1
       b <- b + 1
       c <- c + 1
       while (point <= final.point) {
-        data.at.timescale[c, ] <- c(data.week[b, 1:4], 
+        data.at.timescale[c, ] <- c(data.week[b, 1:4],
                                     data.week[b, 8], colSums(data.week[a:b, 6:7]))
         point <- point + 1
         a <- a + 1
@@ -484,15 +485,15 @@ OperatSDI <-
       }
     }
     else {
-      data.at.timescale[, ] <- as.matrix(c(data.week[, 
+      data.at.timescale[, ] <- as.matrix(c(data.week[,
                                                      1:4], data.week[, 8], data.week[, 6:7]))
     }
-    data.at.timescale <- as.matrix(cbind(data.at.timescale, 
+    data.at.timescale <- as.matrix(cbind(data.at.timescale,
                                          (data.at.timescale[, 6] - data.at.timescale[, 7])))
     n.weeks <- length(data.at.timescale[, 1])
     pos <- 1
     SDI <- matrix(NA, n.weeks, 2)
-    parameters <- as.data.frame(parms[which(parms[, 1] == 
+    parameters <- as.data.frame(parms[which(parms[, 1] ==
                                               lon & parms[, 2] == lat & parms[, 13] == TS), ])
     if (length(parameters[, 1]) == 0) {
       message("It seems that you don't have the distributions' parameters for this local and time scale(TS).\n                                      You must first run Scient.R function.")
@@ -502,7 +503,7 @@ OperatSDI <-
         for (pos in 1:n.weeks) {
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
-          prob <- (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos, 
+          prob <- (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos,
                                                                      6], c(par[4], par[5]))
           if (is.na(prob) == FALSE & prob < 0.001351) {
             prob <- 0.001351
@@ -512,11 +513,11 @@ OperatSDI <-
           }
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
           if (PEMethod == "HS") {
-            prob <- cdfgev(data.at.timescale[pos, 8], 
+            prob <- cdfgev(data.at.timescale[pos, 8],
                            c(par[7], par[8], par[9]))
           }
           if (PEMethod == "PM") {
-            prob <- cdfgev(data.at.timescale[pos, 8], 
+            prob <- cdfgev(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
           if (is.na(prob) == FALSE & prob < 0.001351) {
@@ -533,7 +534,7 @@ OperatSDI <-
         for (pos in 1:n.weeks) {
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
-          prob <- (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos, 
+          prob <- (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos,
                                                                      6], c(par[4], par[5]))
           if (is.na(prob) == FALSE & prob < 0.001351) {
             prob <- 0.001351
@@ -543,11 +544,11 @@ OperatSDI <-
           }
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
           if (PEMethod == "HS") {
-            prob <- cdfglo(data.at.timescale[pos, 8], 
+            prob <- cdfglo(data.at.timescale[pos, 8],
                            c(par[7], par[8], par[9]))
           }
           if (PEMethod == "PM") {
-            prob <- cdfglo(data.at.timescale[pos, 8], 
+            prob <- cdfglo(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
           if (is.na(prob) == FALSE & prob < 0.001351) {
@@ -578,17 +579,17 @@ OperatSDI <-
                 categories[i, 1] <- "Normal"
               }
               else {
-                if (SDI[i, 1] <= 1.5 & !is.na(SDI[i, 
+                if (SDI[i, 1] <= 1.5 & !is.na(SDI[i,
                                                   1])) {
                   categories[i, 1] <- "mod.wet"
                 }
                 else {
-                  if (SDI[i, 1] <= 2 & !is.na(SDI[i, 
+                  if (SDI[i, 1] <= 2 & !is.na(SDI[i,
                                                   1])) {
                     categories[i, 1] <- "sev.wet"
                   }
                   else {
-                    if (SDI[i, 1] > 2 & !is.na(SDI[i, 
+                    if (SDI[i, 1] > 2 & !is.na(SDI[i,
                                                    1])) {
                       categories[i, 1] <- "ext.wet"
                     }
@@ -614,17 +615,17 @@ OperatSDI <-
                 categories[i, 2] <- "Normal"
               }
               else {
-                if (SDI[i, 2] <= 1.5 & !is.na(SDI[i, 
+                if (SDI[i, 2] <= 1.5 & !is.na(SDI[i,
                                                   2])) {
                   categories[i, 2] <- "mod.wet"
                 }
                 else {
-                  if (SDI[i, 2] <= 2 & !is.na(SDI[i, 
+                  if (SDI[i, 2] <= 2 & !is.na(SDI[i,
                                                   2])) {
                     categories[i, 2] <- "sev.wet"
                   }
                   else {
-                    if (SDI[i, 2] > 2 & !is.na(SDI[i, 
+                    if (SDI[i, 2] > 2 & !is.na(SDI[i,
                                                    2])) {
                       categories[i, 2] <- "ext.wet"
                     }
@@ -637,8 +638,8 @@ OperatSDI <-
       }
       SDI <- cbind(data.at.timescale, SDI)
       SDI.final <- data.frame(SDI, categories)
-      colnames(SDI.final) <- c("Lon", "Lat", "Year", "Month", 
-                               "quart.month", "Rain", "PE", "PPE", "SPI", "SPEI", 
+      colnames(SDI.final) <- c("Lon", "Lat", "Year", "Month",
+                               "quart.month", "Rain", "PE", "PPE", "SPI", "SPEI",
                                "Categ.SPI", "Categ.SPEI")
       show.date <- as.Date(start.date, "%Y-%m-%d")
       return(SDI.final)
