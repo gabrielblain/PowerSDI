@@ -205,15 +205,15 @@ OperatSDI <-
                                                                                                                           "T2M_MAX", "T2M_MIN", "ALLSKY_SFC_SW_DWN",
                                                                                                                           "WS2M", "RH2M", "PRECTOTCORR")))
         decli <- 23.45 * sin((360 * (sse_i$DOY - 80)/365) *
-                               (pi/180))
-        lat.rad <- lat * (pi/180)
-        decli.rad <- decli * (pi/180)
+                               (0.01745329))
+        lat.rad <- lat * (0.01745329)
+        decli.rad <- decli * (0.01745329)
         hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
         hn.deg <- hn.rad * (180/pi)
         N <- (2 * hn.deg)/15
-        dist.terra.sol <- 1 + (0.033 * cos((pi/180) * (sse_i$DOY *
-                                                         (360/365))))
-        Ra <- (37.6 * (dist.terra.sol^2)) * ((pi/180) *
+        dist.terra.sol <- 1 + (0.033 * cos((0.01745329) * (sse_i$DOY *
+                                                         (0.9863014))))
+        Ra <- (37.6 * (dist.terra.sol^2)) * ((0.01745329) *
                                                hn.deg * sin(lat.rad) * sin(decli.rad) + (cos(lat.rad) *
                                                                                            cos(decli.rad) * sin(hn.rad)))
         es <- 0.6108 * exp((17.27 * sse_i$T2M)/(sse_i$T2M +
