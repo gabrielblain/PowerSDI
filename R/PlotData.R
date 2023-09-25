@@ -44,30 +44,14 @@ PlotData <- function(lon, lat, start.date, end.date) {
 
   start.user.day <-
     as.numeric(format(start.date.user, format = "%d"))
-  end.user.day <-
-    as.numeric(format(end.date.user, format = "%d"))
-  end.user.month <-
-    as.numeric(format(end.date.user, format = "%m"))
-  start.year <-
-    as.numeric(format(start.date.user, format = "%Y"))
   start.month <-
     as.numeric(format(start.date.user, format = "%m"))
-  if (start.user.day <= 7) {
-    dif <- start.user.day - 1
-    start.week <- 1
-  }
-  if (start.user.day > 7 & start.user.day <= 14) {
-    dif <- start.user.day - 8
-    start.week <- 2
-  }
-  if (start.user.day > 14 & start.user.day <= 21) {
-    dif <- start.user.day - 15
-    start.week <- 3
-  }
-  if (start.user.day >= 22) {
-    dif <- start.user.day - 22
-    start.week <- 4
-  }
+  start.year <-
+    as.numeric(format(start.date.user, format = "%Y"))
+
+  start.week <- calculate.start.week(start.user.day) # see internal_functions.R
+  dif <- calculate.dif(start.week, start.user.day) # see internal_functions.R
+
   start.date.protocal <- start.date.user - dif
   message("Just a sec. Downloading NASA POWER data and calculating the others parameters.")
   sse_i <- as.data.frame(get_power(

@@ -84,18 +84,9 @@ Reference <- function(ref,
   start.year <- ref$YEAR[1]
   start.month <- ref$MM[1]
   start.day <- ref$DD[1]
-  if (start.day <= 7) {
-    start.week <- 1
-  }
-  if (start.day > 7 & start.day <= 14) {
-    start.week <- 2
-  }
-  if (start.day > 14 & start.day <= 22) {
-    start.week <- 3
-  }
-  if (start.day > 22) {
-    start.week <- 4
-  }
+
+  start.week <- calculate.start.week(user.start.day = start.day)
+
   if (PEMethod == "HS") {
     tmed <- ref$tmed
     tmax <- ref$tmax

@@ -185,46 +185,22 @@ OperatSDI <-
     }
   }
   mim.date.fit <- (end.date.user - start.date.user) + 1
-  if (actual.start.day <= 7) {
-    actual.start.week <- 1
-  }
-  if (actual.start.day > 7 & actual.start.day <= 14) {
-    actual.start.week <- 2
-  }
-  if (actual.start.day > 14 & actual.start.day <= 21) {
-    actual.start.week <- 3
-  }
-  if (actual.start.day >= 22) {
-    actual.start.week <- 4
-  }
+
   if (TS > 1) {
     start.date.user <- start.date.user - (10 * TS)
   }
   start.day <- as.numeric(format(start.date.user, format = "%d"))
-  end.user.day <- as.numeric(format(end.date.user, format = "%d"))
-  start.year <- as.numeric(format(start.date.user, format = "%Y"))
   start.month <- as.numeric(format(start.date.user, format = "%m"))
+  start.year <- as.numeric(format(start.date.user, format = "%Y"))
+
   if (mim.date.fit < 7) {
     stop("Time difference between end.date and start.date must be equal to or longer than 7 days",
          call. = FALSE)
   }
   else {
-    if (start.day <= 7) {
-      dif <- start.day - 1
-      start.week <- 1
-    }
-    if (start.day > 7 & start.day <= 14) {
-      dif <- start.day - 8
-      start.week <- 2
-    }
-    if (start.day > 14 & start.day <= 21) {
-      dif <- start.day - 15
-      start.week <- 3
-    }
-    if (start.day >= 22) {
-      dif <- start.day - 22
-      start.week <- 4
-    }
+    start.week <- calculate.start.week(start.day) # see internal_functions.R
+    dif <- calculate.dif(start.week, start.day) # see internal_functions.R
+
     start.date.user <- start.date.user - dif
     start.day <- as.numeric(format(start.date.user, format = "%d"))
     start.year <- as.numeric(format(start.date.user, format = "%Y"))

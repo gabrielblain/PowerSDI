@@ -1,5 +1,62 @@
 
+#' Calculate start.week Value
+#'
+#' Given a user-supplied \code{user.start.day} value, calculate the start.week
+#'   value.
+#'
+#' @param user.start.day User provided value for the start date of the day of
+#'   month.
+#'
+#' @examples
+#' # start.week 1
+#' calculate.start.week(7)
+#'
+#' # start.week 3
+#' calculate.start.week(17)
+#'
+#' @keywords Internal
+#' @noRd
 
+calculate.start.week <- function(user.start.day) {
+  return(cut(
+    x = user.start.day,
+    breaks = c(1, 7, 14, 21, 31),
+    include.lowest = TRUE,
+    labels = FALSE
+  ))
+}
+
+#' Calculate dif Value
+#'
+#' Given a user-supplied \code{user.start.day} value and a \code{start.week}
+#'   value from \code{calculate.start.week}, calculate the \code{dif} value.
+#' @param start.week A value calculated from \code{calculate.start.week}.
+#' @param user.start.day User provided value for the start date of the day of
+#'   month.
+#'
+#' @examples
+#' # start.week 1
+#' start.user.day <- 7
+#' start.week <- calculate.start.week(start.user.day)
+#' calculate.dif(start.week, start.user.day)
+#'
+#' # start.week 3
+#' calculate.start.week(17)
+#'
+#' @keywords Internal
+#' @noRd
+calculate.dif <- function(start.week, start.user.day) {
+  if (start.week == 1) {
+    dif <- start.user.day - 1
+  } else if (start.week == 2) {
+    dif <- start.user.day - 8
+  } else if (start.week == 3) {
+    dif <- start.user.day - 15
+  } else {
+    dif <- start.user.day - 22
+  }
+  return(dif)
+}
 
 #' Check User Provided distr for Validity
 #'
@@ -131,4 +188,29 @@ check.TS <- function(TS) {
     )
   }
   return(dates)
+}
+
+
+#' Check User-Input sig.level
+#' sig.level User provided value
+#'
+#' @examples
+#' # passes
+#' check.sig.level(sig.level = 0.9)
+#'
+#' # doesn't pass
+#' check.sig.level(sig.level = 0.89)
+#'
+#' @return Invisible NULL, called for it's side-effects
+#' @keywords Internal
+#' @noRd
+#'
+check.sig.level <- function(sig.level) {
+  if (isFALSE(is.numeric(sig.level)) || sig.level < 0.90 || sig.level > 0.95) {
+    stop(
+      "Please provide an appropriate significance level, that is:
+        `sig.level` may only assume numeric values between 0.9 and 0.95.",
+      call. = FALSE
+    )
+  }
 }
