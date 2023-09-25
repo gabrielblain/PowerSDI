@@ -134,7 +134,7 @@ check.TS <- function(TS) {
 #' @return A list object of validated date values
 #' @keywords internal
 #' @noRd
-.check_dates <- function(user.dates) {
+check.dates <- function(user.dates) {
   tryCatch(
     # check dates as entered by user
     # set up function to use in lapply() below
