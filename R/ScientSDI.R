@@ -521,13 +521,8 @@ ScientSDI <-
             )
           parameters <- matrix(NA, 48, 11)
           if (Good == "yes") {
-            if (!is.numeric(sig.level) ||
-                sig.level < 0.90 || sig.level > 0.95) {
-              stop(
-                "Please provide an appropriate significance level, that is:
-          sig.level may only assume values between 0.9 and 0.95."
-              )
-            }
+            check.sig.level(sig.level)
+
             message("Calculating the goodness-of-fit tests. This might take a while.")
             Goodness <- matrix(NA, 48, 12)
             for (i in 1:48) {
