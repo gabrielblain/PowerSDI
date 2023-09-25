@@ -447,14 +447,14 @@ ScientSDI <-
           }
           ######## removing suspicions data
           ##### Rainfall
-          if (is.numeric(RainUplim) == FALSE &
-              is.null(RainUplim) == FALSE ||
-              is.numeric(RainLowlim) == FALSE &
-              is.null(RainLowlim) == FALSE ||
-              is.numeric(PEUplim) == FALSE &
-              is.null(PEUplim) == FALSE ||
-              is.numeric(PELowlim) == FALSE &
-              is.null(PELowlim) == FALSE) {
+          if (!is.numeric(RainUplim) &
+              !is.null(RainUplim) ||
+              !is.numeric(RainLowlim) &
+              !is.null(RainLowlim) ||
+              !is.numeric(PEUplim) &
+              !is.null(PEUplim) ||
+              !is.numeric(PELowlim) &
+              !is.null(PELowlim)) {
             stop(
               "Please, provide appropriate numerical values for RainUplim or
                 RainLowlim (mm) or PEUplim or PELowlim (Celsious degrees).
@@ -511,9 +511,9 @@ ScientSDI <-
               data.at.timescale[c,] <-
                 c(data.week[b, 3:4], data.week[b, 9],
                   colSums(data.week[a:b, 6:8]))
-              if (is.na(data.at.timescale[c, 4]) == TRUE ||
-                  is.na(data.at.timescale[c, 5]) == TRUE ||
-                  is.na(data.at.timescale[c, 6] == TRUE)) {
+              if (is.na(data.at.timescale[c, 4]) ||
+                  is.na(data.at.timescale[c, 5]) ||
+                  is.na(data.at.timescale[c, 6] )) {
                 message("Gaps in the original data.")
               }
               point <- point + 1
@@ -533,7 +533,7 @@ ScientSDI <-
             )
           parameters <- matrix(NA, 48, 11)
           if (Good == "yes") {
-            if (is.numeric(sig.level) == FALSE ||
+            if (!is.numeric(sig.level) ||
                 sig.level < 0.90 || sig.level > 0.95) {
               stop(
                 "Please provide an appropriate significance level, that is:
@@ -790,30 +790,30 @@ ScientSDI <-
                 prob <-
                   parameters[i, 6] + (1 - parameters[i, 6]) * cdfgam(data.at.timescale[pos, 4],
                                                                      c(parameters[i, 4], parameters[i, 5]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob) & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
                 prob <-
                   cdfgev(data.at.timescale[pos, 7],
                          c(parameters[i, 7], parameters[i, 8], parameters[i, 9]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
                 prob <-
                   cdfgev(data.at.timescale[pos, 8],
                          c(parameters[i, 10], parameters[i, 11], parameters[i, 12]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
@@ -826,30 +826,30 @@ ScientSDI <-
                 prob <-
                   parameters[i, 6] + (1 - parameters[i, 6]) * cdfgam(data.at.timescale[pos, 4],
                                                                      c(parameters[i, 4], parameters[i, 5]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
                 prob <-
                   cdfglo(data.at.timescale[pos, 7],
                          c(parameters[i, 7], parameters[i, 8], parameters[i, 9]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
                 prob <-
                   cdfglo(data.at.timescale[pos, 8],
                          c(parameters[i, 10], parameters[i, 11], parameters[i, 12]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
@@ -1155,10 +1155,10 @@ ScientSDI <-
                   parameters[i, 6] + (1 - parameters[i, 6]) *
                   cdfgam(data.at.timescale[pos, 4],
                          c(parameters[i, 4], parameters[i, 5]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
@@ -1166,10 +1166,10 @@ ScientSDI <-
                   cdfgev(data.at.timescale[pos, 7],
                          c(parameters[i, 7], parameters[i, 8],
                            parameters[i, 9]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
@@ -1177,10 +1177,10 @@ ScientSDI <-
                   cdfgev(data.at.timescale[pos, 8],
                          c(parameters[i, 10], parameters[i, 11],
                            parameters[i, 12]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
@@ -1194,10 +1194,10 @@ ScientSDI <-
                   parameters[i, 6] + (1 - parameters[i, 6]) *
                   cdfgam(data.at.timescale[pos, 4],
                          c(parameters[i, 4], parameters[i, 5]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
@@ -1205,10 +1205,10 @@ ScientSDI <-
                   cdfglo(data.at.timescale[pos, 7],
                          c(parameters[i, 7], parameters[i, 8],
                            parameters[i, 9]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
@@ -1216,10 +1216,10 @@ ScientSDI <-
                   cdfglo(data.at.timescale[pos, 8],
                          c(parameters[i, 10], parameters[i, 11],
                            parameters[i, 12]))
-                if (is.na(prob) == FALSE & prob < 0.001351) {
+                if (!is.na(prob)  & prob < 0.001351) {
                   prob <- 0.001351
                 }
-                if (is.na(prob) == FALSE & prob > 0.998649) {
+                if (!is.na(prob)  & prob > 0.998649) {
                   prob <- 0.998649
                 }
                 SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)

@@ -58,10 +58,11 @@ OperatSDI <-
   if (distr != "GEV" && distr != "GLO") {
     stop("distri should be set to either GEV or GLO.", call. = FALSE)
   }
-  if (is.na(as.Date(start.date, "%Y-%m-%d")) == TRUE || is.na(as.Date(end.date,
-                                                                      "%Y-%m-%d")) == TRUE || TS < 1 || TS > 96 || all.equal(TS,
-                                                                                                                             as.integer(TS)) != TRUE) {
-    stop("Date format should be YYYY-MM-DD and\n           TS must be an integer value ranging between 1 and 96",
+  if (is.na(as.Date(start.date, "%Y-%m-%d")) ||
+      is.na(as.Date(end.date, "%Y-%m-%d"))
+      || TS < 1 || TS > 96 || isFALSE(all.equal(TS, as.integer(TS)))) {
+    stop("Date format should be YYYY-MM-DD and\n",
+         "TS must be an integer value ranging between 1 and 96",
          call. = FALSE)
   }
   end.date.user <- as.Date(end.date, "%Y-%m-%d")
@@ -74,30 +75,97 @@ OperatSDI <-
   final.year <- as.numeric(format(end.date.user, format = "%Y"))
   final.month <- as.numeric(format(end.date.user, format = "%m"))
   final.day <- as.numeric(format(end.date.user, format = "%d"))
-  if (final.day <= 7) {final.week <- 1}
-  if (final.day > 7 & final.day <= 14) {final.week <- 2}
-  if (final.day > 14 & final.day <= 21) {final.week <- 3}
-  if (final.day > 21) {final.week <- 4}
-  if (final.week == 1 && final.day != 7){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.week == 2 & final.day != 14){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.week == 3 & final.day != 21){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.month == 1 & final.week == 4 & final.day != 31){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.month == 3 & final.week == 4 & final.day != 31){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.month == 5 & final.week == 4 & final.day != 31){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.month == 7 & final.week == 4 & final.day != 31){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.month == 8 & final.week == 4 & final.day != 31){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.month == 10 & final.week == 4 & final.day != 31){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.month == 12 & final.week == 4 & final.day != 31){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.month == 4 & final.week == 4 & final.day != 30){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.month == 6 & final.week == 4 & final.day != 30){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.month == 9 & final.week == 4 & final.day != 30){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if (final.month == 11 & final.week == 4 & final.day != 30){stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")}
-  if( final.month== 2 & final.week == 4){
-    leap=(final.year%%4 == 0 & (final.year%%100 != 0 | final.year%%400 == 0))
-    if (leap == FALSE){
-      if(final.day != 28) {stop ("the last day of the period must be 1, 7, 14, 21 or 28")}
-    } else{
-      if(final.day != 29) {stop ("Leap year: the last day of the period must be 1, 7, 14, 21 or 29")}
+  if (final.day <= 7) {
+    final.week <- 1
+  }
+  if (final.day > 7 & final.day <= 14) {
+    final.week <- 2
+  }
+  if (final.day > 14 & final.day <= 21) {
+    final.week <- 3
+  }
+  if (final.day > 21) {
+    final.week <- 4
+  }
+  if (final.week == 1 &&
+      final.day != 7) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.week == 2 &
+      final.day != 14) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.week == 3 &
+      final.day != 21) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 1 &
+      final.week == 4 &
+      final.day != 31) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 3 &
+      final.week == 4 &
+      final.day != 31) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 5 &
+      final.week == 4 &
+      final.day != 31) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 7 &
+      final.week == 4 &
+      final.day != 31) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 8 &
+      final.week == 4 &
+      final.day != 31) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 10 &
+      final.week == 4 &
+      final.day != 31) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 12 &
+      final.week == 4 &
+      final.day != 31) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 4 &
+      final.week == 4 &
+      final.day != 30) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 6 &
+      final.week == 4 &
+      final.day != 30) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 9 &
+      final.week == 4 &
+      final.day != 30) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 11 &
+      final.week == 4 &
+      final.day != 30) {
+    stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
+  }
+  if (final.month == 2 & final.week == 4) {
+
+    leap = (final.year %% 4 == 0 &
+              (final.year %% 100 != 0 | final.year %% 400 == 0))
+    if (isFALSE(leap)) {
+      if (final.day != 28) {
+        stop ("the last day of the period must be 1, 7, 14, 21 or 28")
+      }
+    } else {
+      if (final.day != 29) {
+        stop ("Leap year: the last day of the period must be 1, 7, 14, 21 or 29")
+      }
     }
   }
   mim.date.fit <- (end.date.user - start.date.user) + 1
@@ -505,10 +573,10 @@ OperatSDI <-
           par <- as.numeric(parameters[week, ])
           prob <- (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos,
                                                                      6], c(par[4], par[5]))
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob)  & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
@@ -520,10 +588,10 @@ OperatSDI <-
             prob <- cdfgev(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+          if (!is.na(prob)  & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob)  & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
@@ -536,10 +604,10 @@ OperatSDI <-
           par <- as.numeric(parameters[week, ])
           prob <- (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos,
                                                                      6], c(par[4], par[5]))
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+          if (!is.na(prob)  & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob)  & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
@@ -551,10 +619,10 @@ OperatSDI <-
             prob <- cdfglo(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob) & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
@@ -645,7 +713,7 @@ OperatSDI <-
       return(SDI.final)
     }
   }
-  if (is.na(sum(SDI.final[, 10])) == TRUE) {
+  if (is.na(sum(SDI.final[, 10]))) {
     message("Check the original data, it might have gaps")
   }
   message("Considering the selected TS, the calculations started on:")
