@@ -72,18 +72,8 @@ OperatSDI <-
   final.month <- as.numeric(format(end.date.user, format = "%m"))
   final.day <- as.numeric(format(end.date.user, format = "%d"))
 
-  if (final.day <= 7) {
-    final.week <- 1
-  }
-  if (final.day > 7 & final.day <= 14) {
-    final.week <- 2
-  }
-  if (final.day > 14 & final.day <= 21) {
-    final.week <- 3
-  }
-  if (final.day > 21) {
-    final.week <- 4
-  }
+  final.week <- calculate.week(final.day)
+
   if (final.week == 1 &&
       final.day != 7) {
     stop("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31",
