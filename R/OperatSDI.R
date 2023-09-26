@@ -64,10 +64,10 @@ OperatSDI <-
            call. = FALSE)
     }
 
-    if (Good != "yes" && Good != "no") {
-      stop("`Good` should be set to either 'Yes' or 'No'.",
-           call. = FALSE)
-    }
+    #if (Good != "yes" && Good != "no") {
+      #stop("`Good` should be set to either 'Yes' or 'No'.",
+     #      call. = FALSE)
+    #}
 
     if (TS < 1 || TS > 96 || !all.equal(TS, as.integer(TS))) {
       stop("TS must be an integer value ranging between 1 and 96.",
