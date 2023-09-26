@@ -25,14 +25,12 @@
 #'   end.date = "2022-12-31"
 #' )
 PlotData <- function(lon, lat, start.date, end.date) {
-  if (is.na(as.Date(end.date, "%Y-%m-%d")) ||
-      is.na(as.Date(start.date, "%Y-%m-%d"))) {
-    stop("Recall Date format should be YYYY-MM-DD",
-         call. = FALSE)
-  }
 
-  end.date.user <- as.Date(end.date, "%Y-%m-%d")
-  start.date.user <- as.Date(start.date, "%Y-%m-%d")
+  dates <- check.dates(c(start.date, end.date))
+
+  start.date.user <- dates[[1]]
+  end.date.user <- dates[[2]]
+
   min.period <- end.date.user - start.date.user
   if (min.period < 365) {
     stop(
