@@ -30,7 +30,6 @@
 #' @importFrom graphics title
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #'
-#' @export
 #'
 #' @examplesIf interactive()
 #'
