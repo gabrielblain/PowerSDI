@@ -26,6 +26,70 @@ calculate.week <- function(x) {
   ))
 }
 
+#' Check User-Provied Dates for Validity
+#'
+#' Validates user entered dates for format
+#'
+#' @param dates A vector of two user entered `dates` values.
+#'
+#' @return Validated dates in a list
+#' @keywords internal
+#' @noRd
+check.dates <- function(dates) {
+  if (is.null(dates)) {
+    stop(call. = FALSE,
+         "You have not entered dates for the query.\n")
+  }
+  if (length(unique(dates)) < 2) {
+    stop(
+      call. = FALSE,
+      "For `temporal_api = monthly`, at least two (2) years ",
+      "are required to be provided.\n"
+    )
+  }
+
+  # check end date to be sure it's not in the future
+  if (dates[[2]] > Sys.Date()) {
+    stop(call. = FALSE,
+         "The weather data cannot possibly extend beyond this day.\n")
+  }
+
+  if (dates[[2]] < dates[[1]]) {
+    message("Your start and end dates were reversed. ",
+            "They have been reordered.\n")
+    dates <- c(dates[2], dates[1])
+  }
+  # put dates in list to use lapply
+  dates <- as.list(dates)
+
+  # check dates as entered by user
+  date_format <- function(x) {
+    tryCatch(
+      # try to parse the date format using lubridate
+      x <- lubridate::parse_date_time(x,
+                                      c(
+                                        "Ymd",
+                                        "dmY",
+                                        "mdY",
+                                        "BdY",
+                                        "Bdy",
+                                        "bdY",
+                                        "bdy"
+                                      )),
+      warning = function(c) {
+        stop(call. = FALSE,
+             "",
+             x,
+             " is not a valid entry for date. Enter as YYYY-MM-DD.\n")
+      }
+    )
+    as.Date(x)
+  }
+  # apply function to reformat/check dates
+  dates <- lapply(X = dates, FUN = date_format)
+  return(dates)
+}
+
 #' Calculate dif Value
 #'
 #' Given a user-supplied \code{user.start.day} value and a \code{start.week}
@@ -125,72 +189,6 @@ check.TS <- function(TS) {
   }
 }
 
-#' Check Dates for Validity
-#'
-#' Validates user entered date values for format and order
-#'
-#' @param user.dates A vector of user entered date values.
-#'
-#' @return A list object of validated date values
-#' @keywords internal
-#' @noRd
-check.dates <- function(user.dates) {
-  tryCatch(
-    # check dates as entered by user
-    # set up function to use in lapply() below
-    date_format <- function(x) {
-      tryCatch(
-        # try to parse the date format using lubridate
-        x <- lubridate::parse_date_time(x,
-                                        c(
-                                          "Ymd",
-                                          "dmY",
-                                          "mdY",
-                                          "BdY",
-                                          "Bdy",
-                                          "bdY",
-                                          "bdy"
-                                        )),
-        warning = function(c) {
-          stop(call. = FALSE,
-               "",
-               x,
-               " is not a valid entry for date. Enter as YYYY-MM-DD.\n")
-        }
-      )
-      return(as.Date(x))
-    }
-  )
-
-  # apply function to reformat/check dates
-  dates <- lapply(X = user.dates, FUN = date_format)
-
-  # if the stdate is > endate, flip order
-  if (dates[[2]] < dates[[1]]) {
-    message("Your start and end dates were reversed. ",
-            "They have been reordered.\n")
-    dates <- c(dates[2], dates[1])
-  }
-
-  # check end date to be sure it's not in the future
-  if (dates[[2]] > Sys.Date()) {
-    stop(call. = FALSE,
-         "The weather data cannot possibly extend beyond this day.\n")
-  }
-
-  mim.date.fit <-
-    as.numeric((dates[[2]] - dates[[1]]) / 365)
-  if (mim.date.fit < 8) {
-    stop(
-      "Please select a longer period between the `start.date` and
-             `end.date` values.",
-      call. = FALSE
-    )
-  }
-  return(dates)
-}
-
-
 #' Check User-Input sig.level
 #' sig.level User provided value
 #'
@@ -214,3 +212,47 @@ check.sig.level <- function(sig.level) {
     )
   }
 }
+
+#' Find the quart.month Value
+#' @param x A data.frame, usually called \dQuote{data.week}
+#'
+#' @examples
+#' # example code
+#' data.week <-
+#' structure(
+#'   c(
+#'     -47.3,
+#'     -47.3,
+#'     -22.87,
+#'     -22.87,
+#'     2015,
+#'     2015,
+#'     1,
+#'     1,
+#'     1,
+#'     2,
+#'     34.88,
+#'     22.72,
+#'     35.4347478184492,
+#'     42.1418688289752,
+#'     34.3122432933585,
+#'     44.6334180288311
+#'   ),
+#'   dim = c(2L, 8L)
+#' )
+#'   find.quart.month(data.week)
+#'
+#' @keywords Internal
+#' @noRd
+#'
+
+find.quart.month <- function(x) {
+  M1 <-
+    cbind(rep(1:12, each = 4), rep(1:4, length.out = 48))
+  M2 <- cbind(x[, 4], x[, 5])
+
+  apply(M2, 1, function(a)
+    which(apply(M1, 1, function(b)
+      all(b == a))))
+}
+
