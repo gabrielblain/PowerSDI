@@ -111,10 +111,7 @@ ScientSDI <-
     Good <- tolower(Good)
     distr <- toupper(distr)
 
-    if (distr != "GEV" && distr != "GLO") {
-      stop("`distr` should be either 'GEV' or 'GLO'",
-           call. = FALSE)
-    }
+    check.distr(distr)
 
     if (Good != "yes" && Good != "no") {
       stop("`Good` should be set to either 'Yes' or 'No'.",
