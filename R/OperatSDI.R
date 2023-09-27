@@ -95,70 +95,70 @@ OperatSDI <-
     }
     if (final.week == 1 &&
         final.day != 7) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.week == 2 &
         final.day != 14) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.week == 3 &
         final.day != 21) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 1 &
         final.week == 4 &
         final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 3 &
         final.week == 4 &
         final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 5 &
         final.week == 4 &
         final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 7 &
         final.week == 4 &
         final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 8 &
         final.week == 4 &
         final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 10 &
         final.week == 4 &
         final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 12 &
         final.week == 4 &
         final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 4 &
         final.week == 4 &
         final.day != 30) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 6 &
         final.week == 4 &
         final.day != 30) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 9 &
         final.week == 4 &
         final.day != 30) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 11 &
         final.week == 4 &
         final.day != 30) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 fev) or 30/31")
+      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
     }
     if (final.month == 2 & final.week == 4) {
       leap = (final.year %% 4 == 0 &
