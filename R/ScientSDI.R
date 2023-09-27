@@ -321,13 +321,11 @@ ScientSDI <-
     lowremov <- which(data.week[, 6] < Lowlim)
     if (length(upremov) > 0) {
       data.week[c(upremov), 6] = NA
-      message("removed rowns:")
-      print(upremov)
+      message("removed rows: ", upremov)
     }
     if (length(lowremov) > 0) {
       data.week[c(lowremov), 6] = NA
-      message("removed rowns:")
-      print(lowremov)
+      message("removed rows: ", lowremov)
     }
     ##### Potential Evapotranspiration (Hargreaves & Samani)
     Uplim <- PEUplim
@@ -336,13 +334,11 @@ ScientSDI <-
     lowremov <- which(data.week[, 7] < Lowlim)
     if (length(upremov) > 0) {
       data.week[c(upremov), 7] = NA
-      message("removed rowns:")
-      print(upremov)
+      message("removed rows: ", upremov)
     }
     if (length(lowremov) > 0) {
       data.week[c(lowremov), 7] = NA
-      message("removed rowns:")
-      print(lowremov)
+      message("removed rows: ", lowremov)
     }
     #########
     n <- length(data.week[, 1])
@@ -473,19 +469,22 @@ ScientSDI <-
         Goodness[i, 5] <- max(abs(prob.emp - prob.pm))
         for (ad in 1:n.nonzero) {
           soma.rain[ad, 1] <-
-            ((2 * ad) - 1) * ((log(prob.rain[ad])) + log(1 - prob.rain[n.nonzero + 1 - ad]))
+            ((2 * ad) - 1) *
+            ((log(prob.rain[ad])) + log(1 - prob.rain[n.nonzero + 1 - ad]))
         }
         Goodness[i, 7] <-
           -n.nonzero - ((1 / n.nonzero) * sum(soma.rain, na.rm = TRUE))
         for (ad in 1:n.harg) {
           soma.harg[ad, 1] <-
-            ((2 * ad) - 1) * ((log(prob.harg[ad])) + log(1 - prob.harg[n.harg + 1 - ad]))
+            ((2 * ad) - 1) *
+            ((log(prob.harg[ad])) + log(1 - prob.harg[n.harg + 1 - ad]))
         }
         Goodness[i, 9] <-
           -n.harg - ((1 / n.harg) * sum(soma.harg, na.rm = TRUE))
         for (ad in 1:n.pm) {
           soma.pm[ad, 1] <-
-            ((2 * ad) - 1) * ((log(prob.pm[ad])) + log(1 - prob.pm[n.pm + 1 - ad]))
+            ((2 * ad) - 1) *
+            ((log(prob.pm[ad])) + log(1 - prob.pm[n.pm + 1 - ad]))
         }
         Goodness[i, 11] <-
           -n.pm - ((1 / n.pm) * sum(soma.pm, na.rm = TRUE))
@@ -506,7 +505,8 @@ ScientSDI <-
           null.dist[j, 1] <- max(abs(prob.emp - prob.synt))
           for (ad in 1:n.nonzero) {
             soma.rain[ad, 1] <-
-              ((2 * ad) - 1) * ((log(prob.synt[ad])) + log(1 - prob.synt[n.nonzero + 1 - ad]))
+              ((2 * ad) - 1) * ((log(prob.synt[ad])) +
+                                  log(1 - prob.synt[n.nonzero + 1 - ad]))
           }
           null.dist[j, 4] <-
             -n.nonzero - ((1 / n.nonzero) * sum(soma.rain, na.rm = TRUE))
@@ -524,7 +524,8 @@ ScientSDI <-
               max(abs(prob.emp - prob.synt))
             for (ad in 1:n.harg) {
               soma.harg[ad, 1] <-
-                ((2 * ad) - 1) * ((log(prob.synt[ad])) + log(1 - prob.synt[n.harg + 1 - ad]))
+                ((2 * ad) - 1) * ((log(prob.synt[ad])) +
+                                    log(1 - prob.synt[n.harg + 1 - ad]))
             }
             null.dist[j, 5] <-
               -n.harg - ((1 / n.harg) * sum(soma.harg, na.rm = TRUE))
@@ -541,7 +542,8 @@ ScientSDI <-
               max(abs(prob.emp - prob.synt))
             for (ad in 1:n.pm) {
               soma.pm[ad, 1] <-
-                ((2 * ad) - 1) * ((log(prob.synt[ad])) + log(1 - prob.synt[n.pm + 1 - ad]))
+                ((2 * ad) - 1) * ((log(prob.synt[ad])) +
+                                    log(1 - prob.synt[n.pm + 1 - ad]))
             }
             null.dist[j, 6] <-
               -n.pm - ((1 / n.pm) * sum(soma.pm, na.rm = TRUE))
@@ -560,7 +562,8 @@ ScientSDI <-
               max(abs(prob.emp - prob.synt))
             for (ad in 1:n.harg) {
               soma.harg[ad, 1] <-
-                ((2 * ad) - 1) * ((log(prob.synt[ad])) + log(1 - prob.synt[n.harg + 1 - ad]))
+                ((2 * ad) - 1) * ((log(prob.synt[ad])) +
+                                    log(1 - prob.synt[n.harg + 1 - ad]))
             }
             null.dist[j, 5] <-
               -n.harg - ((1 / n.harg) * sum(soma.harg, na.rm = TRUE))
@@ -577,7 +580,8 @@ ScientSDI <-
               max(abs(prob.emp - prob.synt))
             for (ad in 1:n.pm) {
               soma.pm[ad, 1] <-
-                ((2 * ad) - 1) * ((log(prob.synt[ad])) + log(1 - prob.synt[n.pm + 1 - ad]))
+                ((2 * ad) - 1) * ((log(prob.synt[ad])) +
+                                    log(1 - prob.synt[n.pm + 1 - ad]))
             }
             null.dist[j, 6] <-
               -n.pm - ((1 / n.pm) * sum(soma.pm, na.rm = TRUE))
@@ -636,8 +640,9 @@ ScientSDI <-
         while (pos <= n.weeks) {
           i <- data.at.timescale[pos, 3]
           prob <-
-            parameters[i, 6] + (1 - parameters[i, 6]) * cdfgam(data.at.timescale[pos, 4],
-                                                               c(parameters[i, 4], parameters[i, 5]))
+            parameters[i, 6] + (1 - parameters[i, 6]) *
+            cdfgam(data.at.timescale[pos, 4],
+                   c(parameters[i, 4], parameters[i, 5]))
           if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
@@ -672,8 +677,9 @@ ScientSDI <-
         while (pos <= n.weeks) {
           i <- data.at.timescale[pos, 3]
           prob <-
-            parameters[i, 6] + (1 - parameters[i, 6]) * cdfgam(data.at.timescale[pos, 4],
-                                                               c(parameters[i, 4], parameters[i, 5]))
+            parameters[i, 6] + (1 - parameters[i, 6]) *
+            cdfgam(data.at.timescale[pos, 4],
+                   c(parameters[i, 4], parameters[i, 5]))
           if (!is.na(prob)  & prob < 0.001351) {
             prob <- 0.001351
           }
