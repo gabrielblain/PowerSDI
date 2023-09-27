@@ -145,7 +145,7 @@ OperatSDI <-
     if (final.month == 2 & final.week == 4) {
       leap = (final.year %% 4 == 0 &
                 (final.year %% 100 != 0 | final.year %% 400 == 0))
-      if (leap == FALSE) {
+      if (isFALSE(leap)) {
         if (final.day != 28) {
           stop("the last day of the period must be 1, 7, 14, 21 or 28")
         }
@@ -445,10 +445,10 @@ OperatSDI <-
           prob <-
             (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos,
                                                                6], c(par[4], par[5]))
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob) & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
@@ -460,10 +460,10 @@ OperatSDI <-
             prob <- cdfgev(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob) & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
