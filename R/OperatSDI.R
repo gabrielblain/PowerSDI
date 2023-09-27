@@ -443,8 +443,8 @@ OperatSDI <-
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
           prob <-
-            (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos,
-                                                               6], c(par[4], par[5]))
+            (par[6] + (1 - par[6])) *
+            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
           if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
@@ -475,12 +475,12 @@ OperatSDI <-
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
           prob <-
-            (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos,
-                                                               6], c(par[4], par[5]))
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+            (par[6] + (1 - par[6])) *
+            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob) & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
@@ -492,10 +492,10 @@ OperatSDI <-
             prob <- cdfglo(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob) & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
