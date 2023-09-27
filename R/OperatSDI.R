@@ -68,8 +68,6 @@ OperatSDI <-
 
     end.date.user <- as.Date(end.date, "%Y-%m-%d")
     start.date.user <- as.Date(start.date, "%Y-%m-%d")
-    actual.start.day <-
-      as.numeric(format(start.date.user, format = "%d"))
 
     final.year <- as.numeric(format(end.date.user, format = "%Y"))
     final.month <- as.numeric(format(end.date.user, format = "%m"))
