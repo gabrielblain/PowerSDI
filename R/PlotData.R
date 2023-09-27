@@ -51,7 +51,9 @@ PlotData <- function(lon, lat, start.date, end.date) {
   dif <- calculate.dif(start.week, start.user.day) # see internal_functions.R
 
   start.date.protocal <- start.date.user - dif
-  message("Just a sec. Downloading NASA POWER data and calculating the others parameters.")
+  message(
+    "Just a sec.",
+    "Downloading NASA POWER data and calculating the others parameters.")
   sse_i <- as.data.frame(get_power(
     community = "ag",
     lonlat = c(lon, lat),
