@@ -60,11 +60,7 @@ OperatSDI <-
     }
 
     check.distr(distr)
-
-    if (TS < 1 || TS > 96 || !all.equal(TS, as.integer(TS))) {
-      stop("TS must be an integer value ranging between 1 and 96.",
-           call. = FALSE)
-    }
+    check.TS(TS)
 
     dates <- check.dates(c(start.date, end.date))
     start.date.user <- dates[[1]]
