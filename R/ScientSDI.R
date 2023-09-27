@@ -321,13 +321,11 @@ ScientSDI <-
     lowremov <- which(data.week[, 6] < Lowlim)
     if (length(upremov) > 0) {
       data.week[c(upremov), 6] = NA
-      message("removed rowns:")
-      print(upremov)
+      message("removed rows: ", upremov)
     }
     if (length(lowremov) > 0) {
       data.week[c(lowremov), 6] = NA
-      message("removed rowns:")
-      print(lowremov)
+      message("removed rows: ", lowremov)
     }
     ##### Potential Evapotranspiration (Hargreaves & Samani)
     Uplim <- PEUplim
@@ -336,13 +334,11 @@ ScientSDI <-
     lowremov <- which(data.week[, 7] < Lowlim)
     if (length(upremov) > 0) {
       data.week[c(upremov), 7] = NA
-      message("removed rowns:")
-      print(upremov)
+      message("removed rows: ", upremov)
     }
     if (length(lowremov) > 0) {
       data.week[c(lowremov), 7] = NA
-      message("removed rowns:")
-      print(lowremov)
+      message("removed rows: ", lowremov)
     }
     #########
     n <- length(data.week[, 1])
