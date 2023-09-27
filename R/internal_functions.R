@@ -90,6 +90,23 @@ check.dates <- function(dates) {
   return(dates)
 }
 
+#' Checks User Provided distr Value for Validity
+#'
+#' @param distr user provided value of either \dQuote{GLO} or \dQuote{GEV}
+#'
+#' @return An invisible `NULL`, called for its side-effects
+#' @keywords Internal
+#' @noRd
+#'
+#' @examples
+check.distr <- function(distr) {
+  if (distr != "GEV" && distr != "GLO") {
+    stop("`distr` should be either 'GEV' or 'GLO'",
+         call. = FALSE)
+  }
+  return(NULL)
+}
+
 #' Calculate dif Value
 #'
 #' Given a user-supplied \code{user.start.day} value and a \code{start.week}
