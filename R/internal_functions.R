@@ -96,7 +96,7 @@ check.dates <- function(dates) {
 #'
 #' @return An invisible `NULL`, called for its side-effects
 #' @keywords Internal
-#' @noRD
+#' @noRd
 #'
 #' @examples
 check.distr <- function(distr) {
