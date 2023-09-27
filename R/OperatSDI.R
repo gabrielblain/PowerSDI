@@ -293,11 +293,11 @@ OperatSDI <-
       dist.terra.sol <-
         1 + (0.033 * cos((0.01745329) * (sse_i$DOY *
                                            (0.9863014))))
-      Ra <- (37.6 * (dist.terra.sol ^ 2)) * ((0.01745329) *
-                                               hn.deg * sin(lat.rad) * sin(decli.rad) + (cos(lat.rad) *
-                                                                                           cos(decli.rad) * sin(hn.rad)))
-      es <- 0.6108 * exp((17.27 * sse_i$T2M) / (sse_i$T2M +
-                                                  273.3))
+      Ra <- (37.6 * (dist.terra.sol ^ 2)) *
+        (0.01745329 * hn.deg * sin(lat.rad) * sin(decli.rad) +
+           (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
+
+      es <- 0.6108 * exp((17.27 * sse_i$T2M) / (sse_i$T2M + 273.3))
       ea <- (sse_i$RH2M * es) / 100
       slope.pressure <- (4098 * es) / ((sse_i$T2M + 237.3) ^ 2)
       Q0.ajust <- 0.75 * Ra
@@ -306,9 +306,9 @@ OperatSDI <-
                                                         Q0.ajust) - 0.35) *
         (0.35 - (0.14 * sqrt(ea))) * (5.67 * 10 ^ -8) *
         (((sse_i$T2M ^ 4) + (sse_i$T2M_MIN ^ 4)) / 2)
-      ETP.pm.daily <- (0.408 * slope.pressure * (Rn -
-                                                   0.8) + 0.063 * (900 /
-                                                                     (sse_i$T2M + 273)) * sse_i$WS2M *
+      ETP.pm.daily <- (0.408 * slope.pressure *
+                         (Rn - 0.8) + 0.063 *
+                         (900 / (sse_i$T2M + 273)) * sse_i$WS2M *
                          (es - ea)) / (slope.pressure + 0.063 * (1 + 0.34 *
                                                                    sse_i$WS2M))
       sse_i <- cbind(sse_i, ETP.pm.daily)
@@ -369,14 +369,14 @@ OperatSDI <-
       }
     }
     data.week <- na.omit(data.week)
-    rows <- which(data.week[, 3] == final.year & data.week[,
-                                                           4] > final.month)
+    rows <- which(data.week[, 3] == final.year &
+                    data.week[, 4] > final.month)
     n.rows <- length(rows)
     if (n.rows > 0) {
       data.week <- as.matrix(data.week[-c(rows), , drop = FALSE])
     }
-    rows <- which(data.week[, 3] == final.year & data.week[,
-                                                           4] == final.month &
+    rows <- which(data.week[, 3] == final.year &
+                    data.week[, 4] == final.month &
                     data.week[, 5] > final.week)
     n.rows <- length(rows)
     if (n.rows > 0) {
@@ -387,12 +387,11 @@ OperatSDI <-
     data.week <-
       cbind(data.week, find.quart.month(x = data.week))
 
-    first.row <- which(data.week[, 3] == start.year & data.week[,
-                                                                4] == start.month &
+    first.row <- which(data.week[, 3] == start.year &
+                         data.week[, 4] == start.month &
                          data.week[, 5] == start.week)
     if (first.row > 1) {
-      data.week <- as.matrix(data.week[-c(1:(first.row -
-                                               1)), , drop = FALSE])
+      data.week <- as.matrix(data.week[-c(1:(first.row - 1)), drop = FALSE])
     }
     n <- length(data.week[, 1])
     data.at.timescale <- matrix(NA, (n - (TS - 1)), 7)
@@ -402,15 +401,17 @@ OperatSDI <-
       a <- 1
       b <- TS
       c <- 1
-      data.at.timescale[c, ] <- c(data.week[b, 1:4], data.week[b,
-                                                               8], colSums(data.week[a:b, 6:7]))
+      data.at.timescale[c, ] <- c(data.week[b, 1:4],
+                                  data.week[b, 8],
+                                  colSums(data.week[a:b, 6:7]))
       point <- point + 1
       a <- a + 1
       b <- b + 1
       c <- c + 1
       while (point <= final.point) {
         data.at.timescale[c, ] <- c(data.week[b, 1:4],
-                                    data.week[b, 8], colSums(data.week[a:b, 6:7]))
+                                    data.week[b, 8],
+                                    colSums(data.week[a:b, 6:7]))
         point <- point + 1
         a <- a + 1
         b <- b + 1
@@ -418,8 +419,9 @@ OperatSDI <-
       }
     }
     else {
-      data.at.timescale[, ] <- as.matrix(c(data.week[,
-                                                     1:4], data.week[, 8], data.week[, 6:7]))
+      data.at.timescale[, ] <- as.matrix(c(data.week[, 1:4],
+                                           data.week[, 8],
+                                           data.week[, 6:7]))
     }
     data.at.timescale <- as.matrix(cbind(
       data.at.timescale,
@@ -428,8 +430,7 @@ OperatSDI <-
     n.weeks <- length(data.at.timescale[, 1])
     pos <- 1
     SDI <- matrix(NA, n.weeks, 2)
-    parameters <- as.data.frame(parms[which(parms[, 1] ==
-                                              lon &
+    parameters <- as.data.frame(parms[which(parms[, 1] == lon &
                                               parms[, 2] == lat &
                                               parms[, 13] == TS), ])
     if (length(parameters[, 1]) == 0) {
@@ -443,8 +444,8 @@ OperatSDI <-
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
           prob <-
-            (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos,
-                                                               6], c(par[4], par[5]))
+            (par[6] + (1 - par[6])) *
+            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
           if (is.na(prob) == FALSE & prob < 0.001351) {
             prob <- 0.001351
           }
@@ -475,12 +476,12 @@ OperatSDI <-
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
           prob <-
-            (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos,
-                                                               6], c(par[4], par[5]))
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+            (par[6] + (1 - par[6])) *
+            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob) & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
@@ -492,10 +493,10 @@ OperatSDI <-
             prob <- cdfglo(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob) & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
