@@ -944,7 +944,7 @@ ScientSDI <-
         rain <-
           (data.at.timescale[which(data.at.timescale[, 3] == month.par), 4])
         rain.nozero <- na.omit(rain[rain > 0])
-        n.rain <- length(rain)
+        n.rain <- length(na.omit(rain))
         n.nonzero <- length(rain.nozero)
         n.z <- n.rain - n.nonzero
         if (n.z == 0) {
