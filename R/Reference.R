@@ -85,7 +85,7 @@ Reference <- function(ref,
   start.month <- ref$MM[1]
   start.day <- ref$DD[1]
 
-  start.week <- calculate.week(start.day)
+  start.week <- find.week.int(start.day)
 
   if (PEMethod == "HS") {
     tmed <- ref$tmed
@@ -174,7 +174,7 @@ Reference <- function(ref,
     end.month <- ref$MM[n.tot]
     end.day <- ref$DD[n.tot]
 
-    end.week <- calculate.week(end.day)
+    end.week <- find.week.int(end.day)
 
     n.years <- 1 + (end.year - start.year)
     total.nweeks <- 48 * n.years

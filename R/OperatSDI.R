@@ -73,88 +73,11 @@ OperatSDI <-
     final.month <- as.numeric(format(end.date.user, format = "%m"))
     final.day <- as.numeric(format(end.date.user, format = "%d"))
 
-    final.week <- calculate.week(final.day)
+    final.week <- find.week.int(final.day)
 
-    if (final.week == 1 &&
-        final.day != 7) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.week == 2 &
-        final.day != 14) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.week == 3 &
-        final.day != 21) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 1 &
-        final.week == 4 &
-        final.day != 31) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 3 &
-        final.week == 4 &
-        final.day != 31) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 5 &
-        final.week == 4 &
-        final.day != 31) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 7 &
-        final.week == 4 &
-        final.day != 31) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 8 &
-        final.week == 4 &
-        final.day != 31) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 10 &
-        final.week == 4 &
-        final.day != 31) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 12 &
-        final.week == 4 &
-        final.day != 31) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 4 &
-        final.week == 4 &
-        final.day != 30) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 6 &
-        final.week == 4 &
-        final.day != 30) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 9 &
-        final.week == 4 &
-        final.day != 30) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 11 &
-        final.week == 4 &
-        final.day != 30) {
-      stop("the last day of the period must be 1, 7, 14, 21 or (28/29 Feb.) or 30/31")
-    }
-    if (final.month == 2 & final.week == 4) {
-      leap = (final.year %% 4 == 0 &
-                (final.year %% 100 != 0 | final.year %% 400 == 0))
-      if (isFALSE(leap)) {
-        if (final.day != 28) {
-          stop("the last day of the period must be 1, 7, 14, 21 or 28")
-        }
-      } else{
-        if (final.day != 29) {
-          stop("Leap year: the last day of the period must be 1, 7, 14, 21 or 29")
-        }
-      }
-    }
+    # see bottom of this file for this function
+    check.final.agreement(final.year, final.month, final.week, final.day)
+
     mim.date.fit <- (end.date.user - start.date.user) + 1
 
     if (TS > 1) {
@@ -165,9 +88,10 @@ OperatSDI <-
     start.month <-
       as.numeric(format(start.date.user, format = "%m"))
     if (mim.date.fit < 7) {
-      message("Time difference between end.date and start.date must be equal to or longer than 7 days")
+      message("Time difference between `end.date` and `start.date`",
+              "must be equal to or longer than 7 days")
     }
-    start.week <- calculate.week(start.day)
+    start.week <- find.week.int(start.day)
     dif <- calculate.dif(start.week, start.day)
 
     start.date.user <- start.date.user - dif
@@ -369,8 +293,8 @@ OperatSDI <-
       }
     }
     data.week <- na.omit(data.week)
-    rows <- which(data.week[, 3] == final.year & data.week[,
-                                                           4] > final.month)
+    rows <- which(data.week[, 3] == final.year &
+                    data.week[, 4] > final.month)
     n.rows <- length(rows)
     if (n.rows > 0) {
       data.week <- as.matrix(data.week[-c(rows), , drop = FALSE])
@@ -383,9 +307,9 @@ OperatSDI <-
       data.week <- as.matrix(data.week[-c(rows), , drop = FALSE])
     }
 
-    # see internal_functions.R for `find.quart.month()`
+    # see internal_functions.R for `find.quart.month.int()`
     data.week <-
-      cbind(data.week, find.quart.month(x = data.week))
+      cbind(data.week, find.quart.month.int(x = data.week))
 
     first.row <- which(data.week[, 3] == start.year & data.week[,
                                                                 4] == start.month &
@@ -402,15 +326,17 @@ OperatSDI <-
       a <- 1
       b <- TS
       c <- 1
-      data.at.timescale[c, ] <- c(data.week[b, 1:4], data.week[b,
-                                                               8], colSums(data.week[a:b, 6:7]))
+      data.at.timescale[c, ] <- c(data.week[b, 1:4],
+                                  data.week[b, 8],
+                                  colSums(data.week[a:b, 6:7]))
       point <- point + 1
       a <- a + 1
       b <- b + 1
       c <- c + 1
       while (point <= final.point) {
         data.at.timescale[c, ] <- c(data.week[b, 1:4],
-                                    data.week[b, 8], colSums(data.week[a:b, 6:7]))
+                                    data.week[b, 8],
+                                    colSums(data.week[a:b, 6:7]))
         point <- point + 1
         a <- a + 1
         b <- b + 1
@@ -418,8 +344,9 @@ OperatSDI <-
       }
     }
     else {
-      data.at.timescale[, ] <- as.matrix(c(data.week[,
-                                                     1:4], data.week[, 8], data.week[, 6:7]))
+      data.at.timescale[, ] <- as.matrix(c(data.week[, 1:4],
+                                           data.week[, 8],
+                                           data.week[, 6:7]))
     }
     data.at.timescale <- as.matrix(cbind(
       data.at.timescale,
@@ -434,7 +361,9 @@ OperatSDI <-
                                               parms[, 13] == TS), ])
     if (length(parameters[, 1]) == 0) {
       message(
-        "It seems that you don't have the distributions' parameters for this local and time scale(TS).\n                                      You must first run Scient.R function."
+        "It seems that you don't have the distributions' parameters for this",
+        "local and time scale(TS).\n",
+        "You must first run the `ScientSDI()` function."
       )
     }
     else {
@@ -503,80 +432,11 @@ OperatSDI <-
         }
       }
       categories <- matrix(NA, n.weeks, 2)
-      for (i in 1:n.weeks) {
-        if (SDI[i, 1] <= -2 & !is.na(SDI[i, 1])) {
-          categories[i, 1] <- "ext.dry"
-        }
-        else {
-          if (SDI[i, 1] <= -1.5 & !is.na(SDI[i, 1])) {
-            categories[i, 1] <- "sev.dry"
-          }
-          else {
-            if (SDI[i, 1] <= -1 & !is.na(SDI[i, 1])) {
-              categories[i, 1] <- "mod.dry"
-            }
-            else {
-              if (SDI[i, 1] <= 1 & !is.na(SDI[i, 1])) {
-                categories[i, 1] <- "Normal"
-              }
-              else {
-                if (SDI[i, 1] <= 1.5 & !is.na(SDI[i,
-                                                  1])) {
-                  categories[i, 1] <- "mod.wet"
-                }
-                else {
-                  if (SDI[i, 1] <= 2 & !is.na(SDI[i,
-                                                  1])) {
-                    categories[i, 1] <- "sev.wet"
-                  }
-                  else {
-                    if (SDI[i, 1] > 2 & !is.na(SDI[i,
-                                                   1])) {
-                      categories[i, 1] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (SDI[i, 2] <= -2 & !is.na(SDI[i, 2])) {
-          categories[i, 2] <- "ext.dry"
-        }
-        else {
-          if (SDI[i, 2] <= -1.5 & !is.na(SDI[i, 2])) {
-            categories[i, 2] <- "sev.dry"
-          }
-          else {
-            if (SDI[i, 2] <= -1 & !is.na(SDI[i, 2])) {
-              categories[i, 2] <- "mod.dry"
-            }
-            else {
-              if (SDI[i, 2] <= 1 & !is.na(SDI[i, 2])) {
-                categories[i, 2] <- "Normal"
-              }
-              else {
-                if (SDI[i, 2] <= 1.5 & !is.na(SDI[i,
-                                                  2])) {
-                  categories[i, 2] <- "mod.wet"
-                }
-                else {
-                  if (SDI[i, 2] <= 2 & !is.na(SDI[i,
-                                                  2])) {
-                    categories[i, 2] <- "sev.wet"
-                  }
-                  else {
-                    if (SDI[i, 2] > 2 & !is.na(SDI[i,
-                                                   2])) {
-                      categories[i, 2] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+
+      # see internal_functions.R for find.category()
+      categories[, 1] <- find.category(x = SDI[, 1])
+      categories[, 2] <- find.category(x = SDI[, 2])
+
       SDI <- cbind(data.at.timescale, SDI)
       SDI.final <- data.frame(SDI, categories)
       colnames(SDI.final) <- c(
@@ -601,4 +461,64 @@ OperatSDI <-
     }
     message("Considering the selected TS, the calculations started on:")
     print(start.date.user)
+  }
+
+
+#' Check for Final Day and Week Agreement
+#'
+#' Ensures that the final day of a period is an acceptable value for the last
+#' day of a period for the purposes of this package.
+#'
+#' @param final.week The last week of the period as calculated by
+#'   find.week.int()
+#' @param final.day The last day of the period as provided by the user.
+#'
+#' @examples
+#' # passes
+#' final.week <- 1
+#' final.day <- 7
+#'
+#' # doesn't pass
+#' final.week <- 2
+#' final.day <- 4
+#'
+#' @keywords Internal
+#' @noRd
+
+check.final.agreement <-
+  function(final.year,
+           final.month,
+           final.week,
+           final.day) {
+    msg <-
+      "The last day of the period must be 1, 7, 14, 21 or (28/29 Feb) or 30/31."
+
+    if (final.week == 1 & final.day != 7) {
+      stop(msg,
+           call. = FALSE)
+    } else if (final.week == 2 & final.day != 14) {
+      stop(msg,
+           call. = FALSE)
+    } else if (final.week == 3 & final.day != 21) {
+      stop(msg,
+           call. = FALSE)
+    } else if (final.month %in% c(1, 3, 5, 7, 8, 10, 12) &
+               final.week == 4 & final.day != 31) {
+      stop(msg,
+           call. = FALSE)
+    } else if (final.month %in% c(4, 6, 9, 11) &
+               final.week == 4 & final.day != 30) {
+      stop(msg,
+           call. = FALSE)
+    } else if (isFALSE(lubridate::leap_year(final.year)) &&
+               final.month == 2) {
+      if (final.day != 28) {
+        stop(msg,
+             call. = FALSE)
+      } else {
+        stop(msg,
+             call. = FALSE)
+      }
+    }
+    return(invisible(NULL))
   }

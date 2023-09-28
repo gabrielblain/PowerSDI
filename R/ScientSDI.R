@@ -143,7 +143,7 @@ ScientSDI <-
       as.numeric(format(start.date.user, format = "%m"))
 
     start.week <-
-      calculate.week(start.user.day) # see internal_functions.R
+      find.week.int(start.user.day) # see internal_functions.R
     dif <-
       calculate.dif(start.week, start.user.day) # see internal_functions.R
 
@@ -280,9 +280,9 @@ ScientSDI <-
     n <- length(which(data.week[, 3] <= final.year))
     data.week <- data.week[1:n, ]
 
-    # see internal_functions.R for `find.quart.month()`
+    # see internal_functions.R for `find.quart.month.int()`
     data.week <-
-      cbind(data.week, find.quart.month(x = data.week))
+      cbind(data.week, find.quart.month.int(x = data.week))
 
     first.row <-
       which(data.week[, 3] == start.year &

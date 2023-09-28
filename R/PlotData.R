@@ -47,7 +47,7 @@ PlotData <- function(lon, lat, start.date, end.date) {
   start.year <-
     as.numeric(format(start.date.user, format = "%Y"))
 
-  start.week <- calculate.week(start.user.day) # see internal_functions.R
+  start.week <- find.week.int(start.user.day) # see internal_functions.R
   dif <- calculate.dif(start.week, start.user.day) # see internal_functions.R
 
   start.date.protocal <- start.date.user - dif
@@ -115,8 +115,8 @@ PlotData <- function(lon, lat, start.date, end.date) {
   final.month <- sse_i$MM[n.tot]
   final.day <- sse_i$DD[n.tot]
 
-  # see internal_functions.R for `calculate.week()`
-  final.week <- calculate.week(final.day)
+  # see internal_functions.R for `find.week.int()`
+  final.week <- find.week.int(final.day)
   n.years <- 1 + (final.year - initial.year)
   total.nweeks <- 48 * n.years
   a <- 1
@@ -176,9 +176,9 @@ PlotData <- function(lon, lat, start.date, end.date) {
   n <- length(which(data.week[, 3] <= final.year))
   data.week <- data.week[1:n, ]
 
-  # see internal_functions.R for `find.quart.month()`
+  # see internal_functions.R for `find.quart.month.int()`
   data.week <-
-    cbind(data.week, find.quart.month(x = data.week))
+    cbind(data.week, find.quart.month.int(x = data.week))
 
   first.row <-
     which(data.week[, 3] == start.year &
