@@ -436,11 +436,11 @@ OperatSDI <-
         "Categ.SPI",
         "Categ.SPEI"
       )
-      show.date <- as.Date(start.date, "%Y-%m-%d")
+
       return(SDI.final)
     }
-    if (is.na(sum(SDI.final[, 10]))) {
-      message("Check the original data, it might have gaps")
+    if (anyNA(SDI.final[, 10])) {
+      message("Check the original data, it might have gaps.")
     }
     message("Considering the selected TS, the calculations started on:")
     print(start.date.user)
