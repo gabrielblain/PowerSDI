@@ -197,7 +197,7 @@ check.sig.level <- function(sig.level) {
 #'
 #' @return A character string classification scheme for wetness
 #' @noRd
-#' @Internal
+#' @keywords Internal
 
 find.category <- function(x) {
   as.character(cut(
