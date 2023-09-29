@@ -283,8 +283,8 @@ OperatSDI <-
     if (n.rows > 0) {
       data.week <- as.matrix(data.week[-c(rows), , drop = FALSE])
     }
-    rows <- which(data.week[, 3] == final.year &
-                    data.week[, 4] == final.month &
+    rows <- which(data.week[, 3] == final.year & data.week[,
+                                                           4] == final.month &
                     data.week[, 5] > final.week)
     n.rows <- length(rows)
     if (n.rows > 0) {
@@ -295,12 +295,12 @@ OperatSDI <-
     data.week <-
       cbind(data.week, find.quart.month.int(x = data.week))
 
-    first.row <- which(data.week[, 3] == start.year &
-                         data.week[, 4] == start.month &
+    first.row <- which(data.week[, 3] == start.year & data.week[,
+                                                                4] == start.month &
                          data.week[, 5] == start.week)
     if (first.row > 1) {
-      data.week <- as.matrix(data.week[-c(1:(first.row - 1)),
-                                       drop = FALSE])
+      data.week <- as.matrix(data.week[-c(1:(first.row -
+                                               1)), , drop = FALSE])
     }
     n <- length(data.week[, 1])
     data.at.timescale <- matrix(NA, (n - (TS - 1)), 7)
@@ -339,7 +339,8 @@ OperatSDI <-
     n.weeks <- length(data.at.timescale[, 1])
     pos <- 1
     SDI <- matrix(NA, n.weeks, 2)
-    parameters <- as.data.frame(parms[which(parms[, 1] == lon &
+    parameters <- as.data.frame(parms[which(parms[, 1] ==
+                                              lon &
                                               parms[, 2] == lat &
                                               parms[, 13] == TS),])
     if (length(parameters[, 1]) == 0) {
