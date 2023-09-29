@@ -341,7 +341,7 @@ OperatSDI <-
     SDI <- matrix(NA, n.weeks, 2)
     parameters <- as.data.frame(parms[which(parms[, 1] == lon &
                                               parms[, 2] == lat &
-                                              parms[, 13] == TS), ])
+                                              parms[, 13] == TS),])
     if (length(parameters[, 1]) == 0) {
       message(
         "It seems that you don't have the distributions' parameters for this",
@@ -439,7 +439,7 @@ OperatSDI <-
       show.date <- as.Date(start.date, "%Y-%m-%d")
       return(SDI.final)
     }
-    if (is.na(sum(SDI.final[, 10])) == TRUE) {
+    if (is.na(sum(SDI.final[, 10]))) {
       message("Check the original data, it might have gaps")
     }
     message("Considering the selected TS, the calculations started on:")
