@@ -1,32 +1,5 @@
 
-#' Calculate start.week Value
-#'
-#' Given a user-supplied \code{user.start.day} value, calculate the start.week
-#'   value.
-#'
-#' @param x User provided value for the start date of the day of
-#'   month.
-#'
-#' @examples
-#' # start.week 1
-#' calculate.week(7)
-#'
-#' # start.week 3
-#' calculate.week(17)
-#'
-#' @keywords Internal
-#' @noRd
-
-calculate.week <- function(x) {
-  return(cut(
-    x = x,
-    breaks = c(1, 7, 14, 21, 31),
-    include.lowest = TRUE,
-    labels = FALSE
-  ))
-}
-
-#' Check User-Provied Dates for Validity
+#' Check User-Provided Dates for Validity
 #'
 #' Validates user entered dates for format
 #'
@@ -93,19 +66,19 @@ check.dates <- function(dates) {
 #' Calculate dif Value
 #'
 #' Given a user-supplied \code{user.start.day} value and a \code{start.week}
-#'   value from \code{calculate.week}, calculate the \code{dif} value.
-#' @param x A value calculated from \code{calculate.week}.
+#'   value from \code{find.week.int}, calculate the \code{dif} value.
+#' @param x A value calculated from \code{find.week.int}.
 #' @param y User provided value for the start date of the day of
 #'   month.
 #'
 #' @examples
 #' # start.week 1
 #' start.user.day <- 7
-#' start.week <- calculate.week(start.user.day)
+#' start.week <- find.week.int(start.user.day)
 #' calculate.dif(start.week, start.user.day)
 #'
 #' # start.week 3
-#' calculate.week(17)
+#' find.week.int(17)
 #'
 #' @keywords Internal
 #' @noRd
@@ -187,6 +160,7 @@ check.TS <- function(TS) {
       call. = FALSE
     )
   }
+  return(invisible(NULL))
 }
 
 #' Check User-Input sig.level
@@ -211,9 +185,38 @@ check.sig.level <- function(sig.level) {
       call. = FALSE
     )
   }
+  return(invisible(NULL))
 }
 
-#' Find the quart.month Value
+#' Find Wetness Category
+#'
+#' @param x a vector of values
+#'
+#' @examples
+#' find.category(x = -3:3)
+#'
+#' @return A character string classification scheme for wetness
+#' @noRd
+#' @keywords Internal
+
+find.category <- function(x) {
+  as.character(cut(
+    x = x,
+    breaks = c(-Inf, -2, -1.5, -1, 1, 1.5, 2, Inf),
+    include.lowest = TRUE,
+    labels = c(
+      "ext.dry",
+      "sev.dry",
+      "mod.dry",
+      "Normal",
+      "mod.wet",
+      "sev.wet",
+      "ext.wet"
+    )
+  ))
+}
+
+#' Find the quart.month Integer Value
 #' @param x A data.frame, usually called \dQuote{data.week}
 #'
 #' @examples
@@ -240,13 +243,13 @@ check.sig.level <- function(sig.level) {
 #'   ),
 #'   dim = c(2L, 8L)
 #' )
-#'   find.quart.month(data.week)
+#'   find.quart.month.int(data.week)
 #'
 #' @keywords Internal
 #' @noRd
 #'
 
-find.quart.month <- function(x) {
+find.quart.month.int <- function(x) {
   M1 <-
     cbind(rep(1:12, each = 4), rep(1:4, length.out = 48))
   M2 <- cbind(x[, 4], x[, 5])
@@ -254,5 +257,33 @@ find.quart.month <- function(x) {
   apply(M2, 1, function(a)
     which(apply(M1, 1, function(b)
       all(b == a))))
+}
+
+
+#' Find a Corresponding Integer Value for a Week's Position in a Month
+#'
+#' Given a user-supplied \code{user.start.day} value, calculate the start.week
+#'   value.
+#'
+#' @param x User provided value for the start date of the day of
+#'   month.
+#'
+#' @examples
+#' # start.week 1
+#' find.week.int(7)
+#'
+#' # start.week 3
+#' find.week.int(17)
+#'
+#' @keywords Internal
+#' @noRd
+
+find.week.int <- function(x) {
+  return(cut(
+    x = x,
+    breaks = c(1, 7, 14, 21, 31),
+    include.lowest = TRUE,
+    labels = FALSE
+  ))
 }
 

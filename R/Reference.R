@@ -85,7 +85,7 @@ Reference <- function(ref,
   start.month <- ref$MM[1]
   start.day <- ref$DD[1]
 
-  start.week <- calculate.week(start.day)
+  start.week <- find.week.int(start.day)
 
   if (PEMethod == "HS") {
     tmed <- ref$tmed
@@ -159,32 +159,23 @@ Reference <- function(ref,
     ea <- (RH * es) / 100
     slope.pressure <- (4098 * es) / ((tmed + 237.3) ^ 2)
     Q0.ajust <- 0.75 * Ra
-    Rn <- (1 - 0.2) * Rs - (1.35 * (Rs / Q0.ajust) -
-                              0.35) * (0.35 - (0.14 * sqrt(ea))) * (5.67 *
-                                                                      10 ^ -8) * (((tmed ^ 4) + (tmin ^ 4)) / 2)
-    ETP.pm.daily <- (0.408 * slope.pressure * (Rn -
-                                                 0.8) + 0.063 * (900 / (tmed + 273)) * W * (es -
-                                                                                              ea)) / (slope.pressure + 0.063 * (1 + 0.34 *
-                                                                                                                                  W))
+    Rn <- (1 - 0.2) * Rs -
+      (1.35 * (Rs / Q0.ajust) - 0.35) *
+      (0.35 - (0.14 * sqrt(ea))) *
+      (5.67 * 10 ^ -8) * (((tmed ^ 4) + (tmin ^ 4)) / 2)
+    ETP.pm.daily <- (0.408 * slope.pressure * (Rn - 0.8) +
+                       0.063 * (900 / (tmed + 273)) * W *
+                       (es - ea)) / (slope.pressure + 0.063 *
+                                       (1 + 0.34 * W))
     message("Calculating. Please wait.")
     ref <- cbind(ref, ETP.pm.daily)
     n.tot <- length(ref[, 1])
     end.year <- ref$YEAR[n.tot]
     end.month <- ref$MM[n.tot]
     end.day <- ref$DD[n.tot]
-    if (end.day <= 7) {
-      end.week <- 1
-    } else {
-      if (end.day <= 14) {
-        end.week <- 2
-      } else {
-        if (end.day <= 21) {
-          end.week <- 3
-        } else {
-          end.week <- 4
-        }
-      }
-    }
+
+    end.week <- find.week.int(end.day)
+
     n.years <- 1 + (end.year - start.year)
     total.nweeks <- 48 * n.years
     a <- 1
@@ -236,8 +227,8 @@ Reference <- function(ref,
   }
   data.week <- cbind(data.week, rep(1:48, n.years))
   first.row <- which(data.week[, 1] == start.year &
-                       data.week[, 2] == start.month & data.week[,
-                                                                 3] == start.week)
+                       data.week[, 2] == start.month &
+                       data.week[, 3] == start.week)
   if (first.row > 1) {
     data.week <- data.week[-(1:(first.row - 1)), ]
   }
@@ -263,16 +254,16 @@ Reference <- function(ref,
     b <- TS
     c <- 1
     data.at.timescale[c, ] <- c(data.week[b, 1:2],
-                                data.week[b, 6], colSums(data.week[a:b,
-                                                                   4:5]))
+                                data.week[b, 6],
+                                colSums(data.week[a:b, 4:5]))
     point <- point + 1
     a <- a + 1
     b <- b + 1
     c <- c + 1
     while (point <= end.point) {
-      data.at.timescale[c, ] <- c(data.week[b,
-                                            1:2], data.week[b, 6], colSums(data.week[a:b,
-                                                                                     4:5]))
+      data.at.timescale[c, ] <- c(data.week[b, 1:2],
+                                  data.week[b, 6],
+                                  colSums(data.week[a:b, 4:5]))
       point <- point + 1
       a <- a + 1
       b <- b + 1
@@ -280,15 +271,15 @@ Reference <- function(ref,
     }
   } else {
     data.at.timescale <- cbind(data.week[, 1:2],
-                               data.week[, 6], data.week[, 4:5])
+                               data.week[, 6],
+                               data.week[, 4:5])
   }
   data.at.timescale <- cbind(data.at.timescale,
-                             (data.at.timescale[, 4] - data.at.timescale[,
-                                                                         5]))
+                             (data.at.timescale[, 4] -
+                                data.at.timescale[, 5]))
   parameters <- matrix(NA, 48, 7)
   for (i in seq_along(1:48)) {
-    rain <- data.at.timescale[which(data.at.timescale[,
-                                                      3] == i), 4]
+    rain <- data.at.timescale[which(data.at.timescale[, 3] == i), 4]
     rain.nozero <- rain[rain > 0]
     n.rain <- length(rain)
     n.nonzero <- length(rain.nozero)
@@ -296,8 +287,7 @@ Reference <- function(ref,
     probzero <- (n.z + 1) / (2 * (n.rain + 1))
     parameters[i, 1:4] <- c(i, pelgam(samlmu(rain.nozero)),
                             probzero)
-    pep <- data.at.timescale[which(data.at.timescale[,
-                                                     3] == i), 6]
+    pep <- data.at.timescale[which(data.at.timescale[, 3] == i), 6]
     if (distr == "GEV") {
       parameters[i, 5:7] <- c(pelgev(samlmu(pep)))
     } else {
@@ -316,9 +306,9 @@ Reference <- function(ref,
   SDI <- matrix(NA, n.weeks, 2)
   while (pos <= n.weeks) {
     i <- data.at.timescale[pos, 3]
-    prob <- parameters[i, 4] + (1 - parameters[i,
-                                               4]) * cdfgam(data.at.timescale[pos, 4],
-                                                            c(parameters[i, 2], parameters[i, 3]))
+    prob <- parameters[i, 4] +
+      (1 - parameters[i, 4]) *
+      cdfgam(data.at.timescale[pos, 4], c(parameters[i, 2], parameters[i, 3]))
     if (!is.na(prob) && prob < 0.001351) {
       prob <- 0.001351
     }

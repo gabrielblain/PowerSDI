@@ -59,15 +59,8 @@ OperatSDI <-
       stop("PEMethod should be set to either HS or PM.", call. = FALSE)
     }
 
-    if (distr != "GEV" && distr != "GLO") {
-      stop("`distr` should be either 'GEV' or 'GLO'",
-           call. = FALSE)
-    }
-
-    if (TS < 1 || TS > 96 || !all.equal(TS, as.integer(TS))) {
-      stop("TS must be an integer value ranging between 1 and 96.",
-           call. = FALSE)
-    }
+    check.distr(distr)
+    check.TS(TS)
 
     dates <- check.dates(c(start.date, end.date))
     start.date.user <- dates[[1]]
@@ -75,118 +68,33 @@ OperatSDI <-
 
     end.date.user <- as.Date(end.date, "%Y-%m-%d")
     start.date.user <- as.Date(start.date, "%Y-%m-%d")
-    actual.start.day <-
-      as.numeric(format(start.date.user, format = "%d"))
 
     final.year <- as.numeric(format(end.date.user, format = "%Y"))
     final.month <- as.numeric(format(end.date.user, format = "%m"))
     final.day <- as.numeric(format(end.date.user, format = "%d"))
-    if (final.day <= 7) {
-      final.week <- 1
-    }
-    if (final.day > 7 & final.day <= 14) {
-      final.week <- 2
-    }
-    if (final.day > 14 & final.day <= 21) {
-      final.week <- 3
-    }
-    if (final.day > 21) {
-      final.week <- 4
-    }
-    if (final.week == 1 &&
-        final.day != 7) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.week == 2 &
-        final.day != 14) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.week == 3 &
-        final.day != 21) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 1 &
-        final.week == 4 &
-        final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 3 &
-        final.week == 4 &
-        final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 5 &
-        final.week == 4 &
-        final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 7 &
-        final.week == 4 &
-        final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 8 &
-        final.week == 4 &
-        final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 10 &
-        final.week == 4 &
-        final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 12 &
-        final.week == 4 &
-        final.day != 31) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 4 &
-        final.week == 4 &
-        final.day != 30) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 6 &
-        final.week == 4 &
-        final.day != 30) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 9 &
-        final.week == 4 &
-        final.day != 30) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 11 &
-        final.week == 4 &
-        final.day != 30) {
-      stop ("the last day of the period must be 1, 7, 14, 21 or (28/29 feb) or 30/31")
-    }
-    if (final.month == 2 & final.week == 4) {
-      leap = (final.year %% 4 == 0 &
-                (final.year %% 100 != 0 | final.year %% 400 == 0))
-      if (leap == FALSE) {
-        if (final.day != 28) {
-          stop ("the last day of the period must be 1, 7, 14, 21 or 28")
-        }
-      } else{
-        if (final.day != 29) {
-          stop ("Leap year: the last day of the period must be 1, 7, 14, 21 or 29")
-        }
-      }
-    }
+
+    final.week <- find.week.int(final.day)
+
+    # see bottom of this file for this function
+    check.final.agreement(final.year, final.month, final.week, final.day)
+
     mim.date.fit <- (end.date.user - start.date.user) + 1
 
     if (TS > 1) {
       start.date.user <- start.date.user - (10 * TS)
     }
-    start.day <- as.numeric(format(start.date.user, format = "%d"))
 
+    start.day <- as.numeric(format(start.date.user, format = "%d"))
     start.year <- as.numeric(format(start.date.user, format = "%Y"))
     start.month <-
       as.numeric(format(start.date.user, format = "%m"))
+
     if (mim.date.fit < 7) {
-      message("Time difference between end.date and start.date must be equal to or longer than 7 days")
+      message("Time difference between `end.date` and `start.date`",
+              "must be equal to or longer than 7 days")
     }
-    start.week <- calculate.week(start.day)
+
+    start.week <- find.week.int(start.day)
     dif <- calculate.dif(start.week, start.day)
 
     start.date.user <- start.date.user - dif
@@ -209,25 +117,18 @@ OperatSDI <-
                  "T2M_MIN",
                  "PRECTOTCORR")
       ))
-      decli <-
-        23.45 * sin((360 * (sse_i$DOY - 80) / 365) * 0.01745329)
-      lat.rad <- lat * 0.01745329
-      decli.rad <- decli * 0.01745329
-      hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
-      hn.deg <- hn.rad * 57.29578
-      N <- (2 * hn.deg) / 15
-      dist.terra.sol <- 1 + (0.033 * cos((0.01745329) *
-                                           (sse_i$DOY * 0.9863014)))
-      Ra <- (37.6 * (dist.terra.sol ^ 2)) *
-        (0.01745329 *
-           hn.deg *
-           sin(lat.rad) *
-           sin(decli.rad) +
-           (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
-      ETP.harg.daily <-
-        0.0023 * (Ra * 0.4081633) * (sse_i$T2M_MAX -
-                                       sse_i$T2M_MIN) ^
-        0.5 * (sse_i$T2M + 17.8)
+
+      # see calculation functions for the following functions
+      decli <- calc.decli(sse_i)
+      lat.rad <- calc.lat.rad(lat)
+      decli.rad <- calc.decli.rad(decli)
+      hn.rad <- calc.hn.rad(decli.rad, lat.rad)
+      hn.deg <- calc.hn.deg(hn.rad)
+      N <- calc.N(hn.deg)
+      dist.terra.sol <- calc.dist.terra.sol(sse_i)
+      Ra <- calc.Ra(dist.terra.sol, hn.deg, lat.rad, decli.rad)
+      ETP.harg.daily <- calc.ETP.harg.daily(Ra, sse_i)
+
       sse_i <- cbind(sse_i, ETP.harg.daily)
       n.tot <- length(sse_i[, 1])
       final.year <- sse_i$YEAR[n.tot]
@@ -302,34 +203,22 @@ OperatSDI <-
           "PRECTOTCORR"
         )
       ))
-      decli <- 23.45 * sin((360 * (sse_i$DOY - 80) / 365) *
-                             (0.01745329))
-      lat.rad <- lat * (0.01745329)
-      decli.rad <- decli * (0.01745329)
-      hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
-      hn.deg <- hn.rad * (180 / pi)
-      N <- (2 * hn.deg) / 15
-      dist.terra.sol <-
-        1 + (0.033 * cos((0.01745329) * (sse_i$DOY *
-                                           (0.9863014))))
-      Ra <- (37.6 * (dist.terra.sol ^ 2)) * ((0.01745329) *
-                                               hn.deg * sin(lat.rad) * sin(decli.rad) + (cos(lat.rad) *
-                                                                                           cos(decli.rad) * sin(hn.rad)))
-      es <- 0.6108 * exp((17.27 * sse_i$T2M) / (sse_i$T2M +
-                                                  273.3))
-      ea <- (sse_i$RH2M * es) / 100
-      slope.pressure <- (4098 * es) / ((sse_i$T2M + 237.3) ^ 2)
-      Q0.ajust <- 0.75 * Ra
-      Rn <- (1 - 0.2) * sse_i$ALLSKY_SFC_SW_DWN - (1.35 *
-                                                     (sse_i$ALLSKY_SFC_SW_DWN /
-                                                        Q0.ajust) - 0.35) *
-        (0.35 - (0.14 * sqrt(ea))) * (5.67 * 10 ^ -8) *
-        (((sse_i$T2M ^ 4) + (sse_i$T2M_MIN ^ 4)) / 2)
-      ETP.pm.daily <- (0.408 * slope.pressure * (Rn -
-                                                   0.8) + 0.063 * (900 /
-                                                                     (sse_i$T2M + 273)) * sse_i$WS2M *
-                         (es - ea)) / (slope.pressure + 0.063 * (1 + 0.34 *
-                                                                   sse_i$WS2M))
+      # see calculation functions for the following functions
+      decli <- calc.decli(sse_i)
+      lat.rad <- calc.lat.rad(lat)
+      decli.rad <- calc.decli.rad(decli)
+      hn.rad <- calc.hn.rad(decli.rad, lat.rad)
+      hn.deg <- calc.hn.deg(hn.rad)
+      N <- calc.N(hn.deg)
+      dist.terra.sol <- calc.dist.terra.sol(sse_i)
+      Ra <- calc.Ra(dist.terra.sol, hn.deg, lat.rad, decli.rad)
+      es <- calc.es(sse_i)
+      ea <- calc.ea(sse_i, es)
+      slope.pressure <- calc.slope.pressure(es, sse_i)
+      Q0.ajust <- calc.Q0.ajust(Ra)
+      Rn <- calc.Rn(sse_i, Q0.ajust, ea)
+      ETP.pm.daily <- calc.ETP.pm.daily(slope.pressure, sse_i, es, ea)
+
       sse_i <- cbind(sse_i, ETP.pm.daily)
       n.tot <- length(sse_i[, 1])
       final.year <- sse_i$YEAR[n.tot]
@@ -388,8 +277,8 @@ OperatSDI <-
       }
     }
     data.week <- na.omit(data.week)
-    rows <- which(data.week[, 3] == final.year & data.week[,
-                                                           4] > final.month)
+    rows <- which(data.week[, 3] == final.year &
+                    data.week[, 4] > final.month)
     n.rows <- length(rows)
     if (n.rows > 0) {
       data.week <- as.matrix(data.week[-c(rows), , drop = FALSE])
@@ -402,9 +291,9 @@ OperatSDI <-
       data.week <- as.matrix(data.week[-c(rows), , drop = FALSE])
     }
 
-    # see internal_functions.R for `find.quart.month()`
+    # see internal_functions.R for `find.quart.month.int()`
     data.week <-
-      cbind(data.week, find.quart.month(x = data.week))
+      cbind(data.week, find.quart.month.int(x = data.week))
 
     first.row <- which(data.week[, 3] == start.year & data.week[,
                                                                 4] == start.month &
@@ -421,15 +310,17 @@ OperatSDI <-
       a <- 1
       b <- TS
       c <- 1
-      data.at.timescale[c, ] <- c(data.week[b, 1:4], data.week[b,
-                                                               8], colSums(data.week[a:b, 6:7]))
+      data.at.timescale[c, ] <- c(data.week[b, 1:4],
+                                  data.week[b, 8],
+                                  colSums(data.week[a:b, 6:7]))
       point <- point + 1
       a <- a + 1
       b <- b + 1
       c <- c + 1
       while (point <= final.point) {
         data.at.timescale[c, ] <- c(data.week[b, 1:4],
-                                    data.week[b, 8], colSums(data.week[a:b, 6:7]))
+                                    data.week[b, 8],
+                                    colSums(data.week[a:b, 6:7]))
         point <- point + 1
         a <- a + 1
         b <- b + 1
@@ -437,8 +328,9 @@ OperatSDI <-
       }
     }
     else {
-      data.at.timescale[, ] <- as.matrix(c(data.week[,
-                                                     1:4], data.week[, 8], data.week[, 6:7]))
+      data.at.timescale[, ] <- as.matrix(c(data.week[, 1:4],
+                                           data.week[, 8],
+                                           data.week[, 6:7]))
     }
     data.at.timescale <- as.matrix(cbind(
       data.at.timescale,
@@ -450,10 +342,12 @@ OperatSDI <-
     parameters <- as.data.frame(parms[which(parms[, 1] ==
                                               lon &
                                               parms[, 2] == lat &
-                                              parms[, 13] == TS), ])
+                                              parms[, 13] == TS),])
     if (length(parameters[, 1]) == 0) {
       message(
-        "It seems that you don't have the distributions' parameters for this local and time scale(TS).\n                                      You must first run Scient.R function."
+        "It seems that you don't have the distributions' parameters for this",
+        "local and time scale(TS).\n",
+        "You must first run the `ScientSDI()` function."
       )
     }
     else {
@@ -462,12 +356,12 @@ OperatSDI <-
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
           prob <-
-            (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos,
-                                                               6], c(par[4], par[5]))
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+            (par[6] + (1 - par[6])) *
+            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob) & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
@@ -479,10 +373,10 @@ OperatSDI <-
             prob <- cdfgev(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob) & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
@@ -494,12 +388,12 @@ OperatSDI <-
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
           prob <-
-            (par[6] + (1 - par[6])) * cdfgam(data.at.timescale[pos,
-                                                               6], c(par[4], par[5]))
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+            (par[6] + (1 - par[6])) *
+            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob) & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
@@ -511,10 +405,10 @@ OperatSDI <-
             prob <- cdfglo(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
-          if (is.na(prob) == FALSE & prob < 0.001351) {
+          if (!is.na(prob) & prob < 0.001351) {
             prob <- 0.001351
           }
-          if (is.na(prob) == FALSE & prob > 0.998649) {
+          if (!is.na(prob) & prob > 0.998649) {
             prob <- 0.998649
           }
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
@@ -522,80 +416,11 @@ OperatSDI <-
         }
       }
       categories <- matrix(NA, n.weeks, 2)
-      for (i in 1:n.weeks) {
-        if (SDI[i, 1] <= -2 & !is.na(SDI[i, 1])) {
-          categories[i, 1] <- "ext.dry"
-        }
-        else {
-          if (SDI[i, 1] <= -1.5 & !is.na(SDI[i, 1])) {
-            categories[i, 1] <- "sev.dry"
-          }
-          else {
-            if (SDI[i, 1] <= -1 & !is.na(SDI[i, 1])) {
-              categories[i, 1] <- "mod.dry"
-            }
-            else {
-              if (SDI[i, 1] <= 1 & !is.na(SDI[i, 1])) {
-                categories[i, 1] <- "Normal"
-              }
-              else {
-                if (SDI[i, 1] <= 1.5 & !is.na(SDI[i,
-                                                  1])) {
-                  categories[i, 1] <- "mod.wet"
-                }
-                else {
-                  if (SDI[i, 1] <= 2 & !is.na(SDI[i,
-                                                  1])) {
-                    categories[i, 1] <- "sev.wet"
-                  }
-                  else {
-                    if (SDI[i, 1] > 2 & !is.na(SDI[i,
-                                                   1])) {
-                      categories[i, 1] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (SDI[i, 2] <= -2 & !is.na(SDI[i, 2])) {
-          categories[i, 2] <- "ext.dry"
-        }
-        else {
-          if (SDI[i, 2] <= -1.5 & !is.na(SDI[i, 2])) {
-            categories[i, 2] <- "sev.dry"
-          }
-          else {
-            if (SDI[i, 2] <= -1 & !is.na(SDI[i, 2])) {
-              categories[i, 2] <- "mod.dry"
-            }
-            else {
-              if (SDI[i, 2] <= 1 & !is.na(SDI[i, 2])) {
-                categories[i, 2] <- "Normal"
-              }
-              else {
-                if (SDI[i, 2] <= 1.5 & !is.na(SDI[i,
-                                                  2])) {
-                  categories[i, 2] <- "mod.wet"
-                }
-                else {
-                  if (SDI[i, 2] <= 2 & !is.na(SDI[i,
-                                                  2])) {
-                    categories[i, 2] <- "sev.wet"
-                  }
-                  else {
-                    if (SDI[i, 2] > 2 & !is.na(SDI[i,
-                                                   2])) {
-                      categories[i, 2] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+
+      # see internal_functions.R for find.category()
+      categories[, 1] <- find.category(x = SDI[, 1])
+      categories[, 2] <- find.category(x = SDI[, 2])
+
       SDI <- cbind(data.at.timescale, SDI)
       SDI.final <- data.frame(SDI, categories)
       colnames(SDI.final) <- c(
@@ -612,13 +437,72 @@ OperatSDI <-
         "Categ.SPI",
         "Categ.SPEI"
       )
-      show.date <- as.Date(start.date, "%Y-%m-%d")
+      if (anyNA(SDI.final[, 10])) {
+        message("Check the original data, it might have gaps.")
+      }
       return(SDI.final)
     }
-    if (is.na(sum(SDI.final[, 10])) == TRUE) {
-      message("Check the original data, it might have gaps")
-    }
+
     message("Considering the selected TS, the calculations started on:")
     print(start.date.user)
   }
 
+
+#' Check for Final Day and Week Agreement
+#'
+#' Ensures that the final day of a period is an acceptable value for the last
+#' day of a period for the purposes of this package.
+#'
+#' @param final.week The last week of the period as calculated by
+#'   find.week.int()
+#' @param final.day The last day of the period as provided by the user.
+#'
+#' @examples
+#' # passes
+#' final.week <- 1
+#' final.day <- 7
+#'
+#' # doesn't pass
+#' final.week <- 2
+#' final.day <- 4
+#'
+#' @keywords Internal
+#' @noRd
+
+check.final.agreement <-
+  function(final.year,
+           final.month,
+           final.week,
+           final.day) {
+    msg <-
+      "The last day of the period must be 1, 7, 14, 21 or (28/29 Feb) or 30/31."
+
+    if (final.week == 1 & final.day != 7) {
+      stop(msg,
+           call. = FALSE)
+    } else if (final.week == 2 & final.day != 14) {
+      stop(msg,
+           call. = FALSE)
+    } else if (final.week == 3 & final.day != 21) {
+      stop(msg,
+           call. = FALSE)
+    } else if (final.month %in% c(1, 3, 5, 7, 8, 10, 12) &
+               final.week == 4 & final.day != 31) {
+      stop(msg,
+           call. = FALSE)
+    } else if (final.month %in% c(4, 6, 9, 11) &
+               final.week == 4 & final.day != 30) {
+      stop(msg,
+           call. = FALSE)
+    } else if (isFALSE(lubridate::leap_year(final.year)) &&
+               final.month == 2) {
+      if (final.day != 28) {
+        stop(msg,
+             call. = FALSE)
+      } else {
+        stop(msg,
+             call. = FALSE)
+      }
+    }
+    return(invisible(NULL))
+  }
