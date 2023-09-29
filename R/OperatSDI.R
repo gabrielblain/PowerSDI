@@ -83,14 +83,17 @@ OperatSDI <-
     if (TS > 1) {
       start.date.user <- start.date.user - (10 * TS)
     }
+
     start.day <- as.numeric(format(start.date.user, format = "%d"))
     start.year <- as.numeric(format(start.date.user, format = "%Y"))
     start.month <-
       as.numeric(format(start.date.user, format = "%m"))
+
     if (mim.date.fit < 7) {
       message("Time difference between `end.date` and `start.date`",
               "must be equal to or longer than 7 days")
     }
+
     start.week <- find.week.int(start.day)
     dif <- calculate.dif(start.week, start.day)
 
@@ -114,25 +117,18 @@ OperatSDI <-
                  "T2M_MIN",
                  "PRECTOTCORR")
       ))
-      decli <-
-        23.45 * sin((360 * (sse_i$DOY - 80) / 365) * 0.01745329)
-      lat.rad <- lat * 0.01745329
-      decli.rad <- decli * 0.01745329
-      hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
-      hn.deg <- hn.rad * 57.29578
-      N <- (2 * hn.deg) / 15
-      dist.terra.sol <- 1 + (0.033 * cos((0.01745329) *
-                                           (sse_i$DOY * 0.9863014)))
-      Ra <- (37.6 * (dist.terra.sol ^ 2)) *
-        (0.01745329 *
-           hn.deg *
-           sin(lat.rad) *
-           sin(decli.rad) +
-           (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
-      ETP.harg.daily <-
-        0.0023 * (Ra * 0.4081633) * (sse_i$T2M_MAX -
-                                       sse_i$T2M_MIN) ^
-        0.5 * (sse_i$T2M + 17.8)
+
+      # see calculation functions for the following functions
+      decli <- calc.decli(sse_i)
+      lat.rad <- calc.lat.rad(lat)
+      decli.rad <- calc.decli.rad(decli)
+      hn.rad <- calc.hn.rad(decli.rad, lat.rad)
+      hn.deg <- calc.hn.deg(hn.rad)
+      N <- calc.N(hn.deg)
+      dist.terra.sol <- calc.dist.terra.sol(sse_i)
+      Ra <- calc.Ra(dist.terra.sol, hn.deg, lat.rad, decli.rad)
+      ETP.harg.daily <- calc.ETP.harg.daily(Ra, sse_i)
+
       sse_i <- cbind(sse_i, ETP.harg.daily)
       n.tot <- length(sse_i[, 1])
       final.year <- sse_i$YEAR[n.tot]
@@ -207,34 +203,22 @@ OperatSDI <-
           "PRECTOTCORR"
         )
       ))
-      decli <- 23.45 * sin((360 * (sse_i$DOY - 80) / 365) *
-                             (0.01745329))
-      lat.rad <- lat * (0.01745329)
-      decli.rad <- decli * (0.01745329)
-      hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
-      hn.deg <- hn.rad * (180 / pi)
-      N <- (2 * hn.deg) / 15
-      dist.terra.sol <-
-        1 + (0.033 * cos((0.01745329) * (sse_i$DOY *
-                                           (0.9863014))))
-      Ra <- (37.6 * (dist.terra.sol ^ 2)) * ((0.01745329) *
-                                               hn.deg * sin(lat.rad) * sin(decli.rad) + (cos(lat.rad) *
-                                                                                           cos(decli.rad) * sin(hn.rad)))
-      es <- 0.6108 * exp((17.27 * sse_i$T2M) / (sse_i$T2M +
-                                                  273.3))
-      ea <- (sse_i$RH2M * es) / 100
-      slope.pressure <- (4098 * es) / ((sse_i$T2M + 237.3) ^ 2)
-      Q0.ajust <- 0.75 * Ra
-      Rn <- (1 - 0.2) * sse_i$ALLSKY_SFC_SW_DWN - (1.35 *
-                                                     (sse_i$ALLSKY_SFC_SW_DWN /
-                                                        Q0.ajust) - 0.35) *
-        (0.35 - (0.14 * sqrt(ea))) * (5.67 * 10 ^ -8) *
-        (((sse_i$T2M ^ 4) + (sse_i$T2M_MIN ^ 4)) / 2)
-      ETP.pm.daily <- (0.408 * slope.pressure * (Rn -
-                                                   0.8) + 0.063 * (900 /
-                                                                     (sse_i$T2M + 273)) * sse_i$WS2M *
-                         (es - ea)) / (slope.pressure + 0.063 * (1 + 0.34 *
-                                                                   sse_i$WS2M))
+      # see calculation functions for the following functions
+      decli <- calc.decli(sse_i)
+      lat.rad <- calc.lat.rad(lat)
+      decli.rad <- calc.decli.rad(decli)
+      hn.rad <- calc.hn.rad(decli.rad, lat.rad)
+      hn.deg <- calc.hn.deg(hn.rad)
+      N <- calc.N(hn.deg)
+      dist.terra.sol <- calc.dist.terra.sol(sse_i)
+      Ra <- calc.Ra(dist.terra.sol, hn.deg, lat.rad, decli.rad)
+      es <- calc.es(sse_i)
+      ea <- calc.ea(sse_i, es)
+      slope.pressure <- calc.slope.pressure(es, sse_i)
+      Q0.ajust <- calc.Q0.ajust(Ra)
+      Rn <- calc.Rn(sse_i, Q0.ajust, ea)
+      ETP.pm.daily <- calc.ETP.pm.daily(slope.pressure, sse_i, es, ea)
+
       sse_i <- cbind(sse_i, ETP.pm.daily)
       n.tot <- length(sse_i[, 1])
       final.year <- sse_i$YEAR[n.tot]
