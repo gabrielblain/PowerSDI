@@ -437,12 +437,12 @@ OperatSDI <-
         "Categ.SPI",
         "Categ.SPEI"
       )
-
+      if (anyNA(SDI.final[, 10])) {
+        message("Check the original data, it might have gaps.")
+      }
       return(SDI.final)
     }
-    if (anyNA(SDI.final[, 10])) {
-      message("Check the original data, it might have gaps.")
-    }
+
     message("Considering the selected TS, the calculations started on:")
     print(start.date.user)
   }
