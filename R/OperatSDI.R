@@ -358,12 +358,8 @@ OperatSDI <-
           prob <-
             (par[6] + (1 - par[6])) *
             cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
-          if (!is.na(prob) & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob) & prob > 0.998649) {
-            prob <- 0.998649
-          }
+          # see internal_functions.R for `adjust.prob()`
+          prob <- adjust.prob(prob)
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
           if (PEMethod == "HS") {
             prob <- cdfgev(data.at.timescale[pos, 8],
@@ -373,12 +369,8 @@ OperatSDI <-
             prob <- cdfgev(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
-          if (!is.na(prob) & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob) & prob > 0.998649) {
-            prob <- 0.998649
-          }
+          # see internal_functions.R for `adjust.prob()`
+          prob <- adjust.prob(prob)
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }
@@ -390,12 +382,8 @@ OperatSDI <-
           prob <-
             (par[6] + (1 - par[6])) *
             cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
-          if (!is.na(prob) & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob) & prob > 0.998649) {
-            prob <- 0.998649
-          }
+          # see internal_functions.R for `adjust.prob()`
+          prob <- adjust.prob(prob)
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
           if (PEMethod == "HS") {
             prob <- cdfglo(data.at.timescale[pos, 8],
@@ -405,12 +393,8 @@ OperatSDI <-
             prob <- cdfglo(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
-          if (!is.na(prob) & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob) & prob > 0.998649) {
-            prob <- 0.998649
-          }
+          # see internal_functions.R for `adjust.prob()`
+          prob <- adjust.prob(prob)
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }
