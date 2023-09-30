@@ -6,9 +6,9 @@ The PowerSDI is an R package capable of calculating the SPI and SPEI using NASA 
 
 The PowerSDI adopts a basic time scale that splits each month into four subperiods: days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 28, 29, 30, or 31 depending on the month. For instance, if TS=4, the time scale corresponds to a moving window with a 1-month length that is calculated four times each month. If TS=48, the time scale corresponds to a moving window with a 12-month length that is calculated four times each month. This time scale is referred as to quart.month.
 
-The package depends on R (>= 2.10) and R packages nasapower and lmom
+The package depends on R (>= 3.10) and R packages nasapower and lmom
 
-# Installation\
+# Installation
 
 ```r
 devtools::install_github("gabrielblain/PowerSDI")
