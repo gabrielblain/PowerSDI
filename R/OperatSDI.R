@@ -25,8 +25,7 @@
 #'   difference between rainfall and PE (in millimiters), the NASA-SPI and
 #'   NASA_SPEI, and the SDI categories corresponding to each indices estimates.
 #' @importFrom nasapower get_power
-#' @importFrom lmom cdfgam cdfgev cdfglo pelgam pelgev pelglo quagev quagam
-#'   quaglo samlmu
+#' @importFrom lmom cdfgam pelgam pelgev pelglo quagev quagam quaglo samlmu
 #' @importFrom graphics title
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #'
@@ -186,6 +185,7 @@ OperatSDI <-
         d <- d + 4
       }
     }
+
     if (PEMethod == "PM") {
       sse_i <- as.data.frame(get_power(
         community = "ag",
@@ -211,12 +211,10 @@ OperatSDI <-
       hn.deg <- calc.hn.deg(hn.rad)
       N <- calc.N(hn.deg)
       dist.terra.sol <- calc.dist.terra.sol(sse_i)
-      Ra <- calc.Ra(dist.terra.sol, hn.deg, lat.rad, decli.rad)
+      Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
       es <- calc.es(sse_i)
       ea <- calc.ea(sse_i, es)
       slope.pressure <- calc.slope.pressure(es, sse_i)
-      Q0.ajust <- calc.Q0.ajust(Ra)
-      Rn <- calc.Rn(sse_i, Q0.ajust, ea)
       ETP.pm.daily <- calc.ETP.pm.daily(slope.pressure, sse_i, es, ea)
 
       sse_i <- cbind(sse_i, ETP.pm.daily)
