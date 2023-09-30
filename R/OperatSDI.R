@@ -126,7 +126,7 @@ OperatSDI <-
       hn.deg <- calc.hn.deg(hn.rad)
       N <- calc.N(hn.deg)
       dist.terra.sol <- calc.dist.terra.sol(sse_i)
-      Ra <- calc.Ra(dist.terra.sol, hn.deg, lat.rad, decli.rad)
+      Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
       ETP.harg.daily <- calc.ETP.harg.daily(Ra, sse_i)
 
       sse_i <- cbind(sse_i, ETP.harg.daily)
