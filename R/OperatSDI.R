@@ -329,14 +329,12 @@ OperatSDI <-
                                            data.week[, 6:7]))
     }
     data.at.timescale <- as.matrix(cbind(
-      data.at.timescale,
-      (data.at.timescale[, 6] - data.at.timescale[, 7])
+      data.at.timescale, (data.at.timescale[, 6] - data.at.timescale[, 7])
     ))
     n.weeks <- length(data.at.timescale[, 1])
     pos <- 1
     SDI <- matrix(NA, n.weeks, 2)
-    parameters <- as.data.frame(parms[which(parms[, 1] ==
-                                              lon &
+    parameters <- as.data.frame(parms[which(parms[, 1] == lon &
                                               parms[, 2] == lat &
                                               parms[, 13] == TS),])
     if (length(parameters[, 1]) == 0) {
@@ -347,7 +345,7 @@ OperatSDI <-
       )
     } else {
       if (distr == "GEV") {
-        for (pos in 1:n.weeks) {
+        for (pos in seq_len(n.weeks)) {
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
           # see internal_functions.R for `adjust.prob()` and `set.PEMethod.prob`
@@ -365,7 +363,7 @@ OperatSDI <-
           pos <- pos + 1
         }
       } else {
-        for (pos in 1:n.weeks) {
+        for (pos in seq_len(n.weeks)) {
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
           prob <-
@@ -383,6 +381,7 @@ OperatSDI <-
           pos <- pos + 1
         }
       }
+
       categories <- matrix(NA, n.weeks, 2)
 
       # see internal_functions.R for find.category()
