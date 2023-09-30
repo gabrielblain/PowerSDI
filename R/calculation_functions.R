@@ -52,6 +52,7 @@ calc.dist.terra.sol <- function(sse_i) {
 #' @noRd
 calc.Ra <- function(dist.terra.sol,
                     hn.deg,
+                    hn.rad,
                     lat.rad,
                     decli.rad) {
   (37.6 * (dist.terra.sol ^ 2)) *
