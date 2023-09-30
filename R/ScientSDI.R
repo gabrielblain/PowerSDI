@@ -130,7 +130,6 @@ ScientSDI <-
            call. = FALSE)
     }
 
-    mim.date.fit <- end.date.user - start.date.user
     start.user.day <-
       as.numeric(format(start.date.user, format = "%d"))
     end.user.day <-
@@ -170,7 +169,6 @@ ScientSDI <-
     decli.rad <- decli * (0.01745329)
     hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
     hn.deg <- hn.rad * (57.29578)
-    N <- (2 * hn.deg) / 15
     dist.terra.sol <-
       1 + (0.033 * cos((0.01745329) * (sse_i$DOY * (0.9863014))))
     Ra <-
@@ -192,7 +190,8 @@ ScientSDI <-
       (1 - 0.2) * sse_i$ALLSKY_SFC_SW_DWN -
       (1.35 * (sse_i$ALLSKY_SFC_SW_DWN / Q0.ajust) - 0.35) *
       (0.35 - (0.14 * sqrt(ea))) * (5.67 * 10 ^
-                                      -8) * (((sse_i$T2M ^ 4) + (sse_i$T2M_MIN ^ 4)) / 2)
+                                      -8) * (((sse_i$T2M ^ 4) +
+                                                (sse_i$T2M_MIN ^ 4)) / 2)
     ETP.pm.daily <-
       (0.408 * slope.pressure * (Rn - 0.8) + 0.063 *
          (900 / (sse_i$T2M + 273)) * sse_i$WS2M * (es - ea)) /
@@ -303,7 +302,7 @@ ScientSDI <-
         !is.null(PELowlim)) {
       stop(
         "Please, provide appropriate numerical values for RainUplim or
-                RainLowlim (mm) or PEUplim or PELowlim (Celsious degrees).
+                RainLowlim (mm) or PEUplim or PELowlim (Celsius degrees).
                 If there is no suspicions data to be removed set them to NULL.",
         call. = FALSE
       )
