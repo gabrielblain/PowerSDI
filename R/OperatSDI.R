@@ -104,6 +104,7 @@ OperatSDI <-
     start.month <-
       as.numeric(format(start.date.user, format = "%m"))
     message("Calculating...")
+
     if (PEMethod == "HS") {
       sse_i <- as.data.frame(get_power(
         community = "ag",
@@ -274,6 +275,7 @@ OperatSDI <-
         d <- d + 4
       }
     }
+
     data.week <- na.omit(data.week)
     rows <- which(data.week[, 3] == final.year &
                     data.week[, 4] > final.month)
