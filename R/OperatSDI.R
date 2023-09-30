@@ -340,10 +340,11 @@ OperatSDI <-
                                               parms[, 2] == lat &
                                               parms[, 13] == TS),])
     if (length(parameters[, 1]) == 0) {
-      message(
+      stop(
         "It seems that you don't have the distributions' parameters for this",
         "local and time scale(TS).\n",
-        "You must first run the `ScientSDI()` function."
+        "You must first run the `ScientSDI()` function.",
+        call. = FALSE
       )
     } else {
       # calc.qnorm() is in this file, below
