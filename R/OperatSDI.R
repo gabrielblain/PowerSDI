@@ -344,43 +344,14 @@ OperatSDI <-
         "You must first run the `ScientSDI()` function."
       )
     } else {
-      if (distr == "GEV") {
-        for (pos in seq_len(n.weeks)) {
-          week <- data.at.timescale[pos, 5]
-          par <- as.numeric(parameters[week, ])
-          # see internal_functions.R for `adjust.prob()` and `set.PEMethod.prob`
-          prob <-
-            adjust.prob((par[6] + (1 - par[6])) *
-            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5])))
-
-          SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
-
-          prob <-
-            adjust.prob(
-              set.PEMethod.prob(distr, PEMethod, data.at.timescale, pos, par))
-
-          SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
-          pos <- pos + 1
-        }
-      } else {
-        for (pos in seq_len(n.weeks)) {
-          week <- data.at.timescale[pos, 5]
-          par <- as.numeric(parameters[week, ])
-          prob <-
-            (par[6] + (1 - par[6])) *
-            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
-
-          # see internal_functions.R for `adjust.prob()` and `set.PEMethod.prob`
-          prob <- adjust.prob(prob)
-          SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
-          prob <-
-            set.PEMethod.prob(distr, PEMethod, data.at.timescale, pos, par)
-          prob <- adjust.prob(prob)
-
-          SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
-          pos <- pos + 1
-        }
-      }
+      # calc.qnorm() is in this file, below
+      SDI <- calc.qnorm(distr,
+                        data.at.timescale,
+                        parameters,
+                        n.weeks,
+                        SDI,
+                        PEMethod
+      )
 
       categories <- matrix(NA, n.weeks, 2)
 
@@ -414,6 +385,67 @@ OperatSDI <-
     print(start.date.user)
   }
 
+#' Calculate Quantile Norm, qnorm, Values
+#'
+#' Calculates quantile values for SDI.
+#'
+#' @return A matrix, SDI, with a new column of qnorm values
+#' @keywords Internal
+#' @noRd
+
+calc.qnorm <-
+  function(distr,
+           data.at.timescale,
+           parameters,
+           n.weeks,
+           SDI,
+           PEMethod) {
+    if (distr == "GEV") {
+      for (pos in seq_len(n.weeks)) {
+        week <- data.at.timescale[pos, 5]
+        par <- as.numeric(parameters[week,])
+        # see internal_functions.R for `adjust.prob()` and `set.PEMethod.prob`
+        prob <-
+          adjust.prob((par[6] + (1 - par[6])) *
+                        cdfgam(data.at.timescale[pos, 6], c(par[4], par[5])))
+
+        SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
+
+        prob <-
+          adjust.prob(set.PEMethod.prob(distr,
+                                        PEMethod,
+                                        data.at.timescale,
+                                        pos,
+                                        par))
+
+        SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
+        pos <- pos + 1
+      }
+    } else {
+      for (pos in seq_len(n.weeks)) {
+        week <- data.at.timescale[pos, 5]
+        par <- as.numeric(parameters[week,])
+        prob <-
+          (par[6] + (1 - par[6])) *
+          cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
+
+        # see internal_functions.R for `adjust.prob()` and `set.PEMethod.prob`
+        prob <- adjust.prob(prob)
+        SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
+        prob <-
+          set.PEMethod.prob(distr,
+                            PEMethod,
+                            data.at.timescale,
+                            pos,
+                            par)
+        prob <- adjust.prob(prob)
+
+        SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
+        pos <- pos + 1
+      }
+    }
+    return(SDI)
+  }
 
 #' Check for Final Day and Week Agreement
 #'
