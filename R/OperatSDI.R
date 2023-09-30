@@ -25,8 +25,7 @@
 #'   difference between rainfall and PE (in millimiters), the NASA-SPI and
 #'   NASA_SPEI, and the SDI categories corresponding to each indices estimates.
 #' @importFrom nasapower get_power
-#' @importFrom lmom cdfgam cdfgev cdfglo pelgam pelgev pelglo quagev quagam
-#'   quaglo samlmu
+#' @importFrom lmom cdfgam pelgam pelgev pelglo quagev quagam quaglo samlmu
 #' @importFrom graphics title
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #'
@@ -105,6 +104,7 @@ OperatSDI <-
     start.month <-
       as.numeric(format(start.date.user, format = "%m"))
     message("Calculating...")
+
     if (PEMethod == "HS") {
       sse_i <- as.data.frame(get_power(
         community = "ag",
@@ -186,6 +186,7 @@ OperatSDI <-
         d <- d + 4
       }
     }
+
     if (PEMethod == "PM") {
       sse_i <- as.data.frame(get_power(
         community = "ag",
@@ -211,12 +212,10 @@ OperatSDI <-
       hn.deg <- calc.hn.deg(hn.rad)
       N <- calc.N(hn.deg)
       dist.terra.sol <- calc.dist.terra.sol(sse_i)
-      Ra <- calc.Ra(dist.terra.sol, hn.deg, lat.rad, decli.rad)
+      Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
       es <- calc.es(sse_i)
       ea <- calc.ea(sse_i, es)
       slope.pressure <- calc.slope.pressure(es, sse_i)
-      Q0.ajust <- calc.Q0.ajust(Ra)
-      Rn <- calc.Rn(sse_i, Q0.ajust, ea)
       ETP.pm.daily <- calc.ETP.pm.daily(slope.pressure, sse_i, es, ea)
 
       sse_i <- cbind(sse_i, ETP.pm.daily)
@@ -276,6 +275,7 @@ OperatSDI <-
         d <- d + 4
       }
     }
+
     data.week <- na.omit(data.week)
     rows <- which(data.week[, 3] == final.year &
                     data.week[, 4] > final.month)
@@ -331,14 +331,12 @@ OperatSDI <-
                                            data.week[, 6:7]))
     }
     data.at.timescale <- as.matrix(cbind(
-      data.at.timescale,
-      (data.at.timescale[, 6] - data.at.timescale[, 7])
+      data.at.timescale, (data.at.timescale[, 6] - data.at.timescale[, 7])
     ))
     n.weeks <- length(data.at.timescale[, 1])
     pos <- 1
     SDI <- matrix(NA, n.weeks, 2)
-    parameters <- as.data.frame(parms[which(parms[, 1] ==
-                                              lon &
+    parameters <- as.data.frame(parms[which(parms[, 1] == lon &
                                               parms[, 2] == lat &
                                               parms[, 13] == TS),])
     if (length(parameters[, 1]) == 0) {
@@ -347,56 +345,16 @@ OperatSDI <-
         "local and time scale(TS).\n",
         "You must first run the `ScientSDI()` function."
       )
-    }
-    else {
-      if (distr == "GEV") {
-        for (pos in 1:n.weeks) {
-          week <- data.at.timescale[pos, 5]
-          par <- as.numeric(parameters[week, ])
-          prob <-
-            (par[6] + (1 - par[6])) *
-            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
-          # see internal_functions.R for `adjust.prob()`
-          prob <- adjust.prob(prob)
-          SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
-          if (PEMethod == "HS") {
-            prob <- cdfgev(data.at.timescale[pos, 8],
-                           c(par[7], par[8], par[9]))
-          }
-          if (PEMethod == "PM") {
-            prob <- cdfgev(data.at.timescale[pos, 8],
-                           c(par[10], par[11], par[12]))
-          }
-          # see internal_functions.R for `adjust.prob()`
-          prob <- adjust.prob(prob)
-          SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
-          pos <- pos + 1
-        }
-      }
-      if (distr == "GLO") {
-        for (pos in 1:n.weeks) {
-          week <- data.at.timescale[pos, 5]
-          par <- as.numeric(parameters[week, ])
-          prob <-
-            (par[6] + (1 - par[6])) *
-            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
-          # see internal_functions.R for `adjust.prob()`
-          prob <- adjust.prob(prob)
-          SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
-          if (PEMethod == "HS") {
-            prob <- cdfglo(data.at.timescale[pos, 8],
-                           c(par[7], par[8], par[9]))
-          }
-          if (PEMethod == "PM") {
-            prob <- cdfglo(data.at.timescale[pos, 8],
-                           c(par[10], par[11], par[12]))
-          }
-          # see internal_functions.R for `adjust.prob()`
-          prob <- adjust.prob(prob)
-          SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
-          pos <- pos + 1
-        }
-      }
+    } else {
+      # calc.qnorm() is in this file, below
+      SDI <- calc.qnorm(distr,
+                        data.at.timescale,
+                        parameters,
+                        n.weeks,
+                        SDI,
+                        PEMethod
+      )
+
       categories <- matrix(NA, n.weeks, 2)
 
       # see internal_functions.R for find.category()
@@ -429,6 +387,67 @@ OperatSDI <-
     print(start.date.user)
   }
 
+#' Calculate Quantile Norm, qnorm, Values
+#'
+#' Calculates quantile values for SDI.
+#'
+#' @return A matrix, SDI, with a new column of qnorm values
+#' @keywords Internal
+#' @noRd
+
+calc.qnorm <-
+  function(distr,
+           data.at.timescale,
+           parameters,
+           n.weeks,
+           SDI,
+           PEMethod) {
+    if (distr == "GEV") {
+      for (pos in seq_len(n.weeks)) {
+        week <- data.at.timescale[pos, 5]
+        par <- as.numeric(parameters[week,])
+        # see internal_functions.R for `adjust.prob()` and `set.PEMethod.prob`
+        prob <-
+          adjust.prob((par[6] + (1 - par[6])) *
+                        cdfgam(data.at.timescale[pos, 6], c(par[4], par[5])))
+
+        SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
+
+        prob <-
+          adjust.prob(set.PEMethod.prob(distr,
+                                        PEMethod,
+                                        data.at.timescale,
+                                        pos,
+                                        par))
+
+        SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
+        pos <- pos + 1
+      }
+    } else {
+      for (pos in seq_len(n.weeks)) {
+        week <- data.at.timescale[pos, 5]
+        par <- as.numeric(parameters[week,])
+        prob <-
+          (par[6] + (1 - par[6])) *
+          cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
+
+        # see internal_functions.R for `adjust.prob()` and `set.PEMethod.prob`
+        prob <- adjust.prob(prob)
+        SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
+        prob <-
+          set.PEMethod.prob(distr,
+                            PEMethod,
+                            data.at.timescale,
+                            pos,
+                            par)
+        prob <- adjust.prob(prob)
+
+        SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
+        pos <- pos + 1
+      }
+    }
+    return(SDI)
+  }
 
 #' Check for Final Day and Week Agreement
 #'
