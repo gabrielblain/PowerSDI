@@ -310,3 +310,34 @@ find.week.int <- function(x) {
   ))
 }
 
+#' Find prob Value for the Potential Evapotranspiration Method
+#' @param distr A character value of either `GLO` or `GEV`
+#' @param PEMethod A character value of either `HS` or `PM`
+#' @param data.at.timescale A matrix of numeric values derived from POWER data
+#'
+#' @noRd
+#' @keywords Internal
+#' @importFrom lmom cdfgev cdfglo
+set.PEMethod.prob <-
+  function(distr,
+           PEMethod,
+           data.at.timescale,
+           pos,
+           par) {
+    # Since there is only `GEV` and `GLO`, use `ifelse, GEV == TRUE` to test
+    ifelse(distr == "GEV",
+           return(switch(
+             PEMethod,
+             "HS" = cdfgev(data.at.timescale[pos, 8],
+                           c(par[7], par[8], par[9])),
+             "PM" = cdfgev(data.at.timescale[pos, 8],
+                           c(par[10], par[11], par[12]))
+           )),
+           return(switch(
+             PEMethod,
+             "HS" = cdfglo(data.at.timescale[pos, 8],
+                           c(par[7], par[8], par[9])),
+             "PM" = cdfglo(data.at.timescale[pos, 8],
+                           c(par[10], par[11], par[12]))
+           )))
+  }

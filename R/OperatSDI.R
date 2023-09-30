@@ -347,52 +347,40 @@ OperatSDI <-
         "local and time scale(TS).\n",
         "You must first run the `ScientSDI()` function."
       )
-    }
-    else {
+    } else {
       if (distr == "GEV") {
         for (pos in 1:n.weeks) {
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
+          # see internal_functions.R for `adjust.prob()` and `set.PEMethod.prob`
           prob <-
-            (par[6] + (1 - par[6])) *
-            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
-          # see internal_functions.R for `adjust.prob()`
-          prob <- adjust.prob(prob)
+            adjust.prob((par[6] + (1 - par[6])) *
+            cdfgam(data.at.timescale[pos, 6], c(par[4], par[5])))
+
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
-          if (PEMethod == "HS") {
-            prob <- cdfgev(data.at.timescale[pos, 8],
-                           c(par[7], par[8], par[9]))
-          }
-          if (PEMethod == "PM") {
-            prob <- cdfgev(data.at.timescale[pos, 8],
-                           c(par[10], par[11], par[12]))
-          }
-          # see internal_functions.R for `adjust.prob()`
-          prob <- adjust.prob(prob)
+
+          prob <-
+            adjust.prob(
+              set.PEMethod.prob(distr, PEMethod, data.at.timescale, pos, par))
+
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }
-      }
-      if (distr == "GLO") {
+      } else {
         for (pos in 1:n.weeks) {
           week <- data.at.timescale[pos, 5]
           par <- as.numeric(parameters[week, ])
           prob <-
             (par[6] + (1 - par[6])) *
             cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
-          # see internal_functions.R for `adjust.prob()`
+
+          # see internal_functions.R for `adjust.prob()` and `set.PEMethod.prob`
           prob <- adjust.prob(prob)
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
-          if (PEMethod == "HS") {
-            prob <- cdfglo(data.at.timescale[pos, 8],
-                           c(par[7], par[8], par[9]))
-          }
-          if (PEMethod == "PM") {
-            prob <- cdfglo(data.at.timescale[pos, 8],
-                           c(par[10], par[11], par[12]))
-          }
-          # see internal_functions.R for `adjust.prob()`
+          prob <-
+            set.PEMethod.prob(distr, PEMethod, data.at.timescale, pos, par)
           prob <- adjust.prob(prob)
+
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }
