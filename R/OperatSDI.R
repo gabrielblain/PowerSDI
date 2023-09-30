@@ -59,7 +59,7 @@ OperatSDI <-
       stop("PEMethod should be set to either HS or PM.", call. = FALSE)
     }
 
-    check.distr(distr)
+    distr <- check.distr(distr)
     check.TS(TS)
 
     dates <- check.dates(c(start.date, end.date))
@@ -126,7 +126,7 @@ OperatSDI <-
       hn.deg <- calc.hn.deg(hn.rad)
       N <- calc.N(hn.deg)
       dist.terra.sol <- calc.dist.terra.sol(sse_i)
-      Ra <- calc.Ra(dist.terra.sol, hn.deg, lat.rad, decli.rad)
+      Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
       ETP.harg.daily <- calc.ETP.harg.daily(Ra, sse_i)
 
       sse_i <- cbind(sse_i, ETP.harg.daily)
@@ -283,8 +283,8 @@ OperatSDI <-
     if (n.rows > 0) {
       data.week <- as.matrix(data.week[-c(rows), , drop = FALSE])
     }
-    rows <- which(data.week[, 3] == final.year & data.week[,
-                                                           4] == final.month &
+    rows <- which(data.week[, 3] == final.year &
+                    data.week[, 4] == final.month &
                     data.week[, 5] > final.week)
     n.rows <- length(rows)
     if (n.rows > 0) {
@@ -295,12 +295,11 @@ OperatSDI <-
     data.week <-
       cbind(data.week, find.quart.month.int(x = data.week))
 
-    first.row <- which(data.week[, 3] == start.year & data.week[,
-                                                                4] == start.month &
+    first.row <- which(data.week[, 3] == start.year &
+                         data.week[, 4] == start.month &
                          data.week[, 5] == start.week)
     if (first.row > 1) {
-      data.week <- as.matrix(data.week[-c(1:(first.row -
-                                               1)), , drop = FALSE])
+      data.week <- as.matrix(data.week[-c(1:(first.row - 1)), , drop = FALSE])
     }
     n <- length(data.week[, 1])
     data.at.timescale <- matrix(NA, (n - (TS - 1)), 7)
@@ -326,8 +325,7 @@ OperatSDI <-
         b <- b + 1
         c <- c + 1
       }
-    }
-    else {
+    } else {
       data.at.timescale[, ] <- as.matrix(c(data.week[, 1:4],
                                            data.week[, 8],
                                            data.week[, 6:7]))
@@ -358,12 +356,8 @@ OperatSDI <-
           prob <-
             (par[6] + (1 - par[6])) *
             cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
-          if (!is.na(prob) & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob) & prob > 0.998649) {
-            prob <- 0.998649
-          }
+          # see internal_functions.R for `adjust.prob()`
+          prob <- adjust.prob(prob)
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
           if (PEMethod == "HS") {
             prob <- cdfgev(data.at.timescale[pos, 8],
@@ -373,12 +367,8 @@ OperatSDI <-
             prob <- cdfgev(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
-          if (!is.na(prob) & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob) & prob > 0.998649) {
-            prob <- 0.998649
-          }
+          # see internal_functions.R for `adjust.prob()`
+          prob <- adjust.prob(prob)
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }
@@ -390,12 +380,8 @@ OperatSDI <-
           prob <-
             (par[6] + (1 - par[6])) *
             cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
-          if (!is.na(prob) & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob) & prob > 0.998649) {
-            prob <- 0.998649
-          }
+          # see internal_functions.R for `adjust.prob()`
+          prob <- adjust.prob(prob)
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
           if (PEMethod == "HS") {
             prob <- cdfglo(data.at.timescale[pos, 8],
@@ -405,12 +391,8 @@ OperatSDI <-
             prob <- cdfglo(data.at.timescale[pos, 8],
                            c(par[10], par[11], par[12]))
           }
-          if (!is.na(prob) & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob) & prob > 0.998649) {
-            prob <- 0.998649
-          }
+          # see internal_functions.R for `adjust.prob()`
+          prob <- adjust.prob(prob)
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }

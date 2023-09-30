@@ -1,4 +1,27 @@
 
+#' Adjust prob Values
+#'
+#' Takes a probability and if <0.001351 or >0.998649 sets it to those values, if
+#'   between, returns the `prob` value unchanged
+#'
+#' @param prob a numeric value of probability
+#'
+#' @examples
+#' adjust.prob(0.997)
+#' adjust.prob(0.0001)
+#' adjust.prob(0.99999)
+#' @noRd
+#' @keywords Internal
+
+adjust.prob <- function(prob) {
+  p <- cut(
+    x = prob,
+    breaks = c(-Inf, 0.001351, 0.998649, Inf),
+    labels = c(0.001351, prob, 0.998649)
+  )
+  return(as.numeric(as.character(p)))
+}
+
 #' Check User-Provided Dates for Validity
 #'
 #' Validates user entered dates for format
