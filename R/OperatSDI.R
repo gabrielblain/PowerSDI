@@ -55,7 +55,16 @@ OperatSDI <-
     distr <- toupper(distr)
 
     if (PEMethod != "HS" && PEMethod != "PM") {
-      stop("PEMethod should be set to either HS or PM.", call. = FALSE)
+      stop("PEMethod should be set to either `HS` or `PM`.", call. = FALSE)
+    }
+
+    if (missing(parms)) {
+      stop(
+        "It seems that you don't have the distributions' parameters for this ",
+        "local and time scale (`TS`).\n",
+        "You must first run the `ScientSDI()` function.",
+        call. = FALSE
+      )
     }
 
     distr <- check.distr(distr)
@@ -78,6 +87,11 @@ OperatSDI <-
     check.final.agreement(final.year, final.month, final.week, final.day)
 
     mim.date.fit <- (end.date.user - start.date.user) + 1
+    if (mim.date.fit < 7) {
+      stop("Time difference between `end.date` and `start.date` ",
+           "must be equal to or longer than 7 days",
+           call. = FALSE)
+    }
 
     if (TS > 1) {
       start.date.user <- start.date.user - (10 * TS)
@@ -88,10 +102,6 @@ OperatSDI <-
     start.month <-
       as.numeric(format(start.date.user, format = "%m"))
 
-    if (mim.date.fit < 7) {
-      message("Time difference between `end.date` and `start.date`",
-              "must be equal to or longer than 7 days")
-    }
 
     start.week <- find.week.int(start.day)
     dif <- calculate.dif(start.week, start.day)
@@ -185,9 +195,7 @@ OperatSDI <-
         c <- c + 4
         d <- d + 4
       }
-    }
-
-    if (PEMethod == "PM") {
+    } else {
       sse_i <- as.data.frame(get_power(
         community = "ag",
         lonlat = c(lon, lat),
@@ -301,6 +309,7 @@ OperatSDI <-
     if (first.row > 1) {
       data.week <- as.matrix(data.week[-c(1:(first.row - 1)), , drop = FALSE])
     }
+
     n <- length(data.week[, 1])
     data.at.timescale <- matrix(NA, (n - (TS - 1)), 7)
     final.point <- n - (TS - 1)
@@ -339,14 +348,7 @@ OperatSDI <-
     parameters <- as.data.frame(parms[which(parms[, 1] == lon &
                                               parms[, 2] == lat &
                                               parms[, 13] == TS),])
-    if (length(parameters[, 1]) == 0) {
-      stop(
-        "It seems that you don't have the distributions' parameters for this",
-        "local and time scale(TS).\n",
-        "You must first run the `ScientSDI()` function.",
-        call. = FALSE
-      )
-    } else {
+
       # calc.qnorm() is in this file, below
       SDI <- calc.qnorm(distr,
                         data.at.timescale,
@@ -381,11 +383,9 @@ OperatSDI <-
       if (anyNA(SDI.final[, 10])) {
         message("Check the original data, it might have gaps.")
       }
+      message("Considering the selected `TS`, the calculations started on: ",
+              start.date.user)
       return(SDI.final)
-    }
-
-    message("Considering the selected TS, the calculations started on:")
-    print(start.date.user)
   }
 
 #' Calculate Quantile Norm, qnorm, Values

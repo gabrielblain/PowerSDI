@@ -97,19 +97,8 @@ Reference <- function(ref,
       (tmax - tmin) ^ 0.5 * (tmed + 17.8)
     message("Calculating. Please wait.")
     ref <- cbind(ref, ETP.harg.daily)
-    if (end.day <= 7) {
-      end.week <- 1
-    } else {
-      if (end.day <= 14) {
-        end.week <- 2
-      } else {
-        if (end.day <= 21) {
-          end.week <- 3
-        } else {
-          end.week <- 4
-        }
-      }
-    }
+
+    end.week <- find.week.int(end.day)
     n.years <- 1 + (end.year - start.year)
     total.nweeks <- 48 * n.years
     a <- 1
@@ -309,12 +298,7 @@ Reference <- function(ref,
     prob <- parameters[i, 4] +
       (1 - parameters[i, 4]) *
       cdfgam(data.at.timescale[pos, 4], c(parameters[i, 2], parameters[i, 3]))
-    if (!is.na(prob) && prob < 0.001351) {
-      prob <- 0.001351
-    }
-    if (!is.na(prob) && prob > 0.998649) {
-      prob <- 0.998649
-    }
+    prob <- adjust.prob(prob)
     SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
     if (distr == "GEV") {
       prob <- cdfgev(data.at.timescale[pos, 6],
@@ -325,73 +309,17 @@ Reference <- function(ref,
                      c(parameters[i, 5], parameters[i, 6],
                        parameters[i, 7]))
     }
-    if (!is.na(prob) && prob < 0.001351) {
-      prob <- 0.001351
-    }
-    if (!is.na(prob) && prob > 0.998649) {
-      prob <- 0.998649
-    }
+    prob <- adjust.prob(prob)
+
     SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
     pos <- pos + 1
   }
   categories <- matrix(NA, n.weeks, 2)
-  for (i in seq_along(1:n.weeks)) {
-    if (SDI[i, 1] <= -2 && !is.na(SDI[i, 1])) {
-      categories[i, 1] <- "ext.dry"
-    } else {
-      if (SDI[i, 1] <= -1.5 && !is.na(SDI[i, 1])) {
-        categories[i, 1] <- "sev.dry"
-      } else {
-        if (SDI[i, 1] <= -1 && !is.na(SDI[i, 1])) {
-          categories[i, 1] <- "mod.dry"
-        } else {
-          if (SDI[i, 1] <= 1 && !is.na(SDI[i, 1])) {
-            categories[i, 1] <- "Normal"
-          } else {
-            if (SDI[i, 1] <= 1.5 && !is.na(SDI[i,
-                                              1])) {
-              categories[i, 1] <- "mod.wet"
-            } else {
-              if (SDI[i, 1] <= 2 && !is.na(SDI[i, 1])) {
-                categories[i, 1] <- "sev.wet"
-              } else {
-                if (SDI[i, 1] > 2 && !is.na(SDI[i, 1])) {
-                  categories[i, 1] <- "ext.wet"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    if (SDI[i, 2] <= -2 && !is.na(SDI[i, 2])) {
-      categories[i, 2] <- "ext.dry"
-    } else {
-      if (SDI[i, 2] <= -1.5 && !is.na(SDI[i, 2])) {
-        categories[i, 2] <- "sev.dry"
-      } else {
-        if (SDI[i, 2] <= -1 && !is.na(SDI[i, 2])) {
-          categories[i, 2] <- "mod.dry"
-        } else {
-          if (SDI[i, 2] <= 1 && !is.na(SDI[i, 2])) {
-            categories[i, 2] <- "Normal"
-          } else {
-            if (SDI[i, 2] <= 1.5 && !is.na(SDI[i, 2])) {
-              categories[i, 2] <- "mod.wet"
-            } else {
-              if (SDI[i, 2] <= 2 && !is.na(SDI[i, 2])) {
-                categories[i, 2] <- "sev.wet"
-              } else {
-                if (SDI[i, 2] > 2 && !is.na(SDI[i, 2])) {
-                  categories[i, 2] <- "ext.wet"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+
+  # see internal_functions.R for find.category()
+  categories[, 1] <- find.category(x = SDI[, 1])
+  categories[, 2] <- find.category(x = SDI[, 2])
+
   SDI <- cbind(data.at.timescale, SDI)
   SDI.final <- data.frame(SDI, categories)
   colnames(SDI.final) <- c(
