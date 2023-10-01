@@ -308,6 +308,7 @@ OperatSDI <-
     if (first.row > 1) {
       data.week <- as.matrix(data.week[-c(1:(first.row - 1)), , drop = FALSE])
     }
+
     n <- length(data.week[, 1])
     data.at.timescale <- matrix(NA, (n - (TS - 1)), 7)
     final.point <- n - (TS - 1)
@@ -346,7 +347,6 @@ OperatSDI <-
     parameters <- as.data.frame(parms[which(parms[, 1] == lon &
                                               parms[, 2] == lat &
                                               parms[, 13] == TS),])
-
 
       # calc.qnorm() is in this file, below
       SDI <- calc.qnorm(distr,
