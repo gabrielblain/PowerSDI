@@ -194,9 +194,7 @@ OperatSDI <-
         c <- c + 4
         d <- d + 4
       }
-    }
-
-    if (PEMethod == "PM") {
+    } else {
       sse_i <- as.data.frame(get_power(
         community = "ag",
         lonlat = c(lon, lat),
