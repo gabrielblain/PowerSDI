@@ -97,19 +97,8 @@ Reference <- function(ref,
       (tmax - tmin) ^ 0.5 * (tmed + 17.8)
     message("Calculating. Please wait.")
     ref <- cbind(ref, ETP.harg.daily)
-    if (end.day <= 7) {
-      end.week <- 1
-    } else {
-      if (end.day <= 14) {
-        end.week <- 2
-      } else {
-        if (end.day <= 21) {
-          end.week <- 3
-        } else {
-          end.week <- 4
-        }
-      }
-    }
+
+    end.week <- find.week.int(end.day)
     n.years <- 1 + (end.year - start.year)
     total.nweeks <- 48 * n.years
     a <- 1
