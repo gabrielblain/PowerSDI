@@ -58,6 +58,15 @@ OperatSDI <-
       stop("PEMethod should be set to either HS or PM.", call. = FALSE)
     }
 
+    if (missing(parms)) {
+      stop(
+        "It seems that you don't have the distributions' parameters for this ",
+        "local and time scale(TS).\n",
+        "You must first run the `ScientSDI()` function.",
+        call. = FALSE
+      )
+    }
+
     distr <- check.distr(distr)
     check.TS(TS)
 
@@ -339,14 +348,8 @@ OperatSDI <-
     parameters <- as.data.frame(parms[which(parms[, 1] == lon &
                                               parms[, 2] == lat &
                                               parms[, 13] == TS),])
-    if (length(parameters[, 1]) == 0) {
-      stop(
-        "It seems that you don't have the distributions' parameters for this",
-        "local and time scale(TS).\n",
-        "You must first run the `ScientSDI()` function.",
-        call. = FALSE
-      )
-    } else {
+
+
       # calc.qnorm() is in this file, below
       SDI <- calc.qnorm(distr,
                         data.at.timescale,
@@ -382,7 +385,7 @@ OperatSDI <-
         message("Check the original data, it might have gaps.")
       }
       return(SDI.final)
-    }
+
 
     message("Considering the selected TS, the calculations started on:")
     print(start.date.user)
