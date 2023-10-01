@@ -316,13 +316,15 @@ find.week.int <- function(x) {
 #' @param data.at.timescale A matrix of numeric values derived from POWER data
 #' @param pos_row The row to draw from in data.at.timescale
 #' @param pos_col The col to draw fropm in data.at.timescale
-#' @param par a data.frame containing the parameters
-#' @param p1 The first `par` object index to draw from
-#' @param p2 The second `par` object index to draw from
-#' @param p3 The third `par` object index to draw from
-#' @param p4 The fourth `par` object index to draw from
-#' @param p5 The fifth `par` object index to draw from
-#' @param p6 The sixth `par` object index to draw from
+#' @param par a `matrix` or `vector` containing the parameters
+#' @param p1 The first `par` object index to draw from for `cdfgev()`
+#' @param p2 The second `par` object index to draw from for `cdfgev()`
+#' @param p3 The third `par` object index to draw from for `cdfgev()`
+#' @param p4 The fourth `par` object index to draw from for `cdfglo()`
+#' @param p5 The fifth `par` object index to draw from for `cdfglo()`
+#' @param p6 The sixth `par` object index to draw from for `cdfglo()`
+#' @param i if par is a `matrix`, `i` is the loop iterator and is the indexed
+#'   row to select for use in calculations
 #' @noRd
 #' @keywords Internal
 #' @importFrom lmom cdfgev cdfglo
@@ -338,21 +340,41 @@ set.PEMethod.prob <-
            p3,
            p4,
            p5,
-           p6) {
+           p6,
+           i = NULL) {
+    if (is.matrix(par)) {
+      if (is.null(i)) {
+        stop("`par` is a matrix object, you must supply `i`.",
+             call. = FALSE)
+      }
+      p1 <- par[i, p1]
+      p2 <- par[i, p2]
+      p3 <- par[i, p3]
+      p4 <- par[i, p4]
+      p5 <- par[i, p5]
+      p6 <- par[i, p6]
+    } else {
+      p1 <- par[p1]
+      p2 <- par[p2]
+      p3 <- par[p3]
+      p4 <- par[p4]
+      p5 <- par[p5]
+      p6 <- par[p6]
+    }
     # Since there is only `GEV` and `GLO`, use `ifelse, GEV == TRUE` to test
     ifelse(distr == "GEV",
            return(switch(
              PEMethod,
              "HS" = cdfgev(data.at.timescale[dat_row, dat_col],
-                           c(par[p1], par[p2], par[p3])),
+                           c(p1, p2, p3)),
              "PM" = cdfgev(data.at.timescale[dat_row, dat_col],
-                           c(par[p4], par[p5], par[p6]))
+                           c(p4, p5, p6))
            )),
            return(switch(
              PEMethod,
              "HS" = cdfglo(data.at.timescale[dat_row, dat_col],
-                           c(par[p1], par[p2], par[p3])),
+                           c(p1, p2, p3)),
              "PM" = cdfglo(data.at.timescale[dat_row, dat_col],
-                           c(par[p4], par[p5], par[p6]))
+                           c(p4, p5, p6))
            )))
   }

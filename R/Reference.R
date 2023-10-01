@@ -300,6 +300,24 @@ Reference <- function(ref,
       cdfgam(data.at.timescale[pos, 4], c(parameters[i, 2], parameters[i, 3]))
     prob <- adjust.prob(prob)
     SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
+
+    prob <-
+      set.PEMethod.prob(
+        distr,
+        PEMethod,
+        data.at.timescale,
+        dat_row = pos,
+        dat_col = 6,
+        par = parameters,
+        p1 = 5,
+        p2 = 6,
+        p3 = 7,
+        p4 = 5,
+        p5 = 6,
+        p6 = 7,
+        i = i
+      )
+
     if (distr == "GEV") {
       prob <- cdfgev(data.at.timescale[pos, 6],
                      c(parameters[i, 5], parameters[i, 6],
