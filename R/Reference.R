@@ -318,6 +318,7 @@ Reference <- function(ref,
         i = i
       )
 
+<<<<<<< HEAD
     if (distr == "GEV") {
       prob <- cdfgev(data.at.timescale[pos, 6],
                      c(parameters[i, 5], parameters[i, 6],
@@ -327,6 +328,8 @@ Reference <- function(ref,
                      c(parameters[i, 5], parameters[i, 6],
                        parameters[i, 7]))
     }
+=======
+>>>>>>> 94a00c1 (use set.PEMethod.prob in both Reference() and OperatSDI())
     prob <- adjust.prob(prob)
 
     SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
