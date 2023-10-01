@@ -314,7 +314,15 @@ find.week.int <- function(x) {
 #' @param distr A character value of either `GLO` or `GEV`
 #' @param PEMethod A character value of either `HS` or `PM`
 #' @param data.at.timescale A matrix of numeric values derived from POWER data
-#'
+#' @param pos_row The row to draw from in data.at.timescale
+#' @param pos_col The col to draw fropm in data.at.timescale
+#' @param par a data.frame containing the parameters
+#' @param p1 The first `par` object index to draw from
+#' @param p2 The second `par` object index to draw from
+#' @param p3 The third `par` object index to draw from
+#' @param p4 The fourth `par` object index to draw from
+#' @param p5 The fifth `par` object index to draw from
+#' @param p6 The sixth `par` object index to draw from
 #' @noRd
 #' @keywords Internal
 #' @importFrom lmom cdfgev cdfglo
@@ -322,22 +330,29 @@ set.PEMethod.prob <-
   function(distr,
            PEMethod,
            data.at.timescale,
-           pos,
-           par) {
+           dat_row,
+           dat_col,
+           par,
+           p1,
+           p2,
+           p3,
+           p4,
+           p5,
+           p6) {
     # Since there is only `GEV` and `GLO`, use `ifelse, GEV == TRUE` to test
     ifelse(distr == "GEV",
            return(switch(
              PEMethod,
-             "HS" = cdfgev(data.at.timescale[pos, 8],
-                           c(par[7], par[8], par[9])),
-             "PM" = cdfgev(data.at.timescale[pos, 8],
-                           c(par[10], par[11], par[12]))
+             "HS" = cdfgev(data.at.timescale[dat_row, dat_col],
+                           c(par[p1], par[p2], par[p3])),
+             "PM" = cdfgev(data.at.timescale[dat_row, dat_col],
+                           c(par[p4], par[p5], par[p6]))
            )),
            return(switch(
              PEMethod,
-             "HS" = cdfglo(data.at.timescale[pos, 8],
-                           c(par[7], par[8], par[9])),
-             "PM" = cdfglo(data.at.timescale[pos, 8],
-                           c(par[10], par[11], par[12]))
+             "HS" = cdfglo(data.at.timescale[dat_row, dat_col],
+                           c(par[p1], par[p2], par[p3])),
+             "PM" = cdfglo(data.at.timescale[dat_row, dat_col],
+                           c(par[p4], par[p5], par[p6]))
            )))
   }

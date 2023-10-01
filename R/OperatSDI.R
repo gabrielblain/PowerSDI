@@ -415,11 +415,18 @@ calc.qnorm <-
         SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
 
         prob <-
-          adjust.prob(set.PEMethod.prob(distr,
-                                        PEMethod,
-                                        data.at.timescale,
-                                        pos,
-                                        par))
+          set.PEMethod.prob(distr,
+                            PEMethod,
+                            data.at.timescale,
+                            dat_row = pos,
+                            dat_col = 8,
+                            par = par,
+                            p1 = 7,
+                            p2 = 8,
+                            p3 = 9,
+                            p4 = 10,
+                            p5 = 11,
+                            p6 = 12)
 
         SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
         pos <- pos + 1
@@ -439,8 +446,15 @@ calc.qnorm <-
           set.PEMethod.prob(distr,
                             PEMethod,
                             data.at.timescale,
-                            pos,
-                            par)
+                            dat_row = pos,
+                            dat_col = 8,
+                            par = par,
+                            p1 = 7,
+                            p2 = 8,
+                            p3 = 9,
+                            p4 = 10,
+                            p5 = 11,
+                            p6 = 12)
         prob <- adjust.prob(prob)
 
         SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
