@@ -129,15 +129,16 @@ OperatSDI <-
       ))
 
       # see calculation functions for the following functions
-      decli <- calc.decli(sse_i)
+      decli <- calc.decli(sse_i$DOY)
       lat.rad <- calc.lat.rad(lat)
       decli.rad <- calc.decli.rad(decli)
       hn.rad <- calc.hn.rad(decli.rad, lat.rad)
       hn.deg <- calc.hn.deg(hn.rad)
       N <- calc.N(hn.deg)
-      dist.terra.sol <- calc.dist.terra.sol(sse_i)
+      dist.terra.sol <- calc.dist.terra.sol(sse_i$DOY)
       Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
-      ETP.harg.daily <- calc.ETP.harg.daily(Ra, sse_i)
+      ETP.harg.daily <-
+        calc.ETP.harg.daily(Ra, sse_i$T2M_MAX, sse_i$T2M_MIN, sse_i$T2M)
 
       sse_i <- cbind(sse_i, ETP.harg.daily)
       n.tot <- length(sse_i[, 1])
@@ -213,18 +214,25 @@ OperatSDI <-
         )
       ))
       # see calculation functions for the following functions
-      decli <- calc.decli(sse_i)
+      decli <- calc.decli(sse_i$DOY)
       lat.rad <- calc.lat.rad(lat)
       decli.rad <- calc.decli.rad(decli)
       hn.rad <- calc.hn.rad(decli.rad, lat.rad)
       hn.deg <- calc.hn.deg(hn.rad)
       N <- calc.N(hn.deg)
-      dist.terra.sol <- calc.dist.terra.sol(sse_i)
+      dist.terra.sol <- calc.dist.terra.sol(sse_i$DOY)
       Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
-      es <- calc.es(sse_i)
-      ea <- calc.ea(sse_i, es)
-      slope.pressure <- calc.slope.pressure(es, sse_i)
-      ETP.pm.daily <- calc.ETP.pm.daily(slope.pressure, Rn, sse_i, es, ea)
+      es <- calc.es(sse_i$T2M)
+      ea <- calc.ea(sse_i$RH2M, es)
+      slope.pressure <- calc.slope.pressure(es, sse_i$T2M)
+      ETP.pm.daily <-
+        calc.ETP.pm.daily(slope.pressure,
+                          Rn,
+                          sse_i$T2M_MAX,
+                          sse_i$T2M_MIN,
+                          sse_i$T2M,
+                          es,
+                          ea)
 
       sse_i <- cbind(sse_i, ETP.pm.daily)
       n.tot <- length(sse_i[, 1])
