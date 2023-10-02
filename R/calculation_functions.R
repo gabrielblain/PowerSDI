@@ -114,7 +114,7 @@ calc.Rn <- function(sse_i, Q0.ajust, ea) {
 #' Calculate ETP.pm.daily
 #' @keywords Internal
 #' @noRd
-calc.ETP.pm.daily <- function(slope.pressure, sse_i, es, ea) {
+calc.ETP.pm.daily <- function(slope.pressure, Rn, sse_i, es, ea) {
   (0.408 * slope.pressure *
      (Rn - 0.8) + 0.063 *
      (900 / (sse_i$T2M + 273)) *

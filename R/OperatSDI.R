@@ -224,7 +224,7 @@ OperatSDI <-
       es <- calc.es(sse_i)
       ea <- calc.ea(sse_i, es)
       slope.pressure <- calc.slope.pressure(es, sse_i)
-      ETP.pm.daily <- calc.ETP.pm.daily(slope.pressure, sse_i, es, ea)
+      ETP.pm.daily <- calc.ETP.pm.daily(slope.pressure, Rn, sse_i, es, ea)
 
       sse_i <- cbind(sse_i, ETP.pm.daily)
       n.tot <- length(sse_i[, 1])
