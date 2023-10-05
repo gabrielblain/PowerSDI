@@ -310,6 +310,21 @@ find.week.int <- function(x) {
   ))
 }
 
+#' Adds a %notin% Function
+#'
+#' Negates `%in%` for easier (mis)matching.
+#'
+#' @param x A character string to match.
+#' @param table A table containing values to match `x` against.
+#'
+#' @return A logical vector, indicating if a mismatch was located for any
+#'  element of x: thus the values are TRUE or FALSE and never NA.
+#' @keywords internal
+#' @noRd
+`%notin%` <- function(x, table) {
+  match(x, table, nomatch = 0L) == 0L
+}
+
 #' Find prob Value for the Potential Evapotranspiration Method
 #' @param distr A character value of either `GLO` or `GEV`
 #' @param PEMethod A character value of either `HS` or `PM`
