@@ -315,7 +315,7 @@ Reference <- function(ref,
         p4 = 5,
         p5 = 6,
         p6 = 7,
-        i = i
+      i = i
       )
 
     prob <- adjust.prob(prob)
@@ -343,32 +343,41 @@ Reference <- function(ref,
     "Categ.SPI",
     "Categ.SPEI"
   )
-  if (end.month == 1 || end.month == 3 || end.month ==
-      5 || end.month == 7 || end.month == 8 || end.month ==
-      10 || end.month == 12) {
-    if (end.day < 7 || end.day > 7 && end.day <
-        14 || end.day > 14 & end.day < 22 || end.day >
-        22 && end.day < 31) {
-      message("The latest quart.month period is not complete")
-      SDI.final <- SDI.final[-c(n.weeks), ]
-    }
-  }
-  if (end.month == 4 || end.month == 6 || end.month ==
-      9 || end.month == 11) {
-    if (end.day < 7 || end.day > 7 && end.day <
-        14 || end.day > 14 && end.day < 22 || end.day >
-        22 && end.day < 30) {
-      message("The latest quart.month period is not complete")
-      SDI.final <- SDI.final[-c(n.weeks), ]
-    }
-  }
-  if (end.month == 2) {
-    if (end.day < 7 || end.day > 7 && end.day <
-        14 || end.day > 14 && end.day < 22 || end.day >
-        22 && end.day < 28) {
-      message("The latest quart.month period is not complete")
-      SDI.final <- SDI.final[-c(n.weeks), ]
-    }
-  }
+
+  check.quart.month.complete(end.month, end.day, n.weeks)
+  SDI.final <- SDI.final[-c(n.weeks), ]
   return(SDI.final)
 }
+
+#' Check That the quart.month Object Has Complete Dates
+#'
+#' @param end.year
+#' @param end.month
+#' @param end.day
+#'
+#' @examples
+#' check.quart.month.complete(2002, 2, 28)
+#' check.quart.month.complete(2002, 2, 21)
+#'
+#'
+#' @noRd
+#' @keywords Internal
+
+check.quart.month.complete <-
+  function(end.year,
+           end.month,
+           end.day) {
+    shared.days <- c(7, 14, 22)
+
+    if (end.month %in% c(4, 6, 9, 11) &
+        end.day %notin% c(shared.days, 30) ||
+        end.month %in% c(1, 3, 5, 7, 8, 10, 12) &
+        end.day %notin% c(shared.days, 31) ||
+        isFALSE(lubridate::leap_year(end.year)) && end.month == 2 &
+        end.day %notin% c(shared.days, 28) ||
+        lubridate::leap_year(end.year) && end.month == 2 &
+        end.day %notin% c(shared.days, 29)) {
+      warning("The latest quart.month period is not complete",
+              call. = FALSE)
+    }
+  }
