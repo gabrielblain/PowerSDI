@@ -47,11 +47,11 @@ Reference <- function(ref,
       "columns. It should be 8.",
       call. = FALSE
     )
-  }
-  if (PEMethod == "PM" && length(ref[1,]) != 11) {
+  } else if (PEMethod == "PM" && length(ref[1,]) != 11) {
     stop("It seems that your input file (ref) has the wrong number of ",
          "columns. It should be 11.")
   }
+
   colnames(ref) <- switch(
     PEMethod,
     "HS" = c("YEAR",
