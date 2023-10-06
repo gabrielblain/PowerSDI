@@ -43,14 +43,14 @@ Reference <- function(ref,
 
   if (PEMethod == "HS" && length(ref[1,]) != 8) {
     stop(
-      "It seems that your input file (ref) has the wrong number of
-                   columns. It should be 8",
+      "It seems that your input file (ref) has the wrong number of ",
+      "columns. It should be 8.",
       call. = FALSE
     )
   }
   if (PEMethod == "PM" && length(ref[1,]) != 11) {
-    stop("It seems that your input file (ref) has the wrong number of
-                   columns. It should be 11")
+    stop("It seems that your input file (ref) has the wrong number of ",
+         "columns. It should be 11.")
   }
   colnames(ref) <- switch(
     PEMethod,
@@ -93,9 +93,11 @@ Reference <- function(ref,
     tmin <- ref$tmin
     Ra <- ref$Ra
     Rain <- ref$Rain
-    ETP.harg.daily <- 0.0023 * (Ra * 0.4081633) *
-      (tmax - tmin) ^ 0.5 * (tmed + 17.8)
+
+    ETP.harg.daily <- calc.ETP.harg.daily(Ra, tmax, tmin, tmed)
+
     message("Calculating. Please wait.")
+
     ref <- cbind(ref, ETP.harg.daily)
 
     end.week <- find.week.int(end.day)
@@ -144,19 +146,15 @@ Reference <- function(ref,
     W <- ref$W
     RH <- ref$RH
     Rain <- ref$Rain
-    es <- 0.6108 * exp((17.27 * tmed) / (tmed + 273.3))
-    ea <- (RH * es) / 100
-    slope.pressure <- (4098 * es) / ((tmed + 237.3) ^ 2)
-    Q0.ajust <- 0.75 * Ra
-    Rn <- (1 - 0.2) * Rs -
-      (1.35 * (Rs / Q0.ajust) - 0.35) *
-      (0.35 - (0.14 * sqrt(ea))) *
-      (5.67 * 10 ^ -8) * (((tmed ^ 4) + (tmin ^ 4)) / 2)
-    ETP.pm.daily <- (0.408 * slope.pressure * (Rn - 0.8) +
-                       0.063 * (900 / (tmed + 273)) * W *
-                       (es - ea)) / (slope.pressure + 0.063 *
-                                       (1 + 0.34 * W))
+    es <- calc.es(tmed)
+    ea <- calc.ea(RH, es)
+    slope.pressure <- calc.slope.pressure(es, tmed)
+    Q0.ajust <- calc.Q0.ajust(Ra)
+    Rn <- calc.Rn(Rs, Q0.ajust, ea, tmed, tmin)
+    ETP.pm.daily <- calc.ETP.pm.daily(slope.pressure, Rn, tmed, W, es, ea)
+
     message("Calculating. Please wait.")
+
     ref <- cbind(ref, ETP.pm.daily)
     n.tot <- length(ref[, 1])
     end.year <- ref$YEAR[n.tot]
@@ -218,21 +216,14 @@ Reference <- function(ref,
   first.row <- which(data.week[, 1] == start.year &
                        data.week[, 2] == start.month &
                        data.week[, 3] == start.week)
+
+
   if (first.row > 1) {
     data.week <- data.week[-(1:(first.row - 1)), ]
-  }
-  if (start.day > 1 & start.day <= 7) {
+  } else {
     data.week <- data.week[c(-1), ]
   }
-  if (start.day > 8 & start.day <= 14) {
-    data.week <- data.week[c(-1), ]
-  }
-  if (start.day > 15 & start.day <= 21) {
-    data.week <- data.week[c(-1), ]
-  }
-  if (start.day > 22) {
-    data.week <- data.week[c(-1), ]
-  }
+
   n <- length(data.week[, 1])
   data.at.timescale <- matrix(NA, (n - (TS - 1)),
                               5)
@@ -267,22 +258,25 @@ Reference <- function(ref,
                              (data.at.timescale[, 4] -
                                 data.at.timescale[, 5]))
   parameters <- matrix(NA, 48, 7)
+
   for (i in seq_along(1:48)) {
     rain <- data.at.timescale[which(data.at.timescale[, 3] == i), 4]
     rain.nozero <- rain[rain > 0]
     n.rain <- length(rain)
     n.nonzero <- length(rain.nozero)
     n.z <- n.rain - n.nonzero
-    probzero <- (n.z + 1) / (2 * (n.rain + 1))
+    probzero <- calc.probzero(n.z, n.rain)
     parameters[i, 1:4] <- c(i, pelgam(samlmu(rain.nozero)),
                             probzero)
     pep <- data.at.timescale[which(data.at.timescale[, 3] == i), 6]
-    if (distr == "GEV") {
-      parameters[i, 5:7] <- c(pelgev(samlmu(pep)))
-    } else {
-      parameters[i, 5:7] <- c(pelglo(samlmu(pep)))
-    }
+
+    parameters[i, 5:7] <- switch(
+        distr,
+        "GEV" = c(pelgev(samlmu(pep))),
+        c(pelglo(samlmu(pep)))
+    )
   }
+
   colnames(parameters) <- c("lastweek",
                             "alfa.gam",
                             "beta.gam",
@@ -344,16 +338,16 @@ Reference <- function(ref,
     "Categ.SPEI"
   )
 
-  check.quart.month.complete(end.month, end.day, n.weeks)
+  check.quart.month.complete(end.year, end.month, end.day)
   SDI.final <- SDI.final[-c(n.weeks), ]
   return(SDI.final)
 }
 
 #' Check That the quart.month Object Has Complete Dates
 #'
-#' @param end.year
-#' @param end.month
-#' @param end.day
+#' @param end.year integer
+#' @param end.month integer
+#' @param end.day integer
 #'
 #' @examples
 #' check.quart.month.complete(2002, 2, 28)
