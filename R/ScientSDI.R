@@ -657,45 +657,39 @@ ScientSDI <-
           c(w$statistic, w$p.value, abs(median((SDI.week[, 3]), na.rm = TRUE)))
         ###### As proposed in Wu et al. (2007)
 
-        if (Norn.check[j, 1] < 0.960 &&
-            Norn.check[j, 2] < 0.10 &&
-            Norn.check[j, 3] > 0.05) {
-          Norn.check[j, 10] <- "NoNormal"
-        } else {
-          Norn.check[j, 10] <- "Normal"
-        }
+        Norn.check[j, 10] <- ifelse((Norn.check[j, 1] < 0.960 &&
+                                       Norn.check[j, 2] < 0.10 &&
+                                       Norn.check[j, 3] > 0.05),
+                                    "NoNormal",
+                                    "Normal")
 
-        if (Norn.check[j, 4] < 0.960 &&
-            Norn.check[j, 5] < 0.10 &&
-            Norn.check[j, 6] > 0.05) {
-          Norn.check[j, 11] <- "NoNormal"
-        } else {
-          Norn.check[j, 11] <- "Normal"
-        }
-        if (Norn.check[j, 7] < 0.960 &&
-            Norn.check[j, 8] < 0.10 &&
-            Norn.check[j, 9] > 0.05) {
-          Norn.check[j, 12] <- "NoNormal"
-        } else {
-          Norn.check[j, 12] <- "Normal"
-        }
+        Norn.check[j, 11] <- ifelse((Norn.check[j, 4] < 0.960 &&
+                                       Norn.check[j, 5] < 0.10 &&
+                                       Norn.check[j, 6] > 0.05),
+                                    "NoNormal",
+                                    "Normal")
+
+        Norn.check[j, 12] <- ifelse((Norn.check[j, 7] < 0.960 &&
+                                       Norn.check[j, 8] < 0.10 &&
+                                       Norn.check[j, 9] > 0.05),
+                                    "NoNormal",
+                                    "Normal")
+
         ###### As proposed in Stagge et al. (2015)
-        if (Norn.check[j, 2] < 0.05) {
-          Norn.check[j, 13] <- "NoNormal"
-        } else {
-          Norn.check[j, 13] <- "Normal"
-        }
-        if (Norn.check[j, 5] < 0.05) {
-          Norn.check[j, 14] <- "NoNormal"
-        } else {
-          Norn.check[j, 14] <- "Normal"
-        }
-        if (Norn.check[j, 8] < 0.05) {
-          Norn.check[j, 15] <- "NoNormal"
-        } else {
-          Norn.check[j, 15] <- "Normal"
-        }
+
+        Norn.check[j, 13] <- ifelse(Norn.check[j, 2] < 0.05,
+                                    "NoNormal",
+                                    "Normal")
+
+        Norn.check[j, 14] <- ifelse(Norn.check[j, 5] < 0.05,
+                                    "NoNormal",
+                                    "Normal")
+
+        Norn.check[j, 15] <- ifelse(Norn.check[j, 8] < 0.05,
+                                    "NoNormal",
+                                    "Normal")
       }
+
       ##########
       colnames(Norn.check) <- c(
         "SPI.Shap",
