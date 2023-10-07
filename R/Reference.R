@@ -342,36 +342,3 @@ Reference <- function(ref,
   SDI.final <- SDI.final[-c(n.weeks), ]
   return(SDI.final)
 }
-
-#' Check That the quart.month Object Has Complete Dates
-#'
-#' @param end.year integer
-#' @param end.month integer
-#' @param end.day integer
-#'
-#' @examples
-#' check.quart.month.complete(2002, 2, 28)
-#' check.quart.month.complete(2002, 2, 21)
-#'
-#'
-#' @noRd
-#' @keywords Internal
-
-check.quart.month.complete <-
-  function(end.year,
-           end.month,
-           end.day) {
-    shared.days <- c(7, 14, 22)
-
-    if (end.month %in% c(4, 6, 9, 11) &
-        end.day %notin% c(shared.days, 30) ||
-        end.month %in% c(1, 3, 5, 7, 8, 10, 12) &
-        end.day %notin% c(shared.days, 31) ||
-        isFALSE(lubridate::leap_year(end.year)) && end.month == 2 &
-        end.day %notin% c(shared.days, 28) ||
-        lubridate::leap_year(end.year) && end.month == 2 &
-        end.day %notin% c(shared.days, 29)) {
-      warning("The latest quart.month period is not complete",
-              call. = FALSE)
-    }
-  }
