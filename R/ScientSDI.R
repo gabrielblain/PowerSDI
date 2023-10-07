@@ -751,9 +751,8 @@ ScientSDI <-
         GoodFit = Goodness,
         Normality = Norn.check
       )
+      message("The calculations started on: ", start.date.protocal)
       return(Result)
-      message("The calculations started on:")
-      print(start.date.protocal)
     } else {
       for (i in 1:48) {
         month.par <- data.at.timescale[i, 3]
@@ -763,11 +762,7 @@ ScientSDI <-
         n.rain <- length(na.omit(rain))
         n.nonzero <- length(rain.nozero)
         n.z <- n.rain - n.nonzero
-        if (n.z == 0) {
-          probzero <- 0
-        } else {
-          probzero <- (n.z + 1) / (2 * (n.rain + 1))
-        }
+        probzero <- calc.probzero(n.z, n.rain)
         parameters[i, 1:4] <-
           c(data.at.timescale[i, 3], pelgam(samlmu(rain.nozero)), probzero)
         petp.harg <-
@@ -787,8 +782,7 @@ ScientSDI <-
                         c(
                           parameters[i, 8], parameters[i, 9], parameters[i, 10]
                         )))
-        }
-        if (distr == "GLO") {
+        } else {
           parameters[i, 5:10] <-
             c(pelglo(samlmu(petp.harg)), pelglo(samlmu(petp.pm)))
           prob.harg <-
