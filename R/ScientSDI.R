@@ -621,8 +621,7 @@ ScientSDI <-
           SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }
-      }
-      if (distr == "GLO") {
+      } else {
         while (pos <= n.weeks) {
           i <- data.at.timescale[pos, 3]
           prob <-
@@ -660,113 +659,30 @@ ScientSDI <-
         }
       }
       categories <- matrix(NA, n.weeks, 3)
-      for (i in 1:n.weeks) {
-        if (SDI[i, 1] <= -2.0 & !is.na(SDI[i, 1])) {
-          categories[i, 1] <- "ext.dry"
-        } else {
-          if (SDI[i, 1] <= -1.5 & !is.na(SDI[i, 1])) {
-            categories[i, 1] <- "sev.dry"
-          } else {
-            if (SDI[i, 1] <= -1.0 & !is.na(SDI[i, 1])) {
-              categories[i, 1] <- "mod.dry"
-            } else {
-              if (SDI[i, 1] <= 1.0 & !is.na(SDI[i, 1])) {
-                categories[i, 1] <- "Normal"
-              } else {
-                if (SDI[i, 1] <= 1.5 & !is.na(SDI[i, 1])) {
-                  categories[i, 1] <- "mod.wet"
-                } else {
-                  if (SDI[i, 1] <= 2.0 & !is.na(SDI[i, 1])) {
-                    categories[i, 1] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 1] > 2.0 & !is.na(SDI[i, 1])) {
-                      categories[i, 1] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (SDI[i, 2] <= -2.0 & !is.na(SDI[i, 2])) {
-          categories[i, 2] <- "ext.dry"
-        } else {
-          if (SDI[i, 2] <= -1.5 & !is.na(SDI[i, 2])) {
-            categories[i, 2] <- "sev.dry"
-          } else {
-            if (SDI[i, 2] <= -1.0 & !is.na(SDI[i, 2])) {
-              categories[i, 2] <- "mod.dry"
-            } else {
-              if (SDI[i, 2] <= 1.0 & !is.na(SDI[i, 2])) {
-                categories[i, 2] <- "Normal"
-              } else {
-                if (SDI[i, 2] <= 1.5 & !is.na(SDI[i, 2])) {
-                  categories[i, 2] <- "mod.wet"
-                } else {
-                  if (SDI[i, 2] <= 2.0 & !is.na(SDI[i, 2])) {
-                    categories[i, 2] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 2] > 2.0 & !is.na(SDI[i, 2])) {
-                      categories[i, 2] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (SDI[i, 3] <= -2.0 & !is.na(SDI[i, 3])) {
-          categories[i, 3] <- "ext.dry"
-        } else {
-          if (SDI[i, 3] <= -1.5 & !is.na(SDI[i, 3])) {
-            categories[i, 3] <- "sev.dry"
-          } else {
-            if (SDI[i, 3] <= -1.0 & !is.na(SDI[i, 3])) {
-              categories[i, 3] <- "mod.dry"
-            } else {
-              if (SDI[i, 3] <= 1.0 & !is.na(SDI[i, 3])) {
-                categories[i, 3] <- "Normal"
-              } else {
-                if (SDI[i, 3] <= 1.5 & !is.na(SDI[i, 3])) {
-                  categories[i, 3] <- "mod.wet"
-                } else {
-                  if (SDI[i, 3] <= 2.0 & !is.na(SDI[i, 3])) {
-                    categories[i, 3] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 3] > 2.0 & !is.na(SDI[i, 3])) {
-                      categories[i, 3] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      # see internal_functions.R for find.category()
+      categories[, 1] <- find.category(x = SDI[, 1])
+      categories[, 2] <- find.category(x = SDI[, 2])
+      categories[, 3] <- find.category(x = SDI[, 3])
+
       SDI <- cbind(data.at.timescale, SDI)
       ##### Normality checking procedures
       Norn.check <- matrix(NA, 48, 15)
       for (j in 1:48) {
         SDI.week <- as.matrix(SDI[which(SDI[, 3] == j), 9:11])
         w <- shapiro.test(SDI.week[, 1])
-        if (w$p.value < 0.01) {
-          w$p.value <- 0.01
-        }
+        w$p.value[w$p.value < 0.01] <- 0.01
         Norn.check[j, 1:3] <-
           c(w$statistic, w$p.value, abs(median((SDI.week[, 1]), na.rm = TRUE)))
         w <- shapiro.test(SDI.week[, 2])
-        if (w$p.value < 0.01) {
-          w$p.value <- 0.01
-        }
+        w$p.value[w$p.value < 0.01] <- 0.01
         Norn.check[j, 4:6] <-
           c(w$statistic, w$p.value, abs(median((SDI.week[, 2]), na.rm = TRUE)))
         w <- shapiro.test(SDI.week[, 3])
-        if (w$p.value < 0.01) {
-          w$p.value <- 0.01
-        }
+        w$p.value[w$p.value < 0.01] <- 0.01
         Norn.check[j, 7:9] <-
           c(w$statistic, w$p.value, abs(median((SDI.week[, 3]), na.rm = TRUE)))
         ###### As proposed in Wu et al. (2007)
+
         if (Norn.check[j, 1] < 0.960 &&
             Norn.check[j, 2] < 0.10 &&
             Norn.check[j, 3] > 0.05) {
@@ -774,6 +690,7 @@ ScientSDI <-
         } else {
           Norn.check[j, 10] <- "Normal"
         }
+
         if (Norn.check[j, 4] < 0.960 &&
             Norn.check[j, 5] < 0.10 &&
             Norn.check[j, 6] > 0.05) {
@@ -886,8 +803,7 @@ ScientSDI <-
       return(Result)
       message("The calculations started on:")
       print(start.date.protocal)
-    }
-    if (Good == "no") {
+    } else {
       for (i in 1:48) {
         month.par <- data.at.timescale[i, 3]
         rain <-
@@ -961,15 +877,10 @@ ScientSDI <-
         while (pos <= n.weeks) {
           i <- data.at.timescale[pos, 3]
           prob <-
-            parameters[i, 6] + (1 - parameters[i, 6]) *
-            cdfgam(data.at.timescale[pos, 4],
-                   c(parameters[i, 4], parameters[i, 5]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+            adjust.prob((parameters[i, 6] + (1 - parameters[i, 6])) *
+                          cdfgam(data.at.timescale[pos, 4],
+                                 c(parameters[i, 4], parameters[i, 5])))
+
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
           prob <-
             cdfgev(data.at.timescale[pos, 7],
@@ -995,8 +906,7 @@ ScientSDI <-
           SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }
-      }
-      if (distr == "GLO") {
+      } else {
         while (pos <= n.weeks) {
           i <- data.at.timescale[pos, 3]
           prob <-
