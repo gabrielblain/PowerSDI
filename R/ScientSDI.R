@@ -345,11 +345,7 @@ ScientSDI <-
         n.rain <- length(na.omit(rain))
         n.nonzero <- length(rain.nozero)
         n.z <- n.rain - n.nonzero
-        if (n.z == 0) {
-          probzero <- 0
-        } else {
-          probzero <- (n.z + 1) / (2 * (n.rain + 1))
-        }
+        probzero <- calc.probzero(n.z, n.rain)
         soma.rain <- matrix(NA, n.nonzero, 1)
         parameters[i, 1:4] <-
           c(data.at.timescale[i, 3], pelgam(samlmu(rain.nozero)), probzero)
