@@ -864,89 +864,11 @@ ScientSDI <-
         }
       }
       categories <- matrix(NA, n.weeks, 3)
-      for (i in 1:n.weeks) {
-        if (SDI[i, 1] <= -2.0 & !is.na(SDI[i, 1])) {
-          categories[i, 1] <- "ext.dry"
-        } else {
-          if (SDI[i, 1] <= -1.5 & !is.na(SDI[i, 1])) {
-            categories[i, 1] <- "sev.dry"
-          } else {
-            if (SDI[i, 1] <= -1.0 & !is.na(SDI[i, 1])) {
-              categories[i, 1] <- "mod.dry"
-            } else {
-              if (SDI[i, 1] <= 1.0 & !is.na(SDI[i, 1])) {
-                categories[i, 1] <- "Normal"
-              } else {
-                if (SDI[i, 1] <= 1.5 & !is.na(SDI[i, 1])) {
-                  categories[i, 1] <- "mod.wet"
-                } else {
-                  if (SDI[i, 1] <= 2.0 & !is.na(SDI[i, 1])) {
-                    categories[i, 1] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 1] > 2.0 & !is.na(SDI[i, 1])) {
-                      categories[i, 1] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (SDI[i, 2] <= -2.0 & !is.na(SDI[i, 2])) {
-          categories[i, 2] <- "ext.dry"
-        } else {
-          if (SDI[i, 2] <= -1.5 & !is.na(SDI[i, 2])) {
-            categories[i, 2] <- "sev.dry"
-          } else {
-            if (SDI[i, 2] <= -1.0 & !is.na(SDI[i, 2])) {
-              categories[i, 2] <- "mod.dry"
-            } else {
-              if (SDI[i, 2] <= 1.0 & !is.na(SDI[i, 2])) {
-                categories[i, 2] <- "Normal"
-              } else {
-                if (SDI[i, 2] <= 1.5 & !is.na(SDI[i, 2])) {
-                  categories[i, 2] <- "mod.wet"
-                } else {
-                  if (SDI[i, 2] <= 2.0 & !is.na(SDI[i, 2])) {
-                    categories[i, 2] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 2] > 2.0 & !is.na(SDI[i, 2])) {
-                      categories[i, 2] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (SDI[i, 3] <= -2.0 & !is.na(SDI[i, 3])) {
-          categories[i, 3] <- "ext.dry"
-        } else {
-          if (SDI[i, 3] <= -1.5 & !is.na(SDI[i, 3])) {
-            categories[i, 3] <- "sev.dry"
-          } else {
-            if (SDI[i, 3] <= -1.0 & !is.na(SDI[i, 3])) {
-              categories[i, 3] <- "mod.dry"
-            } else {
-              if (SDI[i, 3] <= 1.0 & !is.na(SDI[i, 3])) {
-                categories[i, 3] <- "Normal"
-              } else {
-                if (SDI[i, 3] <= 1.5 & !is.na(SDI[i, 3])) {
-                  categories[i, 3] <- "mod.wet"
-                } else {
-                  if (SDI[i, 3] <= 2.0 & !is.na(SDI[i, 3])) {
-                    categories[i, 3] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 3] > 2.0 & !is.na(SDI[i, 3])) {
-                      categories[i, 3] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+
+      categories[, 1] <- find.category(x = SDI[, 1])
+      categories[, 2] <- find.category(x = SDI[, 2])
+      categories[, 3] <- find.category(x = SDI[, 3])
+
       SDI <- cbind(data.at.timescale, SDI)
       SDI.final <- data.frame(SDI, categories)
       colnames(SDI.final) <- c(
