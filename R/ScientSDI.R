@@ -381,8 +381,7 @@ ScientSDI <-
                         c(
                           parameters[i, 8], parameters[i, 9], parameters[i, 10]
                         )))
-        }
-        if (distr == "GLO") {
+        } else {
           parameters[i, 5:10] <-
             c(pelglo(samlmu(petp.harg)), pelglo(samlmu(petp.pm)))
           prob.harg <-
@@ -498,8 +497,7 @@ ScientSDI <-
             }
             null.dist[j, 6] <-
               -n.pm - ((1 / n.pm) * sum(soma.pm, na.rm = TRUE))
-          }
-          if (distr == "GLO") {
+          } else {
             y <-
               sort(quaglo(
                 runif(n.harg),
