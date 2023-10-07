@@ -180,58 +180,35 @@ ScientSDI <-
         "PRECTOTCORR"
       )
     ))
-    decli <-
-      23.45 * sin((360 * (sse_i$DOY - 80) / 365) * (0.01745329))
-    lat.rad <- lat * (0.01745329)
-    decli.rad <- decli * (0.01745329)
-    hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
-    hn.deg <- hn.rad * (57.29578)
-    dist.terra.sol <-
-      1 + (0.033 * cos((0.01745329) * (sse_i$DOY * (0.9863014))))
-    Ra <-
-      (37.6 * (dist.terra.sol ^ 2)) *
-      ((0.01745329) * hn.deg * sin(lat.rad) * sin(decli.rad) +
-         (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
-    ####   Hargreaves&Samani
+    decli <- calc.decli(sse_i$DOY)
+    lat.rad <- calc.decli.rad(lat)
+    decli.rad <- calc.decli.rad(decli)
+    hn.rad <- calc.hn.rad(decli.rad, lat.rad)
+    hn.deg <- calc.hn.deg(hn.rad)
+    dist.terra.sol <- calc.dist.terra.sol(sse_i$DOY)
+    Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
+
+    #### Hargreaves & Samani ---
+
     ETP.harg.daily <-
-      0.0023 * (Ra * 0.4081633) *
-      (sse_i$T2M_MAX - sse_i$T2M_MIN) ^ 0.5 * (sse_i$T2M + 17.8)
-    ####    Penman- Monteith-FAO
-    es <-
-      0.6108 * exp((17.27 * sse_i$T2M) / (sse_i$T2M + 273.3))
-    ea <- (sse_i$RH2M * es) / 100
-    slope.pressure <-
-      (4098 * es) / ((sse_i$T2M + 237.3) ^ 2)
-    Q0.ajust <- 0.75 * Ra
-    Rn <-
-      (1 - 0.2) * sse_i$ALLSKY_SFC_SW_DWN -
-      (1.35 * (sse_i$ALLSKY_SFC_SW_DWN / Q0.ajust) - 0.35) *
-      (0.35 - (0.14 * sqrt(ea))) * (5.67 * 10 ^
-                                      -8) * (((sse_i$T2M ^ 4) +
-                                                (sse_i$T2M_MIN ^ 4)) / 2)
+      calc.ETP.harg.daily(Ra, sse_i$T2M_MAX, sse_i$T2M_MIN, sse_i$T2M)
+
+    #### Penman- Monteith-FAO ---
+    es <- calc.es(sse_i$T2M)
+    ea <- calc.ea(sse_i$RH2M, es)
+    slope.pressure <- calc.slope.pressure(es, sse_i$T2M)
+    Q0.ajust <- calc.Q0.ajust(Ra)
+    Rn <- calc.Rn(0.8, Q0.ajust, ea, sse_i$T2M, sse_i$T2M_MIN)
     ETP.pm.daily <-
-      (0.408 * slope.pressure * (Rn - 0.8) + 0.063 *
-         (900 / (sse_i$T2M + 273)) * sse_i$WS2M * (es - ea)) /
-      (slope.pressure + 0.063 * (1 + 0.34 * sse_i$WS2M))
+      calc.ETP.pm.daily(slope.pressure, Rn, sse_i$T2M, sse_i$WS2M, es, ea)
+
     sse_i <- cbind(sse_i, ETP.harg.daily, ETP.pm.daily)
     n.tot <- length(sse_i[, 1])
     final.year <- sse_i$YEAR[n.tot]
     initial.year <- sse_i$YEAR[1]
     final.month <- sse_i$MM[n.tot]
     final.day <- sse_i$DD[n.tot]
-    if (final.day <= 7) {
-      final.week <- 1
-    } else {
-      if (final.day <= 14) {
-        final.week <- 2
-      } else {
-        if (final.day <= 21) {
-          final.week <- 3
-        } else {
-          final.week <- 4
-        }
-      }
-    }
+    final.week <- find.week.int(final.day)
     n.years <- 1 + (final.year - initial.year)
     total.nweeks <- 48 * n.years
     a <- 1
@@ -1201,4 +1178,73 @@ ScientSDI <-
       message("The calculations started on:", start.date.protocal)
       return(Result)
     }
+  }
+
+#' Check and Remove Values Outside of Set Limits
+#'
+#' Takes a user-provided value, checks if values are within the boundaries,
+#' emits a message with number of removed rows and removes the rows falling
+#' outside the boundaries.
+#' @param data.week A matrix of values
+#' @param col.position An integer value indicating which column should be
+#'   checked
+#' @param Uplim The user-defined upper limit
+#' @param Lowlim The user-defined lower limit
+#' @param which.lim A string indicating whether the limits are applied to rain
+#'   or PE values for the message that is emitted
+#'
+#' @examples
+#' data.week <-
+#' structure(
+#'   c(
+#'     -47.3,
+#'     -47.3,
+#'     -22.87,
+#'     -22.87,
+#'     2015,
+#'     2015,
+#'     1,
+#'     1,
+#'     1,
+#'     2,
+#'     34.88,
+#'     22.72,
+#'     35.4347478184492,
+#'     42.1418688289752,
+#'     34.3122432933585,
+#'     44.6334180288311
+#'   ),
+#'   dim = c(2L, 8L)
+#' )
+#'
+#' # removes second row
+#' check.remove.lims(data.week, 6, 45, 34, "rain")
+#' @noRd
+#' @keywords Internal
+
+check.remove.lims <-
+  function(data.week,
+           col.position,
+           Uplim,
+           Lowlim,
+           which.lim) {
+    if (!is.null(Uplim)) {
+      upremov <- which(data.week[, col.position] > Uplim)
+      if (length(upremov) > 0) {
+        message("removed rows above limit: ", upremov, " for ", which.lim)
+        data.week <-
+          data.week[data.week[, col.position] > Uplim, , drop = FALSE]
+      }
+    }
+
+    if (!is.null(Lowlim)) {
+      lowremov <- which(data.week[, col.position] < Lowlim)
+      if (length(lowremov) > 0) {
+        message("removed rows below limit: ", lowremov, " for ", which.lim)
+        data.week <-
+          data.week[data.week[, col.position] < Lowlim, , drop = FALSE]
+      }
+    }
+
+    return(data.week)
   }
