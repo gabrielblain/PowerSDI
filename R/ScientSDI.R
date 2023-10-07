@@ -735,40 +735,13 @@ ScientSDI <-
         "Categ.SPEI.Harg",
         "Categ.SPEI.PM"
       )
-      if (end.user.month == 1 ||
-          end.user.month == 3 || end.user.month == 5 ||
-          end.user.month == 7 ||
-          end.user.month == 8 ||
-          end.user.month == 10 || end.user.month == 12) {
-        if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-            end.user.day > 14 &
-            end.user.day < 22 ||
-            end.user.day > 22 & end.user.day < 31) {
-          message("The latest quart.month period is not complete")
-          SDI.final <- SDI.final[-c(n.weeks), ]
-        }
-      }
-      if (end.user.month == 4 ||
-          end.user.month == 6 ||
-          end.user.month == 9 || end.user.month == 11) {
-        if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-            end.user.day > 14 &
-            end.user.day < 22 ||
-            end.user.day > 22 & end.user.day < 30) {
-          message("The latest quart.month period is not complete")
-          SDI.final <- SDI.final[-c(n.weeks), ]
-        }
-      }
-      if (end.user.month == 2) {
-        if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-            end.user.day > 14 &
-            end.user.day < 22 ||
-            end.user.day > 22 & end.user.day < 28) {
-          message("The latest quart.month period is not complete")
-          SDI.final <- SDI.final[-c(n.weeks), ]
-        }
-      }
-      whichTS <- paste("TS is", as.character(TS))
+      check.quart.month.complete(as.numeric(format(end.date.user,
+                                                   format = "%Y")),
+                                 end.user.month,
+                                 end.user.day)
+      SDI.final <- SDI.final[-c(n.weeks), ]
+
+      whichTS <- paste("TS is ", as.character(TS))
       row.names(SDI.final[1, ]) <- whichTS
       Result <-
         list(SDI.final, parameters, Goodness, Norn.check)
