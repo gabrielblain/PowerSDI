@@ -119,6 +119,23 @@ ScientSDI <-
            call. = FALSE)
     }
 
+    if (!is.numeric(RainUplim) &
+        !is.null(RainUplim) ||
+        !is.numeric(RainLowlim) &
+        !is.null(RainLowlim) ||
+        !is.numeric(PEUplim) &
+        !is.null(PEUplim) ||
+        !is.numeric(PELowlim) &
+        !is.null(PELowlim)) {
+      stop(
+        "Please, provide appropriate numerical values for `RainUplim` or ",
+        "`RainLowlim` (mm) or `PEUplim` or `PELowlim` (Celsius degrees). ",
+        "If there are no suspicious data to be removed, leave them set them to",
+        " `NULL`.",
+        call. = FALSE
+      )
+    }
+
     dates <- check.dates(c(start.date, end.date))
     start.date.user <- dates[[1]]
     end.date.user <- dates[[2]]
@@ -163,58 +180,35 @@ ScientSDI <-
         "PRECTOTCORR"
       )
     ))
-    decli <-
-      23.45 * sin((360 * (sse_i$DOY - 80) / 365) * (0.01745329))
-    lat.rad <- lat * (0.01745329)
-    decli.rad <- decli * (0.01745329)
-    hn.rad <- (acos(tan(decli.rad) * -tan(lat.rad)))
-    hn.deg <- hn.rad * (57.29578)
-    dist.terra.sol <-
-      1 + (0.033 * cos((0.01745329) * (sse_i$DOY * (0.9863014))))
-    Ra <-
-      (37.6 * (dist.terra.sol ^ 2)) *
-      ((0.01745329) * hn.deg * sin(lat.rad) * sin(decli.rad) +
-         (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
-    ####   Hargreaves&Samani
+    decli <- calc.decli(sse_i$DOY)
+    lat.rad <- calc.decli.rad(lat)
+    decli.rad <- calc.decli.rad(decli)
+    hn.rad <- calc.hn.rad(decli.rad, lat.rad)
+    hn.deg <- calc.hn.deg(hn.rad)
+    dist.terra.sol <- calc.dist.terra.sol(sse_i$DOY)
+    Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
+
+    #### Hargreaves & Samani ---
+
     ETP.harg.daily <-
-      0.0023 * (Ra * 0.4081633) *
-      (sse_i$T2M_MAX - sse_i$T2M_MIN) ^ 0.5 * (sse_i$T2M + 17.8)
-    ####    Penman- Monteith-FAO
-    es <-
-      0.6108 * exp((17.27 * sse_i$T2M) / (sse_i$T2M + 273.3))
-    ea <- (sse_i$RH2M * es) / 100
-    slope.pressure <-
-      (4098 * es) / ((sse_i$T2M + 237.3) ^ 2)
-    Q0.ajust <- 0.75 * Ra
-    Rn <-
-      (1 - 0.2) * sse_i$ALLSKY_SFC_SW_DWN -
-      (1.35 * (sse_i$ALLSKY_SFC_SW_DWN / Q0.ajust) - 0.35) *
-      (0.35 - (0.14 * sqrt(ea))) * (5.67 * 10 ^
-                                      -8) * (((sse_i$T2M ^ 4) +
-                                                (sse_i$T2M_MIN ^ 4)) / 2)
+      calc.ETP.harg.daily(Ra, sse_i$T2M_MAX, sse_i$T2M_MIN, sse_i$T2M)
+
+    #### Penman- Monteith-FAO ---
+    es <- calc.es(sse_i$T2M)
+    ea <- calc.ea(sse_i$RH2M, es)
+    slope.pressure <- calc.slope.pressure(es, sse_i$T2M)
+    Q0.ajust <- calc.Q0.ajust(Ra)
+    Rn <- calc.Rn(0.8, Q0.ajust, ea, sse_i$T2M, sse_i$T2M_MIN)
     ETP.pm.daily <-
-      (0.408 * slope.pressure * (Rn - 0.8) + 0.063 *
-         (900 / (sse_i$T2M + 273)) * sse_i$WS2M * (es - ea)) /
-      (slope.pressure + 0.063 * (1 + 0.34 * sse_i$WS2M))
+      calc.ETP.pm.daily(slope.pressure, Rn, sse_i$T2M, sse_i$WS2M, es, ea)
+
     sse_i <- cbind(sse_i, ETP.harg.daily, ETP.pm.daily)
     n.tot <- length(sse_i[, 1])
     final.year <- sse_i$YEAR[n.tot]
     initial.year <- sse_i$YEAR[1]
     final.month <- sse_i$MM[n.tot]
     final.day <- sse_i$DD[n.tot]
-    if (final.day <= 7) {
-      final.week <- 1
-    } else {
-      if (final.day <= 14) {
-        final.week <- 2
-      } else {
-        if (final.day <= 21) {
-          final.week <- 3
-        } else {
-          final.week <- 4
-        }
-      }
-    }
+    final.week <- find.week.int(final.day)
     n.years <- 1 + (final.year - initial.year)
     total.nweeks <- 48 * n.years
     a <- 1
@@ -290,48 +284,13 @@ ScientSDI <-
     if (first.row > 1) {
       data.week <- data.week[-(1:(first.row - 1)), ]
     }
-    ######## removing suspicions data
-    ##### Rainfall
-    if (!is.numeric(RainUplim) &
-        !is.null(RainUplim) ||
-        !is.numeric(RainLowlim) &
-        !is.null(RainLowlim) ||
-        !is.numeric(PEUplim) &
-        !is.null(PEUplim) ||
-        !is.numeric(PELowlim) &
-        !is.null(PELowlim)) {
-      stop(
-        "Please, provide appropriate numerical values for RainUplim or
-                RainLowlim (mm) or PEUplim or PELowlim (Celsius degrees).
-                If there is no suspicions data to be removed set them to NULL.",
-        call. = FALSE
-      )
-    }
-    Uplim <- RainUplim
-    Lowlim <- RainLowlim
-    upremov <- which(data.week[, 6] > Uplim)
-    lowremov <- which(data.week[, 6] < Lowlim)
-    if (length(upremov) > 0) {
-      data.week[c(upremov), 6] = NA
-      message("removed rows: ", upremov)
-    }
-    if (length(lowremov) > 0) {
-      data.week[c(lowremov), 6] = NA
-      message("removed rows: ", lowremov)
-    }
-    ##### Potential Evapotranspiration (Hargreaves & Samani)
-    Uplim <- PEUplim
-    Lowlim <- PELowlim
-    upremov <- which(data.week[, 7] > Uplim)
-    lowremov <- which(data.week[, 7] < Lowlim)
-    if (length(upremov) > 0) {
-      data.week[c(upremov), 7] = NA
-      message("removed rows: ", upremov)
-    }
-    if (length(lowremov) > 0) {
-      data.week[c(lowremov), 7] = NA
-      message("removed rows: ", lowremov)
-    }
+    ######## removing suspicious data ----
+
+    data.week <-
+      check.remove.lims(data.week, 6L, RainUplim, RainLowlim, "rain")
+    data.week <-
+      check.remove.lims(data.week, 7L, PEUplim, PELowlim, "PE")
+
     #########
     n <- length(data.week[, 1])
     data.at.timescale <- matrix(NA, (n - (TS - 1)), 6)
@@ -386,11 +345,7 @@ ScientSDI <-
         n.rain <- length(na.omit(rain))
         n.nonzero <- length(rain.nozero)
         n.z <- n.rain - n.nonzero
-        if (n.z == 0) {
-          probzero <- 0
-        } else {
-          probzero <- (n.z + 1) / (2 * (n.rain + 1))
-        }
+        probzero <- calc.probzero(n.z, n.rain)
         soma.rain <- matrix(NA, n.nonzero, 1)
         parameters[i, 1:4] <-
           c(data.at.timescale[i, 3], pelgam(samlmu(rain.nozero)), probzero)
@@ -422,8 +377,7 @@ ScientSDI <-
                         c(
                           parameters[i, 8], parameters[i, 9], parameters[i, 10]
                         )))
-        }
-        if (distr == "GLO") {
+        } else {
           parameters[i, 5:10] <-
             c(pelglo(samlmu(petp.harg)), pelglo(samlmu(petp.pm)))
           prob.harg <-
@@ -539,8 +493,7 @@ ScientSDI <-
             }
             null.dist[j, 6] <-
               -n.pm - ((1 / n.pm) * sum(soma.pm, na.rm = TRUE))
-          }
-          if (distr == "GLO") {
+          } else {
             y <-
               sort(quaglo(
                 runif(n.harg),
@@ -632,222 +585,111 @@ ScientSDI <-
         while (pos <= n.weeks) {
           i <- data.at.timescale[pos, 3]
           prob <-
-            parameters[i, 6] + (1 - parameters[i, 6]) *
-            cdfgam(data.at.timescale[pos, 4],
-                   c(parameters[i, 4], parameters[i, 5]))
-          if (!is.na(prob) & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+            adjust.prob(parameters[i, 6] + (1 - parameters[i, 6]) *
+                          cdfgam(data.at.timescale[pos, 4],
+                                 c(parameters[i, 4], parameters[i, 5])))
+
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
           prob <-
-            cdfgev(data.at.timescale[pos, 7],
-                   c(parameters[i, 7], parameters[i, 8], parameters[i, 9]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+            adjust.prob(cdfgev(
+              data.at.timescale[pos, 7],
+              c(parameters[i, 7], parameters[i, 8], parameters[i, 9])
+            ))
+
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
           prob <-
-            cdfgev(data.at.timescale[pos, 8],
-                   c(parameters[i, 10], parameters[i, 11], parameters[i, 12]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+            adjust.prob(cdfgev(
+              data.at.timescale[pos, 8],
+              c(parameters[i, 10], parameters[i, 11], parameters[i, 12])
+            ))
+
           SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }
-      }
-      if (distr == "GLO") {
+      } else {
         while (pos <= n.weeks) {
           i <- data.at.timescale[pos, 3]
           prob <-
-            parameters[i, 6] + (1 - parameters[i, 6]) *
-            cdfgam(data.at.timescale[pos, 4],
-                   c(parameters[i, 4], parameters[i, 5]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+            adjust.prob(parameters[i, 6] + (1 - parameters[i, 6]) *
+                          cdfgam(data.at.timescale[pos, 4],
+                                 c(parameters[i, 4], parameters[i, 5])))
+
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
           prob <-
-            cdfglo(data.at.timescale[pos, 7],
-                   c(parameters[i, 7], parameters[i, 8], parameters[i, 9]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+            adjust.prob(cdfglo(
+              data.at.timescale[pos, 7],
+              c(parameters[i, 7], parameters[i, 8], parameters[i, 9])
+            ))
+
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
           prob <-
-            cdfglo(data.at.timescale[pos, 8],
-                   c(parameters[i, 10], parameters[i, 11], parameters[i, 12]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+            adjust.prob(cdfglo(
+              data.at.timescale[pos, 8],
+              c(parameters[i, 10], parameters[i, 11], parameters[i, 12])
+            ))
+
           SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }
       }
       categories <- matrix(NA, n.weeks, 3)
-      for (i in 1:n.weeks) {
-        if (SDI[i, 1] <= -2.0 & !is.na(SDI[i, 1])) {
-          categories[i, 1] <- "ext.dry"
-        } else {
-          if (SDI[i, 1] <= -1.5 & !is.na(SDI[i, 1])) {
-            categories[i, 1] <- "sev.dry"
-          } else {
-            if (SDI[i, 1] <= -1.0 & !is.na(SDI[i, 1])) {
-              categories[i, 1] <- "mod.dry"
-            } else {
-              if (SDI[i, 1] <= 1.0 & !is.na(SDI[i, 1])) {
-                categories[i, 1] <- "Normal"
-              } else {
-                if (SDI[i, 1] <= 1.5 & !is.na(SDI[i, 1])) {
-                  categories[i, 1] <- "mod.wet"
-                } else {
-                  if (SDI[i, 1] <= 2.0 & !is.na(SDI[i, 1])) {
-                    categories[i, 1] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 1] > 2.0 & !is.na(SDI[i, 1])) {
-                      categories[i, 1] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (SDI[i, 2] <= -2.0 & !is.na(SDI[i, 2])) {
-          categories[i, 2] <- "ext.dry"
-        } else {
-          if (SDI[i, 2] <= -1.5 & !is.na(SDI[i, 2])) {
-            categories[i, 2] <- "sev.dry"
-          } else {
-            if (SDI[i, 2] <= -1.0 & !is.na(SDI[i, 2])) {
-              categories[i, 2] <- "mod.dry"
-            } else {
-              if (SDI[i, 2] <= 1.0 & !is.na(SDI[i, 2])) {
-                categories[i, 2] <- "Normal"
-              } else {
-                if (SDI[i, 2] <= 1.5 & !is.na(SDI[i, 2])) {
-                  categories[i, 2] <- "mod.wet"
-                } else {
-                  if (SDI[i, 2] <= 2.0 & !is.na(SDI[i, 2])) {
-                    categories[i, 2] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 2] > 2.0 & !is.na(SDI[i, 2])) {
-                      categories[i, 2] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (SDI[i, 3] <= -2.0 & !is.na(SDI[i, 3])) {
-          categories[i, 3] <- "ext.dry"
-        } else {
-          if (SDI[i, 3] <= -1.5 & !is.na(SDI[i, 3])) {
-            categories[i, 3] <- "sev.dry"
-          } else {
-            if (SDI[i, 3] <= -1.0 & !is.na(SDI[i, 3])) {
-              categories[i, 3] <- "mod.dry"
-            } else {
-              if (SDI[i, 3] <= 1.0 & !is.na(SDI[i, 3])) {
-                categories[i, 3] <- "Normal"
-              } else {
-                if (SDI[i, 3] <= 1.5 & !is.na(SDI[i, 3])) {
-                  categories[i, 3] <- "mod.wet"
-                } else {
-                  if (SDI[i, 3] <= 2.0 & !is.na(SDI[i, 3])) {
-                    categories[i, 3] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 3] > 2.0 & !is.na(SDI[i, 3])) {
-                      categories[i, 3] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      # see internal_functions.R for find.category()
+      categories[, 1] <- find.category(x = SDI[, 1])
+      categories[, 2] <- find.category(x = SDI[, 2])
+      categories[, 3] <- find.category(x = SDI[, 3])
+
       SDI <- cbind(data.at.timescale, SDI)
       ##### Normality checking procedures
       Norn.check <- matrix(NA, 48, 15)
       for (j in 1:48) {
         SDI.week <- as.matrix(SDI[which(SDI[, 3] == j), 9:11])
         w <- shapiro.test(SDI.week[, 1])
-        if (w$p.value < 0.01) {
-          w$p.value <- 0.01
-        }
+        w$p.value[w$p.value < 0.01] <- 0.01
         Norn.check[j, 1:3] <-
           c(w$statistic, w$p.value, abs(median((SDI.week[, 1]), na.rm = TRUE)))
         w <- shapiro.test(SDI.week[, 2])
-        if (w$p.value < 0.01) {
-          w$p.value <- 0.01
-        }
+        w$p.value[w$p.value < 0.01] <- 0.01
         Norn.check[j, 4:6] <-
           c(w$statistic, w$p.value, abs(median((SDI.week[, 2]), na.rm = TRUE)))
         w <- shapiro.test(SDI.week[, 3])
-        if (w$p.value < 0.01) {
-          w$p.value <- 0.01
-        }
+        w$p.value[w$p.value < 0.01] <- 0.01
         Norn.check[j, 7:9] <-
           c(w$statistic, w$p.value, abs(median((SDI.week[, 3]), na.rm = TRUE)))
         ###### As proposed in Wu et al. (2007)
-        if (Norn.check[j, 1] < 0.960 &&
-            Norn.check[j, 2] < 0.10 &&
-            Norn.check[j, 3] > 0.05) {
-          Norn.check[j, 10] <- "NoNormal"
-        } else {
-          Norn.check[j, 10] <- "Normal"
-        }
-        if (Norn.check[j, 4] < 0.960 &&
-            Norn.check[j, 5] < 0.10 &&
-            Norn.check[j, 6] > 0.05) {
-          Norn.check[j, 11] <- "NoNormal"
-        } else {
-          Norn.check[j, 11] <- "Normal"
-        }
-        if (Norn.check[j, 7] < 0.960 &&
-            Norn.check[j, 8] < 0.10 &&
-            Norn.check[j, 9] > 0.05) {
-          Norn.check[j, 12] <- "NoNormal"
-        } else {
-          Norn.check[j, 12] <- "Normal"
-        }
+
+        Norn.check[j, 10] <- ifelse((Norn.check[j, 1] < 0.960 &&
+                                       Norn.check[j, 2] < 0.10 &&
+                                       Norn.check[j, 3] > 0.05),
+                                    "NoNormal",
+                                    "Normal")
+
+        Norn.check[j, 11] <- ifelse((Norn.check[j, 4] < 0.960 &&
+                                       Norn.check[j, 5] < 0.10 &&
+                                       Norn.check[j, 6] > 0.05),
+                                    "NoNormal",
+                                    "Normal")
+
+        Norn.check[j, 12] <- ifelse((Norn.check[j, 7] < 0.960 &&
+                                       Norn.check[j, 8] < 0.10 &&
+                                       Norn.check[j, 9] > 0.05),
+                                    "NoNormal",
+                                    "Normal")
+
         ###### As proposed in Stagge et al. (2015)
-        if (Norn.check[j, 2] < 0.05) {
-          Norn.check[j, 13] <- "NoNormal"
-        } else {
-          Norn.check[j, 13] <- "Normal"
-        }
-        if (Norn.check[j, 5] < 0.05) {
-          Norn.check[j, 14] <- "NoNormal"
-        } else {
-          Norn.check[j, 14] <- "Normal"
-        }
-        if (Norn.check[j, 8] < 0.05) {
-          Norn.check[j, 15] <- "NoNormal"
-        } else {
-          Norn.check[j, 15] <- "Normal"
-        }
+
+        Norn.check[j, 13] <- ifelse(Norn.check[j, 2] < 0.05,
+                                    "NoNormal",
+                                    "Normal")
+
+        Norn.check[j, 14] <- ifelse(Norn.check[j, 5] < 0.05,
+                                    "NoNormal",
+                                    "Normal")
+
+        Norn.check[j, 15] <- ifelse(Norn.check[j, 8] < 0.05,
+                                    "NoNormal",
+                                    "Normal")
       }
+
       ##########
       colnames(Norn.check) <- c(
         "SPI.Shap",
@@ -883,41 +725,13 @@ ScientSDI <-
         "Categ.SPEI.Harg",
         "Categ.SPEI.PM"
       )
-      if (end.user.month == 1 ||
-          end.user.month == 3 || end.user.month == 5 ||
-          end.user.month == 7 ||
-          end.user.month == 8 ||
-          end.user.month == 10 || end.user.month == 12) {
-        if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-            end.user.day > 14 &
-            end.user.day < 22 ||
-            end.user.day > 22 & end.user.day < 31) {
-          message("The latest quart.month period is not complete")
-          SDI.final <- SDI.final[-c(n.weeks), ]
-        }
-      }
-      if (end.user.month == 4 ||
-          end.user.month == 6 ||
-          end.user.month == 9 || end.user.month == 11) {
-        if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-            end.user.day > 14 &
-            end.user.day < 22 ||
-            end.user.day > 22 & end.user.day < 30) {
-          message("The latest quart.month period is not complete")
-          SDI.final <- SDI.final[-c(n.weeks), ]
-        }
-      }
-      if (end.user.month == 2) {
-        if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-            end.user.day > 14 &
-            end.user.day < 22 ||
-            end.user.day > 22 & end.user.day < 28) {
-          message("The latest quart.month period is not complete")
-          SDI.final <- SDI.final[-c(n.weeks), ]
-        }
-      }
-      whichTS <- paste("TS is", as.character(TS))
-      row.names(SDI.final[1, ]) <- whichTS
+      check.quart.month.complete(as.numeric(format(end.date.user,
+                                                   format = "%Y")),
+                                 end.user.month,
+                                 end.user.day)
+      SDI.final <- SDI.final[-c(n.weeks), ]
+
+      row.names(SDI.final[1, ]) <- paste("TS is ", as.character(TS))
       Result <-
         list(SDI.final, parameters, Goodness, Norn.check)
       Result <- list(
@@ -926,11 +740,9 @@ ScientSDI <-
         GoodFit = Goodness,
         Normality = Norn.check
       )
+      message("The calculations started on: ", start.date.protocal)
       return(Result)
-      message("The calculations started on:")
-      print(start.date.protocal)
-    }
-    if (Good == "no") {
+    } else {
       for (i in 1:48) {
         month.par <- data.at.timescale[i, 3]
         rain <-
@@ -939,11 +751,7 @@ ScientSDI <-
         n.rain <- length(na.omit(rain))
         n.nonzero <- length(rain.nozero)
         n.z <- n.rain - n.nonzero
-        if (n.z == 0) {
-          probzero <- 0
-        } else {
-          probzero <- (n.z + 1) / (2 * (n.rain + 1))
-        }
+        probzero <- calc.probzero(n.z, n.rain)
         parameters[i, 1:4] <-
           c(data.at.timescale[i, 3], pelgam(samlmu(rain.nozero)), probzero)
         petp.harg <-
@@ -963,8 +771,7 @@ ScientSDI <-
                         c(
                           parameters[i, 8], parameters[i, 9], parameters[i, 10]
                         )))
-        }
-        if (distr == "GLO") {
+        } else {
           parameters[i, 5:10] <-
             c(pelglo(samlmu(petp.harg)), pelglo(samlmu(petp.pm)))
           prob.harg <-
@@ -1004,164 +811,53 @@ ScientSDI <-
         while (pos <= n.weeks) {
           i <- data.at.timescale[pos, 3]
           prob <-
-            parameters[i, 6] + (1 - parameters[i, 6]) *
-            cdfgam(data.at.timescale[pos, 4],
-                   c(parameters[i, 4], parameters[i, 5]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+            adjust.prob((parameters[i, 6] + (1 - parameters[i, 6])) *
+                          cdfgam(data.at.timescale[pos, 4],
+                                 c(parameters[i, 4], parameters[i, 5])))
+
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
           prob <-
-            cdfgev(data.at.timescale[pos, 7],
+            adjust.prob(cdfgev(data.at.timescale[pos, 7],
                    c(parameters[i, 7], parameters[i, 8],
-                     parameters[i, 9]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+                     parameters[i, 9])))
+
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
           prob <-
-            cdfgev(data.at.timescale[pos, 8],
+            adjust.prob(cdfgev(data.at.timescale[pos, 8],
                    c(parameters[i, 10], parameters[i, 11],
-                     parameters[i, 12]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+                     parameters[i, 12])))
+
           SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }
-      }
-      if (distr == "GLO") {
+      } else {
         while (pos <= n.weeks) {
           i <- data.at.timescale[pos, 3]
           prob <-
-            parameters[i, 6] + (1 - parameters[i, 6]) *
+            adjust.prob(parameters[i, 6] + (1 - parameters[i, 6]) *
             cdfgam(data.at.timescale[pos, 4],
-                   c(parameters[i, 4], parameters[i, 5]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+                   c(parameters[i, 4], parameters[i, 5])))
           SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
+
           prob <-
-            cdfglo(data.at.timescale[pos, 7],
+            adjust.prob(cdfglo(data.at.timescale[pos, 7],
                    c(parameters[i, 7], parameters[i, 8],
-                     parameters[i, 9]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+                     parameters[i, 9])))
           SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
           prob <-
-            cdfglo(data.at.timescale[pos, 8],
+            adjust.prob(cdfglo(data.at.timescale[pos, 8],
                    c(parameters[i, 10], parameters[i, 11],
-                     parameters[i, 12]))
-          if (!is.na(prob)  & prob < 0.001351) {
-            prob <- 0.001351
-          }
-          if (!is.na(prob)  & prob > 0.998649) {
-            prob <- 0.998649
-          }
+                     parameters[i, 12])))
           SDI[pos, 3] <- qnorm(prob, mean = 0, sd = 1)
           pos <- pos + 1
         }
       }
       categories <- matrix(NA, n.weeks, 3)
-      for (i in 1:n.weeks) {
-        if (SDI[i, 1] <= -2.0 & !is.na(SDI[i, 1])) {
-          categories[i, 1] <- "ext.dry"
-        } else {
-          if (SDI[i, 1] <= -1.5 & !is.na(SDI[i, 1])) {
-            categories[i, 1] <- "sev.dry"
-          } else {
-            if (SDI[i, 1] <= -1.0 & !is.na(SDI[i, 1])) {
-              categories[i, 1] <- "mod.dry"
-            } else {
-              if (SDI[i, 1] <= 1.0 & !is.na(SDI[i, 1])) {
-                categories[i, 1] <- "Normal"
-              } else {
-                if (SDI[i, 1] <= 1.5 & !is.na(SDI[i, 1])) {
-                  categories[i, 1] <- "mod.wet"
-                } else {
-                  if (SDI[i, 1] <= 2.0 & !is.na(SDI[i, 1])) {
-                    categories[i, 1] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 1] > 2.0 & !is.na(SDI[i, 1])) {
-                      categories[i, 1] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (SDI[i, 2] <= -2.0 & !is.na(SDI[i, 2])) {
-          categories[i, 2] <- "ext.dry"
-        } else {
-          if (SDI[i, 2] <= -1.5 & !is.na(SDI[i, 2])) {
-            categories[i, 2] <- "sev.dry"
-          } else {
-            if (SDI[i, 2] <= -1.0 & !is.na(SDI[i, 2])) {
-              categories[i, 2] <- "mod.dry"
-            } else {
-              if (SDI[i, 2] <= 1.0 & !is.na(SDI[i, 2])) {
-                categories[i, 2] <- "Normal"
-              } else {
-                if (SDI[i, 2] <= 1.5 & !is.na(SDI[i, 2])) {
-                  categories[i, 2] <- "mod.wet"
-                } else {
-                  if (SDI[i, 2] <= 2.0 & !is.na(SDI[i, 2])) {
-                    categories[i, 2] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 2] > 2.0 & !is.na(SDI[i, 2])) {
-                      categories[i, 2] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (SDI[i, 3] <= -2.0 & !is.na(SDI[i, 3])) {
-          categories[i, 3] <- "ext.dry"
-        } else {
-          if (SDI[i, 3] <= -1.5 & !is.na(SDI[i, 3])) {
-            categories[i, 3] <- "sev.dry"
-          } else {
-            if (SDI[i, 3] <= -1.0 & !is.na(SDI[i, 3])) {
-              categories[i, 3] <- "mod.dry"
-            } else {
-              if (SDI[i, 3] <= 1.0 & !is.na(SDI[i, 3])) {
-                categories[i, 3] <- "Normal"
-              } else {
-                if (SDI[i, 3] <= 1.5 & !is.na(SDI[i, 3])) {
-                  categories[i, 3] <- "mod.wet"
-                } else {
-                  if (SDI[i, 3] <= 2.0 & !is.na(SDI[i, 3])) {
-                    categories[i, 3] <- "sev.wet"
-                  } else {
-                    if (SDI[i, 3] > 2.0 & !is.na(SDI[i, 3])) {
-                      categories[i, 3] <- "ext.wet"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+
+      categories[, 1] <- find.category(x = SDI[, 1])
+      categories[, 2] <- find.category(x = SDI[, 2])
+      categories[, 3] <- find.category(x = SDI[, 3])
+
       SDI <- cbind(data.at.timescale, SDI)
       SDI.final <- data.frame(SDI, categories)
       colnames(SDI.final) <- c(
@@ -1180,43 +876,85 @@ ScientSDI <-
         "Categ.SPEI.Harg",
         "Categ.SPEI.PM"
       )
-      if (end.user.month == 1 || end.user.month == 3 ||
-          end.user.month == 5 ||
-          end.user.month == 7 ||
-          end.user.month == 8 ||
-          end.user.month == 10 || end.user.month == 12) {
-        if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-            end.user.day > 14 &
-            end.user.day < 22 || end.user.day > 22 &
-            end.user.day < 31) {
-          message("The latest quart.month period is not complete")
-          SDI.final <- SDI.final[-c(n.weeks), ]
-        }
-      }
-      if (end.user.month == 4 || end.user.month == 6 ||
-          end.user.month == 9 || end.user.month == 11) {
-        if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-            end.user.day > 14 &
-            end.user.day < 22 || end.user.day > 22 &
-            end.user.day < 30) {
-          message("The latest quart.month period is not complete")
-          SDI.final <- SDI.final[-c(n.weeks), ]
-        }
-      }
-      if (end.user.month == 2) {
-        if (end.user.day < 7 || end.user.day > 7 & end.user.day < 14 ||
-            end.user.day > 14 &
-            end.user.day < 22 || end.user.day > 22 &
-            end.user.day < 28) {
-          message("The latest quart.month period is not complete")
-          SDI.final <- SDI.final[-c(n.weeks), ]
-        }
-      }
-      whichTS <- paste("TS is", as.character(TS))
-      row.names(SDI.final[1, ]) <- whichTS
+      check.quart.month.complete(as.numeric(format(end.date.user,
+                                                   format = "%Y")),
+                                 end.user.month,
+                                 end.user.day)
+      SDI.final <- SDI.final[-c(n.weeks), ]
+
+      row.names(SDI.final[1, ]) <- paste("TS is", as.character(TS))
       Result <- list(SDI.final, parameters)
       Result <- list(SDI = SDI.final, DistPar = parameters)
-      message("The calculations started on:", start.date.protocal)
+      message("The calculations started on: ", start.date.protocal)
       return(Result)
     }
+  }
+
+#' Check and Remove Values Outside of Set Limits
+#'
+#' Takes a user-provided value, checks if values are within the boundaries,
+#' emits a message with number of removed rows and removes the rows falling
+#' outside the boundaries.
+#' @param data.week A matrix of values
+#' @param col.position An integer value indicating which column should be
+#'   checked
+#' @param Uplim The user-defined upper limit
+#' @param Lowlim The user-defined lower limit
+#' @param which.lim A string indicating whether the limits are applied to rain
+#'   or PE values for the message that is emitted
+#'
+#' @examples
+#' data.week <-
+#' structure(
+#'   c(
+#'     -47.3,
+#'     -47.3,
+#'     -22.87,
+#'     -22.87,
+#'     2015,
+#'     2015,
+#'     1,
+#'     1,
+#'     1,
+#'     2,
+#'     34.88,
+#'     22.72,
+#'     35.4347478184492,
+#'     42.1418688289752,
+#'     34.3122432933585,
+#'     44.6334180288311
+#'   ),
+#'   dim = c(2L, 8L)
+#' )
+#'
+#' # removes second row
+#' check.remove.lims(data.week, 6, 45, 34, "rain")
+#' @noRd
+#' @keywords Internal
+
+check.remove.lims <-
+  function(data.week,
+           col.position,
+           Uplim,
+           Lowlim,
+           which.lim) {
+    if (!is.null(Uplim)) {
+      upremov <- which(data.week[, col.position] > Uplim)
+      if (length(upremov) > 0) {
+        message("removed rows above limit: ", upremov, " for ", which.lim)
+        data.week <-
+          data.week[data.week[, col.position] > Uplim, , drop = FALSE]
+      }
+    }
+
+    if (!is.null(Lowlim)) {
+      lowremov <- which(data.week[, col.position] < Lowlim)
+      if (length(lowremov) > 0) {
+        message("removed rows below limit: ", lowremov, " for ", which.lim)
+        data.week <-
+          data.week[data.week[, col.position] < Lowlim, , drop = FALSE]
+      }
+    }
+
+    return(data.week)
   }

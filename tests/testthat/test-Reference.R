@@ -1,13 +1,13 @@
 test_that("Reference() calculates SPI/SPEI using GEV & HS w/ TS4", {
   data("refHS")
 
-  expect_message(Reference(
+  expect_warning(Reference(
     ref = refHS,
     distr = "GEV",
     PEMethod = "HS",
     TS = 4L
   ),
-  regexp = "The latest quart.month period is not complete*")
+  regexp = "The latest quart.month period is not complete")
 
   ref_gev <- Reference(
     ref = refHS,
@@ -39,13 +39,13 @@ test_that("Reference() calculates SPI/SPEI using GEV & HS w/ TS4", {
 test_that("Reference() calculates SPI/SPEI using GLO & HS w/ TS4", {
   data("refHS")
 
-  expect_message(Reference(
+  expect_warning(Reference(
     ref = refHS,
     distr = "GLO",
     PEMethod = "HS",
     TS = 4
   ),
-  regexp = "The latest quart.month period is not complete*")
+  regexp = "The latest quart.month period is not complete")
 
   ref_glo <- Reference(
     ref = refHS,

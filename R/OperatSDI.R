@@ -227,7 +227,6 @@ OperatSDI <-
       slope.pressure <- calc.slope.pressure(es, sse_i$T2M)
       ETP.pm.daily <-
         calc.ETP.pm.daily(slope.pressure,
-                          Rn,
                           sse_i$T2M_MAX,
                           sse_i$T2M_MIN,
                           sse_i$T2M,
