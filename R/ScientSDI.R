@@ -322,7 +322,7 @@ ScientSDI <-
         c <- c + 1
       }
     } else {
-      # need to fix error when data.week is only one row
+      # TODO: need to fix error when data.week is only one row or no rows due to filtering values ----
       data.at.timescale <- cbind(data.week[, c(3:4, 9, 6:8)])
     }
     data.at.timescale <-
