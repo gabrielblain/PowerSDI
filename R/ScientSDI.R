@@ -959,7 +959,7 @@ check.remove.lims <-
       }
     }
 
-    if (nrow(data.week < 2)) {
+    if (nrow(data.week) < 2) {
       stop(call. = FALSE,
            "There are not enough rows in the data with the limits that you ",
            "have set. Please use lower or higher limits to allow enough data ",
