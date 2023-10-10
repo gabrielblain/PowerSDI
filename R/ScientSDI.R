@@ -941,7 +941,10 @@ check.remove.lims <-
     if (!is.null(Uplim)) {
       upremov <- which(data.week[, col.position] > Uplim)
       if (length(upremov) > 0) {
-        message("removed row(s) above limit: ", upremov, " for ", which.lim)
+        message("removed row(s) above limit: ",
+                paste(upremov, collapse = ", "),
+                " for ",
+                which.lim)
         data.week <-
           data.week[data.week[, col.position] < Uplim, , drop = FALSE]
       }
@@ -950,7 +953,10 @@ check.remove.lims <-
     if (!is.null(Lowlim)) {
       lowremov <- which(data.week[, col.position] < Lowlim)
       if (length(lowremov) > 0) {
-        message("removed rows below limit: ", lowremov, " for ", which.lim)
+        message("removed rows below limit: ",
+                paste(lowremov, collapse = ", "),
+                " for ",
+                which.lim)
         data.week <-
           data.week[data.week[, col.position] > Lowlim, , drop = FALSE]
       }
