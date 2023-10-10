@@ -164,7 +164,7 @@ ScientSDI <-
       calculate.dif(start.week, start.user.day) # see internal_functions.R
 
     start.date.protocal <- start.date.user - dif
-    message("Just a sec. Downloading NASA POWER data and calculating the others parameters.")
+
     sse_i <- as.data.frame(get_power(
       community = "ag",
       lonlat = c(lon, lat),
@@ -322,7 +322,6 @@ ScientSDI <-
         c <- c + 1
       }
     } else {
-      # TODO: need to fix error when data.week is only one row or no rows due to filtering values ----
       data.at.timescale <- cbind(data.week[, c(3:4, 9, 6:8)])
     }
     data.at.timescale <-
@@ -335,7 +334,6 @@ ScientSDI <-
     if (Good == "yes") {
       check.sig.level(sig.level)
 
-      message("Calculating the goodness-of-fit tests. This might take a while.")
       Goodness <- matrix(NA, 48, 12)
       for (i in 1:48) {
         month.par <- data.at.timescale[i, 3]
@@ -443,7 +441,6 @@ ScientSDI <-
           prob.synt <- try(cdfgam(x, pelgam(samlmu(x))))
           if (length(prob.synt) != n.nonzero) {
             prob.synt <- try(cdfgam(x, c(parameters[i, 2], parameters[i, 3])))
-            message("Using original parameters")
           }
           prob.synt[prob.synt < 0.001351] <- 0.001351
           prob.synt[prob.synt > 0.998649] <- 0.998649
