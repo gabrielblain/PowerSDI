@@ -198,7 +198,7 @@ ScientSDI <-
     ea <- calc.ea(sse_i$RH2M, es)
     slope.pressure <- calc.slope.pressure(es, sse_i$T2M)
     Q0.ajust <- calc.Q0.ajust(Ra)
-    Rn <- calc.Rn(0.8, Q0.ajust, ea, sse_i$T2M, sse_i$T2M_MIN)
+    Rn <- calc.Rn(sse_i$ALLSKY_SFC_SW_DWN, Q0.ajust, ea, sse_i$T2M, sse_i$T2M_MIN)
     ETP.pm.daily <-
       calc.ETP.pm.daily(slope.pressure, Rn, sse_i$T2M, sse_i$WS2M, es, ea)
 
