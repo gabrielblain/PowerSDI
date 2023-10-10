@@ -19,7 +19,7 @@
 #' date at which the indices estimates should end. Format: "YYYY-MM-DD".
 #' @param distr
 #' A character variable ("GEV" or "GLO") defining the distribution to calculate
-#'   the \acronym{SPEI}. Default is "GEV".
+#'   the \acronym{SPEI}.  Default is "GEV".
 #' @param TS
 #' Time scale on the quart.month basis (integer values between 1 and 96).
 #'   Default is 4.
@@ -31,16 +31,16 @@
 #'   for parameter Good. Default is "0.95".
 #' @param RainUplim
 #' Optional. Upper limit in millimeters from which rainfall values larger than
-#'   it will be removed. Default is \code{NULL}.
+#'   it will be removed.  Default is \code{NULL}.
 #' @param RainLowlim
 #' Optional. Lower limit in millimeters from which rainfall values smaller than
-#'   it will be removed. Default is \code{NULL}.
+#'   it will be removed.  Default is \code{NULL}.
 #' @param PEUplim
 #' Optional. Upper limit in millimeters from which evapotranspiration values
-#'   larger than it will be removed. Default is \code{NULL}.
+#'   larger than it will be removed.  Default is \code{NULL}.
 #' @param PELowlim
 #' Optional. Lower limit in millimeters from which evapotranspiration values
-#'   smaller than it will be removed. Default is \code{NULL}.
+#'   smaller than it will be removed.  Default is \code{NULL}.
 #' @return
 #' A list with data calculated at the time scale selected by the user.
 #' If \code{Good="Yes"}, this list includes:
@@ -322,8 +322,8 @@ ScientSDI <-
         c <- c + 1
       }
     } else {
-      data.at.timescale <-
-        cbind(data.week[, 3:4], data.week[, 9], data.week[, 6:8])
+      # TODO: need to fix error when data.week is only one row or no rows due to filtering values ----
+      data.at.timescale <- cbind(data.week[, c(3:4, 9, 6:8)])
     }
     data.at.timescale <-
       cbind(
@@ -941,18 +941,24 @@ check.remove.lims <-
     if (!is.null(Uplim)) {
       upremov <- which(data.week[, col.position] > Uplim)
       if (length(upremov) > 0) {
-        message("removed rows above limit: ", upremov, " for ", which.lim)
+        message("removed row(s) above limit: ",
+                paste(upremov, collapse = ", "),
+                " for ",
+                which.lim)
         data.week <-
-          data.week[data.week[, col.position] > Uplim, , drop = FALSE]
+          data.week[data.week[, col.position] < Uplim, , drop = FALSE]
       }
     }
 
     if (!is.null(Lowlim)) {
       lowremov <- which(data.week[, col.position] < Lowlim)
       if (length(lowremov) > 0) {
-        message("removed rows below limit: ", lowremov, " for ", which.lim)
+        message("removed rows below limit: ",
+                paste(lowremov, collapse = ", "),
+                " for ",
+                which.lim)
         data.week <-
-          data.week[data.week[, col.position] < Lowlim, , drop = FALSE]
+          data.week[data.week[, col.position] > Lowlim, , drop = FALSE]
       }
     }
 
