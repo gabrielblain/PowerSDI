@@ -75,7 +75,7 @@ test_that("ScientSDI properly fetches and calculates values, no", {
   expect_equal(s_sdi[[1]]$PE.PM[1], 30.12083, tolerance = 0.01)
   expect_equal(s_sdi[[1]]$PPE.Harg[1], 0.8758454, tolerance = 0.01)
   expect_equal(s_sdi[[1]]$PPE.PM[1], 0.8691654, tolerance = 0.01)
-  expect_equal(s_sdi[[1]]$SPI[1], -0.707524, tolerance = 0.01)
+  expect_equal(s_sdi[[1]]$SPI[1], -0.7457067, tolerance = 0.01)
   expect_equal(s_sdi[[1]]$SPEI.Harg[1], -0.772679, tolerance = 0.01)
   expect_equal(s_sdi[[1]]$Categ.SPEI.Harg[1], "Normal")
   expect_equal(s_sdi[[1]]$SPEI.PM[1], -0.774377, tolerance = 0.01)

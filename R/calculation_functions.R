@@ -132,5 +132,5 @@ calc.ETP.pm.daily <- function(slope.pressure, Rn, temp, wind.speed, es, ea) {
 #' @keywords Internal
 
 calc.probzero <- function(n.z, n.rain) {
-  (n.z + 1) / (2 * (n.rain + 1))
+  ifelse(n.z == 0, 0, (n.z + 1) / (2 * (n.rain + 1)))
 }
