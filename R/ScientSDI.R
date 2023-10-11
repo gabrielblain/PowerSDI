@@ -164,7 +164,7 @@ ScientSDI <-
       calculate.dif(start.week, start.user.day) # see internal_functions.R
 
     start.date.protocal <- start.date.user - dif
-    message("Just a sec. Downloading NASA POWER data and calculating the others parameters.")
+
     sse_i <- as.data.frame(get_power(
       community = "ag",
       lonlat = c(lon, lat),
@@ -198,7 +198,7 @@ ScientSDI <-
     ea <- calc.ea(sse_i$RH2M, es)
     slope.pressure <- calc.slope.pressure(es, sse_i$T2M)
     Q0.ajust <- calc.Q0.ajust(Ra)
-    Rn <- calc.Rn(0.8, Q0.ajust, ea, sse_i$T2M, sse_i$T2M_MIN)
+    Rn <- calc.Rn(sse_i$ALLSKY_SFC_SW_DWN, Q0.ajust, ea, sse_i$T2M, sse_i$T2M_MIN)
     ETP.pm.daily <-
       calc.ETP.pm.daily(slope.pressure, Rn, sse_i$T2M, sse_i$WS2M, es, ea)
 
@@ -322,7 +322,6 @@ ScientSDI <-
         c <- c + 1
       }
     } else {
-      # TODO: need to fix error when data.week is only one row or no rows due to filtering values ----
       data.at.timescale <- cbind(data.week[, c(3:4, 9, 6:8)])
     }
     data.at.timescale <-
@@ -335,7 +334,6 @@ ScientSDI <-
     if (Good == "yes") {
       check.sig.level(sig.level)
 
-      message("Calculating the goodness-of-fit tests. This might take a while.")
       Goodness <- matrix(NA, 48, 12)
       for (i in 1:48) {
         month.par <- data.at.timescale[i, 3]
@@ -443,7 +441,6 @@ ScientSDI <-
           prob.synt <- try(cdfgam(x, pelgam(samlmu(x))))
           if (length(prob.synt) != n.nonzero) {
             prob.synt <- try(cdfgam(x, c(parameters[i, 2], parameters[i, 3])))
-            message("Using original parameters")
           }
           prob.synt[prob.synt < 0.001351] <- 0.001351
           prob.synt[prob.synt > 0.998649] <- 0.998649
@@ -941,7 +938,7 @@ check.remove.lims <-
     if (!is.null(Uplim)) {
       upremov <- which(data.week[, col.position] > Uplim)
       if (length(upremov) > 0) {
-        message("removed row(s) above limit: ",
+        message("Removed row(s) above limit: ",
                 paste(upremov, collapse = ", "),
                 " for ",
                 which.lim)
@@ -953,7 +950,7 @@ check.remove.lims <-
     if (!is.null(Lowlim)) {
       lowremov <- which(data.week[, col.position] < Lowlim)
       if (length(lowremov) > 0) {
-        message("removed rows below limit: ",
+        message("Removed rows below limit: ",
                 paste(lowremov, collapse = ", "),
                 " for ",
                 which.lim)
@@ -962,5 +959,11 @@ check.remove.lims <-
       }
     }
 
+    if (nrow(data.week) < 2) {
+      stop(call. = FALSE,
+           "There are not enough rows in the data with the limits that you ",
+           "have set. Please use lower or higher limits to allow enough data ",
+           "to remain.")
+    }
     return(data.week)
   }

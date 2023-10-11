@@ -103,8 +103,7 @@ calc.Q0.ajust <- function(Ra) {
 #' @keywords Internal
 #' @noRd
 calc.Rn <- function(Rs, Q0.ajust, ea, temp, tmin) {
-  (1 - 0.2) *
-    Rs -
+  0.8 * Rs -
     (1.35 * (Rs / Q0.ajust) - 0.35) *
     (0.35 - (0.14 * sqrt(ea))) *
     (5.67 * 10 ^ -8) *
