@@ -1,11 +1,11 @@
 
 test_that("ScientSDI properly fetches and calculates values, no", {
   skip_if_offline()
-  vcr::use_cassette("ScientSDI_no", {
+  vcr::use_cassette("ScientSDI", {
     s_sdi <- ScientSDI(
       lon = -47.3,
       lat = -22.87,
-      start.date = "2015-01-01",
+      start.date = "1991-01-01",
       end.date = "2022-12-31",
       TS = 1,
       Good = "no"
@@ -14,26 +14,20 @@ test_that("ScientSDI properly fetches and calculates values, no", {
   expect_type(s_sdi, "list")
   expect_length(s_sdi, 2)
   expect_named(s_sdi, c("SDI", "DistPar"))
-})
 
-test_that("ScientSDI properly fetches and calculates values, yes", {
-  skip_if_offline()
-  vcr::use_cassette("ScientSDI_yes", {
-    s_sdi <- ScientSDI(
-      lon = -47.3,
-      lat = -22.87,
-      start.date = "2015-01-01",
-      end.date = "2022-12-31",
-      TS = 1,
-      Good = "yes"
-    )
-  })
+  s_sdi <- ScientSDI(
+    lon = -47.3,
+    lat = -22.87,
+    start.date = "1991-01-01",
+    end.date = "2022-12-31",
+    TS = 1,
+    Good = "yes"
+  )
+
   expect_type(s_sdi, "list")
   expect_length(s_sdi, 4)
   expect_named(s_sdi, c("SDI", "DistPar", "GoodFit", "Normality"))
-})
 
-test_that("ScientSDI stops on invalid `Good` value", {
   expect_error(
     ScientSDI(
       lon = -47.3,
@@ -44,22 +38,18 @@ test_that("ScientSDI stops on invalid `Good` value", {
       Good = "maybe"
     )
   )
-})
 
-test_that("ScientSDI properly filters `RainUplim` values with `TS = 1`", {
-  skip_if_offline()
-  vcr::use_cassette("ScientSDI_rain_uplim", {
-    s_sdi <- ScientSDI(
-      lon = -48.11,
-      lat = -24.81,
-      start.date = "1991-01-01",
-      end.date = "2022-12-31",
-      TS = 1,
-      Good = "yes",
-      distr = "GEV",
-      RainUplim = 250
-    )
-  })
+  s_sdi <- ScientSDI(
+    lon = -48.11,
+    lat = -24.81,
+    start.date = "1991-01-01",
+    end.date = "2022-12-31",
+    TS = 1,
+    Good = "yes",
+    distr = "GEV",
+    RainUplim = 250
+  )
+
   expect_length(s_sdi, 4)
   expect_named(s_sdi, c("SDI", "DistPar", "GoodFit", "Normality"))
   expect_named(
@@ -89,20 +79,34 @@ test_that("ScientSDI properly filters `RainUplim` values with `TS = 1`", {
   expect_equal(s_sdi[[1]]$SPEI.Harg[1], -0.772679, tolerance = 0.01)
   expect_equal(s_sdi[[1]]$Categ.SPEI.Harg[1], "Normal")
   expect_equal(s_sdi[[1]]$SPEI.PM[1], -0.774377, tolerance = 0.01)
-})
 
-test_that("ScientSDI properly filters `PEUplim` values with `TS = 1`", {
-  skip_if_offline()
-  vcr::use_cassette("ScientSDI_PE_uplim", {
-        expect_message(ScientSDI(
-        lon = -48.11,
-        lat = -24.81,
-        start.date = "1991-01-01",
-        end.date = "2022-12-31",
-        TS = 1,
-        Good = "yes",
-        distr = "GEV",
-        PEUplim = 45
-      ), regexp = "Removed row(s) above limit: 48, 52, 96, 336*")
-  })
+  expect_message(
+    s_sdi <- ScientSDI(
+      lon = -48.11,
+      lat = -24.81,
+      start.date = "1991-01-01",
+      end.date = "2022-12-31",
+      TS = 1,
+      Good = "yes",
+      distr = "GEV",
+      PEUplim = 45
+    ),
+    "above limit: 48, 52, 96, 336"
+  )
+  expect_length(s_sdi, 4)
+  expect_equal(s_sdi[[1]]$PE.PM[1], 30.120835, tolerance = 0.01)
+
+  expect_error(
+    s_sdi <- ScientSDI(
+      lon = -48.11,
+      lat = -24.81,
+      start.date = "1991-01-01",
+      end.date = "2022-12-31",
+      TS = 1,
+      Good = "yes",
+      distr = "GEV",
+      PELowlim = 100
+    ),
+    "There are not enough rows in the data"
+  )
 })
