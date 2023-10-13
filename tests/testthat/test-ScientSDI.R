@@ -38,6 +38,25 @@ test_that("ScientSDI properly fetches and calculates values, TS=1, distr=GLO",
             })
           })
 
+test_that("ScientSDI properly fetches and calculates values, distr=GLO,
+          good=yes",
+          {
+            vcr::use_cassette("ScientSDI_TS-4_Good-yes_distr-GLO", {
+              s_sdi <- ScientSDI(
+                lon = -47.3,
+                lat = -22.87,
+                start.date = "1991-01-01",
+                end.date = "2022-12-31",
+                distr = "GLO",
+                Good = "yes"
+              )
+
+              expect_type(s_sdi, "list")
+              expect_length(s_sdi, 4)
+              expect_named(s_sdi, c("SDI", "DistPar", "GoodFit", "Normality"))
+            })
+          })
+
 test_that("ScientSDI properly fetches and calculates values, TS=4, distr=GLO",
           {
             vcr::use_cassette("ScientSDI_TS-4_Good-No_distr-GLO", {
