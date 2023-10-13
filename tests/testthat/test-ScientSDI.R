@@ -3,7 +3,7 @@
 
 test_that("ScientSDI properly fetches and calculates values TS=1, distr=GEV",
           {
-            vcr::use_cassette("ScientSDI_TS-1_Good-No_distr-GEV", {
+            vcr::use_cassette("ScientSDI", {
               s_sdi <- ScientSDI(
                 lon = -47.3,
                 lat = -22.87,
@@ -21,7 +21,7 @@ test_that("ScientSDI properly fetches and calculates values TS=1, distr=GEV",
 
 test_that("ScientSDI properly fetches and calculates values, TS=1, distr=GLO",
           {
-            vcr::use_cassette("ScientSDI_TS-1_Good-No_distr-GLO", {
+            vcr::use_cassette("ScientSDI", {
               s_sdi <- ScientSDI(
                 lon = -47.3,
                 lat = -22.87,
@@ -41,7 +41,7 @@ test_that("ScientSDI properly fetches and calculates values, TS=1, distr=GLO",
 test_that("ScientSDI properly fetches and calculates values, distr=GLO,
           good=yes",
           {
-            vcr::use_cassette("ScientSDI_TS-4_Good-yes_distr-GLO", {
+            vcr::use_cassette("ScientSDI", {
               s_sdi <- ScientSDI(
                 lon = -47.3,
                 lat = -22.87,
@@ -59,7 +59,7 @@ test_that("ScientSDI properly fetches and calculates values, distr=GLO,
 
 test_that("ScientSDI properly fetches and calculates values, TS=4, distr=GLO",
           {
-            vcr::use_cassette("ScientSDI_TS-4_Good-No_distr-GLO", {
+            vcr::use_cassette("ScientSDI", {
               s_sdi <- ScientSDI(
                 lon = -47.3,
                 lat = -22.87,
@@ -77,7 +77,7 @@ test_that("ScientSDI properly fetches and calculates values, TS=4, distr=GLO",
 
 test_that("ScientSDI properly fetches and calculates values, Good='yes'",
           {
-            vcr::use_cassette("ScientSDI_TS-4_Good-Yes", {
+            vcr::use_cassette("ScientSDI", {
               s_sdi <- ScientSDI(
                 lon = -47.3,
                 lat = -22.87,
