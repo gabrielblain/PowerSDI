@@ -32,11 +32,6 @@ adjust.prob <- function(prob) {
 #' @keywords internal
 #' @noRd
 check.dates <- function(dates) {
-  if (length(dates) < 2) {
-    stop(call. = FALSE,
-         "You have not entered at least two dates for the query.\n")
-  }
-
   # check end date to be sure it's not in the future
   if (dates[[2]] > Sys.Date()) {
     stop(call. = FALSE,
