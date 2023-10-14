@@ -36,13 +36,6 @@ check.dates <- function(dates) {
     stop(call. = FALSE,
          "You have not entered dates for the query.\n")
   }
-  if (length(unique(dates)) < 2) {
-    stop(
-      call. = FALSE,
-      "For `temporal_api = monthly`, at least two (2) years ",
-      "are required to be provided.\n"
-    )
-  }
 
   # check end date to be sure it's not in the future
   if (dates[[2]] > Sys.Date()) {
