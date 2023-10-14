@@ -128,6 +128,21 @@ test_that("OperatSDI fails w/ bad date format", {
       end.date = "2023-06-30",
       parms = DistPar,
       distr = "GEV"
-    )
+    ),
+    regexp = "5-12-08 is not a valid entry for date. Enter as YYYY-MM-DD."
+  )
+})
+
+test_that("OperatSDI fails w/ missing parms", {
+  data("DistPar")
+  expect_error(
+    OperatSDI(
+      lon = -47.3,
+      lat = -22.67,
+      start.date = "06-01-2023",
+      end.date = "2023-06-30",
+      distr = "GEV"
+    ),
+    regexp = "It seems that you don't have the distributions' parameters"
   )
 })
