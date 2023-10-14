@@ -93,7 +93,7 @@ test_that("OperatSDI works as expected in example", {
   })
 })
 
-test_that("OperatSDI works as expected in example", {
+test_that("OperatSDI works as expected w/ PEMethod=PM", {
   vcr::use_cassette("OperatSDI-PEMethod=PM", {
     osdi <- OperatSDI(
       lon = -47.3,
@@ -191,6 +191,109 @@ test_that("OperatSDI works as expected in example", {
                    "ext.dry",
                    "sev.dry",
                    "ext.dry"
+                 ))
+  })
+})
+
+test_that("OperatSDI works as expected w/ PEMethod=PM, dist=GLO", {
+  vcr::use_cassette("OperatSDI-PEMethod=PM", {
+    osdi <- OperatSDI(
+      lon = -47.3,
+      lat = -22.67,
+      start.date = "2023-06-01",
+      end.date = "2023-06-30",
+      distr = "GLO",
+      PEMethod = "PM",
+      parms = DistPar
+    )
+    expect_s3_class(osdi, "data.frame")
+    expect_length(osdi, 12)
+    expect_equal(nrow(osdi), 6)
+    expect_named(
+      osdi,
+      c(
+        "Lon",
+        "Lat",
+        "Year",
+        "Month",
+        "quart.month",
+        "Rain",
+        "PE",
+        "PPE",
+        "SPI",
+        "SPEI",
+        "Categ.SPI",
+        "Categ.SPEI"
+      )
+    )
+
+    expect_equal(osdi[, "Lon"], c(-47.3, -47.3, -47.3, -47.3, -47.3, -47.3))
+    expect_equal(osdi[, "Lat"],
+                 c(-22.67, -22.67, -22.67, -22.67, -22.67, -22.67))
+    expect_equal(osdi[, "Year"], c(2023, 2023, 2023, 2023, 2023, 2023))
+    expect_equal(osdi[, "Month"], c(5, 5, 6, 6, 6, 6))
+    expect_equal(osdi[, "quart.month"], c(19, 20, 21, 22, 23, 24))
+    expect_equal(osdi[, "Rain"],
+                 c(11.32, 34.6, 35.93, 39.21, 46.94, 15.36),
+                 tolerance = 0.1)
+    expect_equal(
+      osdi[, "PE"],
+      c(
+        140.158552712686,
+        149.314819414548,
+        139.883948394412,
+        144.102577406368,
+        135.963707185575,
+        132.552852346312
+      ),
+      tolerance = 0.1
+    )
+    expect_equal(
+      osdi[, "PPE"],
+      c(
+        -128.838552712686,
+        -114.714819414548,
+        -103.953948394412,
+        -104.892577406368,
+        -89.0237071855748,
+        -117.192852346312
+      ),
+      tolerance = 0.1
+    )
+    expect_equal(
+      osdi[, "SPI"],
+      c(
+        -0.982842281872578,
+        -0.497989940589524,
+        -0.385541271014979,
+        -0.183884807837741,
+        0.195580476882115,
+        -0.386626155683378
+      ),
+      tolerance = 0.1
+    )
+    expect_equal(
+      osdi[, "SPEI"],
+      c(
+        -0.869564987719618,
+        -0.843375808988047,
+        -0.935077359265666,
+        -1.33720536025451,
+        -0.618389343897046,
+        -1.42260223092696
+      ),
+      tolerance = 0.1
+    )
+    expect_equal(osdi[, "Categ.SPI"],
+                 c("Normal", "Normal", "Normal", "Normal", "Normal", "Normal"))
+    expect_equal(osdi[, "Categ.SPEI"],
+                 c(
+                   "Normal",
+                   "Normal",
+                   "Normal",
+                   "mod.dry",
+                   "Normal",
+                   "mod.dry"
                  ))
   })
 })
