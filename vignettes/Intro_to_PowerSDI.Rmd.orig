@@ -19,13 +19,13 @@ knitr::opts_chunk$set(collapse = TRUE,
 
 # Introduction
 
-The 'PowerSDI' R-package calculates the Standardized Precipitation (SPI; @mckee1993) and Standardized Precipitation-Evapotranspiration (SPEI; @VicenteSerrano2010) indices using gridded-data from the NASA-POWER project.
+{PowerSDI} calculates the Standardized Precipitation (SPI; @mckee1993) and Standardized Precipitation-Evapotranspiration (SPEI; @VicenteSerrano2010) indices using gridded-data from the NASA-POWER project.
 The package includes functions (`ScientSDI()`, `Reference()`, `Accuracy()` and `PlotData()`), which evaluate how well the drought indices meet their conceptual assumptions.
 The `OperatSDI()` function allows users to download NASA-POWER data for specific monitoring periods.
 The package adopts a quasi-weekly basic time scale (`quart.month`), allowing for four index calculations per month: days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 28, 29, 30, or 31 depending on the month.
 For instance, if the time scale is set to 4 (`TS = 4`), it corresponds to a moving window with a 1-month length that is calculated four times each month.
 If `TS = 48`, the time scale corresponds to a moving window with a 12-month length that is calculated four times each month.
-'PowerSDI' uses functions from the 'nasapower' [@Sparks2018; @Sparks2023] and 'Lmom' [@Hosking2023] packages.
+{PowerSDI} uses functions from the {nasapower} [@Sparks2018; @Sparks2023] and {Lmom} [@Hosking2023] packages.
 
 # Basic Instructions: Getting Started
 
