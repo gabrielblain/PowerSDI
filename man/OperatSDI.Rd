@@ -44,7 +44,7 @@ between 1 and 96).}
 \value{
 A data frame with rainfall, potential evapotranspiration (PE),
   difference between rainfall and PE (in millimiters), the NASA-SPI and
-  NASA_SPEI, and the SDI categories corresponding to each indices estimates.
+  NASA-SPEI, and the SDI categories corresponding to each indices estimates.
 }
 \description{
 Calculates the \acronym{SPI} (Standardized Precipitation Index) and

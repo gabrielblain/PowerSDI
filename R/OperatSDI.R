@@ -25,7 +25,7 @@
 #' @return
 #' A data frame with rainfall, potential evapotranspiration (PE),
 #'   difference between rainfall and PE (in millimiters), the NASA-SPI and
-#'   NASA_SPEI, and the SDI categories corresponding to each indices estimates.
+#'   NASA-SPEI, and the SDI categories corresponding to each indices estimates.
 #' @importFrom lmom cdfgam pelgam pelgev pelglo quagev quagam quaglo samlmu
 #' @importFrom graphics title
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
