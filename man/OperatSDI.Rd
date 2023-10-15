@@ -12,7 +12,7 @@ OperatSDI(
   PEMethod = "HS",
   distr = "GEV",
   parms,
-  TS = 4
+  TS = 4L
 )
 }
 \arguments{
@@ -52,7 +52,8 @@ Calculates the \acronym{SPI} (Standardized Precipitation Index) and
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
-data("DistPar")
+# This example uses data included in this package, \code{DistPar} for
+#   \code{parms}
 OperatSDI(
   lon = -47.3,
   lat = -22.67,

@@ -24,7 +24,6 @@
 #' A data frame with rainfall, potential evapotranspiration (PE),
 #'   difference between rainfall and PE (in millimiters), the NASA-SPI and
 #'   NASA_SPEI, and the SDI categories corresponding to each indices estimates.
-#' @importFrom nasapower get_power
 #' @importFrom lmom cdfgam pelgam pelgev pelglo quagev quagam quaglo samlmu
 #' @importFrom graphics title
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
@@ -32,7 +31,8 @@
 #'
 #' @examplesIf interactive()
 #'
-#' data("DistPar")
+#' # This example uses data included in this package, \code{DistPar} for
+#' #   \code{parms}
 #' OperatSDI(
 #'   lon = -47.3,
 #'   lat = -22.67,
@@ -106,7 +106,7 @@ OperatSDI <-
     start.week <- find.week.int(start.day)
     dif <- calculate.dif(start.week, start.day)
 
-    start.date.user <- start.date.user - dif
+    start.date.user <- as.Date(start.date.user - dif)
     start.day <-
       as.numeric(format(start.date.user, format = "%d"))
     start.year <-
@@ -116,17 +116,12 @@ OperatSDI <-
     message("Calculating...")
 
     if (PEMethod == "HS") {
-      sse_i <- as.data.frame(get_power(
-        community = "ag",
-        lonlat = c(lon, lat),
-        dates = c(start.date.user,
-                  end.date.user),
-        temporal_api = "daily",
-        pars = c("T2M",
-                 "T2M_MAX",
-                 "T2M_MIN",
-                 "PRECTOTCORR")
-      ))
+      sse_i <-
+        get_sdi_power_data(lon,
+                           lat,
+                           start.date.user,
+                           end.date.user,
+                           PEMethod = "HS")
 
       # see calculation functions for the following functions
       decli <- calc.decli(sse_i$DOY)
@@ -197,22 +192,12 @@ OperatSDI <-
         d <- d + 4
       }
     } else {
-      sse_i <- as.data.frame(get_power(
-        community = "ag",
-        lonlat = c(lon, lat),
-        dates = c(start.date.user,
-                  end.date.user),
-        temporal_api = "daily",
-        pars = c(
-          "T2M",
-          "T2M_MAX",
-          "T2M_MIN",
-          "ALLSKY_SFC_SW_DWN",
-          "WS2M",
-          "RH2M",
-          "PRECTOTCORR"
-        )
-      ))
+      sse_i <-
+        get_sdi_power_data(lon,
+                           lat,
+                           start.date.user,
+                           end.date.user,
+                           PEMethod = "PM")
       # see calculation functions for the following functions
       decli <- calc.decli(sse_i$DOY)
       lat.rad <- calc.lat.rad(lat)

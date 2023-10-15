@@ -15,7 +15,6 @@
 #' Scatter plots of Rainfall and potential evapotranspiration accumulated at the
 #'   1-quart.month time scale.
 #' @export
-#' @importFrom nasapower get_power
 #' @importFrom graphics par
 #' @examplesIf interactive()
 #' PlotData(
@@ -54,21 +53,8 @@ PlotData <- function(lon, lat, start.date, end.date) {
   message(
     "Just a sec.",
     "Downloading NASA POWER data and calculating the others parameters.")
-  sse_i <- as.data.frame(get_power(
-    community = "ag",
-    lonlat = c(lon, lat),
-    dates = c(start.date.protocal, end.date.user),
-    temporal_api = "daily",
-    pars = c(
-      "T2M",
-      "T2M_MAX",
-      "T2M_MIN",
-      "ALLSKY_SFC_SW_DWN",
-      "WS2M",
-      "RH2M",
-      "PRECTOTCORR"
-    )
-  ))
+  sse_i <-
+    get_sdi_power_data(lon, lat, start.date.user, end.date.user)
   decli <-
     23.45 * sin((360 * (sse_i$DOY - 80) / 365) * (0.01745329))
   lat.rad <- lat * (0.01745329)

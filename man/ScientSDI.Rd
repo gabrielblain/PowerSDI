@@ -10,7 +10,7 @@ ScientSDI(
   start.date,
   end.date,
   distr = "GEV",
-  TS = 4,
+  TS = 4L,
   Good = "No",
   sig.level = 0.95,
   RainUplim = NULL,

@@ -68,7 +68,6 @@
 #'   (PPEHS and PPEPM).
 #'   }
 #' @export
-#' @importFrom nasapower get_power
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @importFrom utils install.packages menu write.table
 #' @examplesIf interactive()
@@ -169,21 +168,11 @@ ScientSDI <-
 
     start.date.protocal <- start.date.user - dif
 
-    sse_i <- as.data.frame(get_power(
-      community = "ag",
-      lonlat = c(lon, lat),
-      dates = c(start.date.protocal, end.date.user),
-      temporal_api = "daily",
-      pars = c(
-        "T2M",
-        "T2M_MAX",
-        "T2M_MIN",
-        "ALLSKY_SFC_SW_DWN",
-        "WS2M",
-        "RH2M",
-        "PRECTOTCORR"
-      )
-    ))
+    sse_i <-
+      get_sdi_power_data(lon = lon,
+                         lat = lat,
+                         start.date.user = start.date.user,
+                         end.date.user = end.date.user)
     decli <- calc.decli(sse_i$DOY)
     lat.rad <- calc.decli.rad(lat)
     decli.rad <- calc.decli.rad(decli)

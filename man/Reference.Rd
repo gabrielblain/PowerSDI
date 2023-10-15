@@ -4,7 +4,7 @@
 \alias{Reference}
 \title{Calculate the SPI and SPEI Using a Reference Data Source}
 \usage{
-Reference(ref, distr = "GEV", PEMethod = "HS", TS = 4)
+Reference(ref, distr = "GEV", PEMethod = "HS", TS = 4L)
 }
 \arguments{
 \item{ref}{A data frame with the variables required for calculating the \acronym{SDI}s.

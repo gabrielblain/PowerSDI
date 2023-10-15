@@ -1,6 +1,6 @@
 
 test_that("OperatSDI works as expected in example", {
-  vcr::use_cassette("OperatSDI-PEMethod=HS", {
+  vcr::use_cassette("OperatSDI-HS", {
     data("DistPar")
     osdi <- OperatSDI(
       lon = -47.3,
@@ -94,7 +94,7 @@ test_that("OperatSDI works as expected in example", {
 })
 
 test_that("OperatSDI works as expected w/ PEMethod=PM", {
-  vcr::use_cassette("OperatSDI-PEMethod=PM", {
+  vcr::use_cassette("OperatSDI-PM", {
     osdi <- OperatSDI(
       lon = -47.3,
       lat = -22.67,
@@ -196,7 +196,7 @@ test_that("OperatSDI works as expected w/ PEMethod=PM", {
 })
 
 test_that("OperatSDI works as expected w/ PEMethod=PM, dist=GLO", {
-  vcr::use_cassette("OperatSDI-PEMethod=PM", {
+  vcr::use_cassette("OperatSDI-PM", {
     osdi <- OperatSDI(
       lon = -47.3,
       lat = -22.67,
