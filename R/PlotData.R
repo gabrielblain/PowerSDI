@@ -51,7 +51,7 @@ PlotData <- function(lon, lat, start.date, end.date) {
 
   start.date.protocal <- start.date.user - dif
   message(
-    "Just a sec.",
+    "Just a sec. ",
     "Downloading NASA POWER data and calculating the others parameters.")
   sse_i <-
     get_sdi_power_data(lon, lat, start.date.user, end.date.user)
