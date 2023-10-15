@@ -50,7 +50,7 @@ OperatSDI <-
            PEMethod = "HS",
            distr = "GEV",
            parms,
-           TS = 4) {
+           TS = 4L) {
     PEMethod <- toupper(PEMethod)
     distr <- toupper(distr)
 
