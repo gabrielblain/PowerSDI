@@ -35,7 +35,7 @@
 Reference <- function(ref,
                       distr = "GEV",
                       PEMethod = "HS",
-                      TS = 4) {
+                      TS = 4L) {
 
   distr <- check.distr(distr)
   PEMethod <- check.PEMethod(PEMethod)

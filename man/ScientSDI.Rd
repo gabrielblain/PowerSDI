@@ -30,7 +30,7 @@ Hemisphere.}
 \item{end.date}{date at which the indices estimates should end. Format: "YYYY-MM-DD".}
 
 \item{distr}{A character variable ("GEV" or "GLO") defining the distribution to calculate
-the \acronym{SPEI}. Default is "GEV".}
+the \acronym{SPEI}.  Default is "GEV".}
 
 \item{TS}{Time scale on the quart.month basis (integer values between 1 and 96).
 Default is 4.}
@@ -42,16 +42,16 @@ and normality tests. Default is "No".}
 for parameter Good. Default is "0.95".}
 
 \item{RainUplim}{Optional. Upper limit in millimeters from which rainfall values larger than
-it will be removed. Default is \code{NULL}.}
+it will be removed.  Default is \code{NULL}.}
 
 \item{RainLowlim}{Optional. Lower limit in millimeters from which rainfall values smaller than
-it will be removed. Default is \code{NULL}.}
+it will be removed.  Default is \code{NULL}.}
 
 \item{PEUplim}{Optional. Upper limit in millimeters from which evapotranspiration values
-larger than it will be removed. Default is \code{NULL}.}
+larger than it will be removed.  Default is \code{NULL}.}
 
 \item{PELowlim}{Optional. Lower limit in millimeters from which evapotranspiration values
-smaller than it will be removed. Default is \code{NULL}.}
+smaller than it will be removed.  Default is \code{NULL}.}
 }
 \value{
 A list with data calculated at the time scale selected by the user.

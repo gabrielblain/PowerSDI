@@ -95,13 +95,17 @@
 #'   locations and dry seasons. International Journal of Climatology: A Journal
 #'   of the Royal Meteorological Society, 27(1), pp.65-79.
 
+# TODO: Think about splitting this up to i) fetch data, ii) process and split
+# processing functions by GLO/GEV first and then add Goodness test functions
+# as a third step?
+
 ScientSDI <-
   function(lon,
            lat,
            start.date,
            end.date,
            distr = "GEV",
-           TS = 4,
+           TS = 4L,
            Good = "No",
            sig.level = 0.95,
            RainUplim = NULL,
@@ -828,6 +832,7 @@ ScientSDI <-
           pos <- pos + 1
         }
       } else {
+        # TODO: could this just be an apply() rather than a while loop?
         while (pos <= n.weeks) {
           i <- data.at.timescale[pos, 3]
           prob <-
