@@ -16,7 +16,8 @@
 #'   \dQuote{GEV} (generalized extreme value) with \dQuote{GLO} (generalized
 #'   logistic distributions) as an option.
 #' @param parms Parameters required for calculating the \acronym{SPI} and
-#'   \acronym{SPEI}.  It is provided by the \code{ScientSDI} function (DistPar).
+#'   \acronym{SPEI}.  It is provided by the \code{\link{ScientSDI}} function's
+#'   \code{DistPar}.
 #' @param TS Time scale on the \dQuote{quart.month} basis (integer values
 #'   between 1 and 96).
 #'

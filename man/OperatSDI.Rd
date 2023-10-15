@@ -34,7 +34,8 @@ which distribution is used to calculate the \acronym{SPEI}. Default is
 logistic distributions) as an option.}
 
 \item{parms}{Parameters required for calculating the \acronym{SPI} and
-\acronym{SPEI}.  It is provided by the \code{ScientSDI} function (DistPar).}
+\acronym{SPEI}.  It is provided by the \code{\link{ScientSDI}} function's
+\code{DistPar}.}
 
 \item{TS}{Time scale on the \dQuote{quart.month} basis (integer values
 between 1 and 96).}
