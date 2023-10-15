@@ -20,10 +20,11 @@ OperatSDI(
 
 \item{lat}{latitude in decimal degrees.}
 
-\item{start.date}{Date at each the calculation must start
+\item{start.date}{Date at each time when the calculation must start
 (\dQuote{YYYY-MM-DD}).}
 
-\item{end.date}{Date at each the calculation must end (\dQuote{YYYY-MM-DD}).}
+\item{end.date}{Date at each time when the calculation must end
+(\dQuote{YYYY-MM-DD}).}
 
 \item{PEMethod}{A character variable (\dQuote{HS} or \dQuote{PM}) defining
 the potential evapotranspiration method. Default is \dQuote{HS}.}

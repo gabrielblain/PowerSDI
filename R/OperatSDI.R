@@ -6,9 +6,10 @@
 #'
 #' @param lon longitude in decimal degrees.
 #' @param lat latitude in decimal degrees.
-#' @param start.date Date at each the calculation must start
+#' @param start.date Date at each time when the calculation must start
 #'  (\dQuote{YYYY-MM-DD}).
-#' @param end.date Date at each the calculation must end (\dQuote{YYYY-MM-DD}).
+#' @param end.date Date at each time when the calculation must end
+#'  (\dQuote{YYYY-MM-DD}).
 #' @param PEMethod A character variable (\dQuote{HS} or \dQuote{PM}) defining
 #'   the potential evapotranspiration method. Default is \dQuote{HS}.
 #' @param distr A character variable (\dQuote{GEV} or \dQuote{GLO}) defining
