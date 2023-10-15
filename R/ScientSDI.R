@@ -74,7 +74,7 @@
 #' ScientSDI(
 #'   lon = -47.3,
 #'   lat = -22.87,
-#'   start.date = "2015-01-01",
+#'   start.date = "1993-01-01",
 #'   end.date = "2022-12-31",
 #'   TS = 1,
 #'   Good = "no"
