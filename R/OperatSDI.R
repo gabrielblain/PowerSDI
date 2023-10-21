@@ -38,8 +38,10 @@
 #'   lat = -22.67,
 #'   start.date = "2023-06-01",
 #'   end.date = "2023-06-30",
-#'   parms = DistPar
-#' )
+#'   PEMethod = "HS",
+#'   distr = "GEV",
+#'   parms = DistPar,
+#'   TS = 4)
 #' @export
 
 OperatSDI <-
