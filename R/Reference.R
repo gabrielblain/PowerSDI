@@ -30,7 +30,7 @@
 #' @export
 #'
 #' @examples
-#' data("refHS")
+#'
 #' Reference(ref = refHS, distr = "GEV", PEMethod = "HS", TS = 4)
 Reference <- function(ref,
                       distr = "GEV",
@@ -57,7 +57,7 @@ Reference <- function(ref,
     "HS" = c("YEAR",
              "MM",
              "DD",
-             "tmed",
+             "tavg",
              "tmax",
              "tmin",
              "Ra",
@@ -66,7 +66,7 @@ Reference <- function(ref,
       "YEAR",
       "MM",
       "DD",
-      "tmed",
+      "tavg",
       "tmax",
       "tmin",
       "Ra",
@@ -88,13 +88,20 @@ Reference <- function(ref,
   start.week <- find.week.int(start.day)
 
   if (PEMethod == "HS") {
-    tmed <- ref$tmed
+    tavg <- ref$tavg
     tmax <- ref$tmax
     tmin <- ref$tmin
     Ra <- ref$Ra
     Rain <- ref$Rain
 
-    ETP.harg.daily <- calc.ETP.harg.daily(Ra, tmax, tmin, tmed)
+    ETP.harg.daily <-
+      calc.ETP.daily(
+        tavg = tavg,
+        tmax = tmax,
+        tmin = tmin,
+        Ra = Ra,
+        method = PEMethod
+      )
 
     message("Calculating. Please wait.")
 
@@ -138,7 +145,7 @@ Reference <- function(ref,
     }
   }
   if (PEMethod == "PM") {
-    tmed <- ref$tmed
+    tavg <- ref$tavg
     tmax <- ref$tmax
     tmin <- ref$tmin
     Ra <- ref$Ra
@@ -146,12 +153,16 @@ Reference <- function(ref,
     W <- ref$W
     RH <- ref$RH
     Rain <- ref$Rain
-    es <- calc.es(tmed)
-    ea <- calc.ea(RH, es)
-    slope.pressure <- calc.slope.pressure(es, tmed)
-    Q0.ajust <- calc.Q0.ajust(Ra)
-    Rn <- calc.Rn(Rs, Q0.ajust, ea, tmed, tmin)
-    ETP.pm.daily <- calc.ETP.pm.daily(slope.pressure, Rn, tmed, W, es, ea)
+
+    ETP.pm.daily <-
+      calc.ETP.daily(
+        tavg = tavg,
+        tmax = tmax,
+        tmin = tmim,
+        wind = W,
+        rh = RH,
+        method = PEMethod
+      )
 
     message("Calculating. Please wait.")
 
