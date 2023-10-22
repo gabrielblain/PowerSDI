@@ -26,8 +26,9 @@ OperatSDI(
 \item{end.date}{Date at each time when the calculation must end
 (\dQuote{YYYY-MM-DD}).}
 
-\item{PEMethod}{A character variable (\dQuote{HS} or \dQuote{PM}) defining
-the potential evapotranspiration method. Default is \dQuote{HS}.}
+\item{PEMethod}{A character variable (\dQuote{HS} (Hargreaves & Samani) or
+\dQuote{PM} (Penman-Monteith) defining the potential evapotranspiration
+method. Default is \dQuote{HS}.}
 
 \item{distr}{A character variable (\dQuote{GEV} or \dQuote{GLO}) defining
 which distribution is used to calculate the \acronym{SPEI}. Default is

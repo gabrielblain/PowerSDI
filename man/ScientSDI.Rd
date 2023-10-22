@@ -25,12 +25,13 @@ ScientSDI(
 \item{lat}{latitude in decimal degrees: (+) Northern hemisphere, (-) Southern
 Hemisphere.}
 
-\item{start.date}{date at which the indices estimates should start. Format: "YYYY-MM-DD".}
+\item{start.date}{date at which the indices estimates should start. Format:
+\dQuote{YYYY-MM-DD}.}
 
-\item{end.date}{date at which the indices estimates should end. Format: "YYYY-MM-DD".}
+\item{end.date}{date at which the indices estimates should end. Format: \dQuote{YYYY-MM-DD}.}
 
-\item{distr}{A character variable ("GEV" or "GLO") defining the distribution to calculate
-the \acronym{SPEI}.  Default is "GEV".}
+\item{distr}{A character variable (\dQuote{GEV} or \dQuote{GLO}) defining the distribution
+to calculate the \acronym{SPEI}.  Default is \code{GEV}.}
 
 \item{TS}{Time scale on the quart.month basis (integer values between 1 and 96).
 Default is 4.}
@@ -55,29 +56,29 @@ smaller than it will be removed.  Default is \code{NULL}.}
 }
 \value{
 A list with data calculated at the time scale selected by the user.
-If \code{Good="Yes"}, this list includes:
+If \code{Good = "Yes"}, this list includes:
 \describe{
   \item{SDI}{The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.}
-  \item{DistPar}{The parameters of the distributions (gamma and GEV) used to
-  calculate the indices.}
+  \item{DistPar}{The parameters of the distributions (gamma and
+    \acronym{GEV}) used to calculate the indices.}
   \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
-  tests.}
+    tests.}
   \item{Normality}{The outcomes of the two normality checking procedures (Wu
-  et al., 2007 and Stagge et al., 2015).}
+    \emph{et al}., 2007 and Stagge \emph{et al}., 2015).}
  }
 
-If \code{Good="No"}, this list includes \acronym{SDI} and DistPar.
+If \code{Good = "No"}, this list includes \acronym{SDI} and DistPar.
 
 This function also presents other data (in millimiters) calculated from the
   \acronym{NASA} \acronym{POWER} project:
 \itemize{
   \item Rainfall amounts (Rain).
   \item Potential evapotranspiration values estimated through the Hargreaves
-   and Samani method (PEHS).
+   and Samani method (\acronym{PEHS}).
   \item Potential evapotranspiration values estimated through the FAO-56
-   Penman-Monteith method (PEPM).
+   Penman-Monteith method (\acronym{PEPM}).
   \item The difference between rainfall and potential evapotranspiration
-  (PPEHS and PPEPM).
+  (\acronym{PPEHS} and \acronym{PPEPM}).
   }
 }
 \description{
