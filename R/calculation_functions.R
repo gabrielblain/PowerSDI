@@ -1,3 +1,76 @@
+
+#' Calculate Daily Evapotranspiration
+#' @param DOY Day of year as an integer
+#' @param lat User provided latitude value
+#' @param tavg Average daily temperature
+#' @param tmax Daily maximum temperature
+#' @param tmin Daily minimum temperature
+#' @param rh Daily relative humidity
+#' @param wind Daily average wind speed
+#' @param rad Solar radiation
+#' @param method A string indicating whether the method should be
+#'   Penman-Monteith (\dQuote{PM}) or Hargreaves & Samani \dQuote{HS}.
+#' @keywords Internal
+#' @noRd
+calc.ETP.daily <-
+  function(J = NULL,
+           lat = NULL,
+           tavg,
+           tmax,
+           tmin,
+           rh = NULL,
+           wind = NULL,
+           rad = NULL,
+           Ra = NULL,
+           method) {
+    # the Reference() provides pre-calculated data so there is no need to
+    # calculate all of these values
+    if (!is.null(J) && !is.null(lat)) {
+      decli <- calc.decli(J)
+      lat.rad <- calc.decli.rad(lat)
+      decli.rad <- calc.decli.rad(decli)
+      hn.rad <- calc.hn.rad(decli.rad, lat.rad)
+      hn.deg <- calc.hn.deg(hn.rad)
+      dist.terra.sol <- calc.dist.terra.sol(J)
+      Ra <-
+        calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
+    }
+
+    if (method == "PM") {
+      es <- calc.es(tavg)
+      ea <- calc.ea(rh, es)
+      slope.pressure <- calc.slope.pressure(es, tavg)
+      Q0.ajust <- calc.Q0.ajust(Ra)
+      Rn <-
+        calc.Rn(rad,
+                Q0.ajust,
+                ea,
+                tavg,
+                tmin)
+    }
+
+    return(switch(
+      method,
+      "PM" =  (0.408 * slope.pressure *
+                 (Rn - 0.8) + 0.063 *
+                 (900 / (tavg + 273)) *
+                 wind *
+                 (es - ea)) / (slope.pressure + 0.063 *
+                                 (1 + 0.34 * wind)),
+      "HS" = 0.0023 *
+        (Ra * 0.4081633) *
+        (tmax - tmin) ^ 0.5 *
+        (tavg + 17.8)
+    ))
+  }
+
+#' Calculate Mean Daylight Hours (N) for Different Latitudes for the 15th of the Month
+#' @keywords Internal
+#' @noRd
+calc.N <- function(hn.deg) {
+  (2 * hn.deg) / 15
+}
+
 #' Calculate decli
 #' @keywords Internal
 #' @noRd
