@@ -33,18 +33,11 @@ calc.hn.deg <- function(hn.rad) {
   hn.rad * 57.29578
 }
 
-#' Calculate N
-#' @keywords Internal
-#' @noRd
-calc.N <- function(hn.deg) {
-  (2 * hn.deg) / 15
-}
-
 #' Calculate dist.terra.sol
 #' @keywords Internal
 #' @noRd
 calc.dist.terra.sol <- function(DOY) {
-  1 + (0.033 * cos((0.01745329) * (DOY * 0.9863014)))
+  1 + (0.033 * cos(0.01745329 * (DOY * 0.9863014)))
 }
 
 #' Calculate Ra
