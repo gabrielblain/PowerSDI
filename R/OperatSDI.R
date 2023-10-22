@@ -497,12 +497,13 @@ check.final.agreement <-
                final.week == 4 & final.day != 30) {
       stop(msg,
            call. = FALSE)
-    } else if (isFALSE(lubridate::leap_year(final.year)) &&
-               final.month == 2) {
-      if (final.day != 28) {
+    } else if (final.month == 2) {
+      if (isFALSE(lubridate::leap_year(final.year)) &
+          final.week == 4 & final.day != 28) {
         stop(msg,
              call. = FALSE)
-      } else {
+      } else if (lubridate::leap_year(final.year) &
+                 final.week == 4 & final.day != 29) {
         stop(msg,
              call. = FALSE)
       }
