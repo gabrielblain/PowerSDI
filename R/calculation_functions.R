@@ -53,16 +53,6 @@ calc.Ra <- function(dist.terra.sol,
        (cos(lat.rad) * cos(decli.rad) * sin(hn.rad)))
 }
 
-#' Calculate ETP.harg.daily
-#' @keywords Internal
-#' @noRd
-calc.ETP.harg.daily <- function(Ra, tmax, tmin, temp) {
-  0.0023 *
-    (Ra * 0.4081633) *
-    (tmax - tmin) ^ 0.5 *
-    (temp + 17.8)
-}
-
 #' Calculate es
 #' @keywords Internal
 #' @noRd
