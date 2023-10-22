@@ -478,7 +478,7 @@ check.final.agreement <-
            final.week,
            final.day) {
     msg <-
-      "The last day of the period must be 1, 7, 14, 21 or (28/29 Feb) or 30/31."
+      "The last day of the period must be 7, 14, 21 or (28/29 Feb) or 30/31."
 
     if (final.week == 1 & final.day != 7) {
       stop(msg,
