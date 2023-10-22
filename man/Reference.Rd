@@ -36,6 +36,6 @@ Calculates the Standardised Precipitation Index (\acronym{SPI}) and
   a reference data source.
 }
 \examples{
-data("refHS")
+
 Reference(ref = refHS, distr = "GEV", PEMethod = "HS", TS = 4)
 }
