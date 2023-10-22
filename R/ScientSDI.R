@@ -31,16 +31,16 @@
 #' A numeric variable (between 0.90 and 0.95) defining the significance level
 #'   for parameter Good. Default is "0.95".
 #' @param RainUplim
-#' Optional. Upper limit in millimeters from which rainfall values larger than
+#' Optional. Upper limit in millimetres from which rainfall values larger than
 #'   it will be removed.  Default is \code{NULL}.
 #' @param RainLowlim
-#' Optional. Lower limit in millimeters from which rainfall values smaller than
+#' Optional. Lower limit in millimetres from which rainfall values smaller than
 #'   it will be removed.  Default is \code{NULL}.
 #' @param PEUplim
-#' Optional. Upper limit in millimeters from which evapotranspiration values
+#' Optional. Upper limit in millimetres from which evapotranspiration values
 #'   larger than it will be removed.  Default is \code{NULL}.
 #' @param PELowlim
-#' Optional. Lower limit in millimeters from which evapotranspiration values
+#' Optional. Lower limit in millimetres from which evapotranspiration values
 #'   smaller than it will be removed.  Default is \code{NULL}.
 #' @return
 #' A list with data calculated at the time scale selected by the user.

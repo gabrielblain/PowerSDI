@@ -38,7 +38,7 @@ library("PowerSDI")
 ## Using PlotData() to visually inspect NASA-POWER data
 
 The `PlotData()` function allows a visual inspection of the indices' inputs (precipitation and potential evapotranspiration) obtained from the NASA-POWER project.
-These inputs (in millimeters) are show at the 1-quart.month time scale.
+These inputs (in millimetres) are show at the 1-quart.month time scale.
 
 ## Example 1: Inspecting indices' input for Campinas-SP, Brazil
 

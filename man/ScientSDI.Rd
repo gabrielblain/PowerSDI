@@ -42,16 +42,16 @@ and normality tests. Default is "No".}
 \item{sig.level}{A numeric variable (between 0.90 and 0.95) defining the significance level
 for parameter Good. Default is "0.95".}
 
-\item{RainUplim}{Optional. Upper limit in millimeters from which rainfall values larger than
+\item{RainUplim}{Optional. Upper limit in millimetres from which rainfall values larger than
 it will be removed.  Default is \code{NULL}.}
 
-\item{RainLowlim}{Optional. Lower limit in millimeters from which rainfall values smaller than
+\item{RainLowlim}{Optional. Lower limit in millimetres from which rainfall values smaller than
 it will be removed.  Default is \code{NULL}.}
 
-\item{PEUplim}{Optional. Upper limit in millimeters from which evapotranspiration values
+\item{PEUplim}{Optional. Upper limit in millimetres from which evapotranspiration values
 larger than it will be removed.  Default is \code{NULL}.}
 
-\item{PELowlim}{Optional. Lower limit in millimeters from which evapotranspiration values
+\item{PELowlim}{Optional. Lower limit in millimetres from which evapotranspiration values
 smaller than it will be removed.  Default is \code{NULL}.}
 }
 \value{

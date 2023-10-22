@@ -48,10 +48,10 @@ TS: Time scale on the quart.month basis (integer values between 1 and 96). Defau
 Good: A character variable ("Yes" or "No") to calculate or not the goodness-of-fit and 
 normality tests. Default is "Yes".
 sig.level: A numeric variable (between 0.90 and 0.95) defining the significance level for parameter Good. Default is "0.95".
-RainUplim: Optional. Upper limit in millimeters from which rainfall values larger than it will be removed. Default is NULL.
-RainLowlim: Optional. Lower limit in millimeters from which rainfall values smaller than it will be removed. Default is NULL.
-PEUplim: Optional. Upper limit in millimeters from which evapotranspiration values larger than it will be removed. Default is NULL.
-PELowlim: Optional. Lower limit in millimeters from which evapotranspiration values smaller than it will be removed. Default is NULL.
+RainUplim: Optional. Upper limit in millimetres from which rainfall values larger than it will be removed. Default is NULL.
+RainLowlim: Optional. Lower limit in millimetres from which rainfall values smaller than it will be removed. Default is NULL.
+PEUplim: Optional. Upper limit in millimetres from which evapotranspiration values larger than it will be removed. Default is NULL.
+PELowlim: Optional. Lower limit in millimetres from which evapotranspiration values smaller than it will be removed. Default is NULL.
 
 ## Value
 A list with data calculated at the time scale selected by the user. 
@@ -61,7 +61,7 @@ DistPar: The parameters of the distributions (gamma and GEV or GLO) used to calc
 GoodFit: The Lilliefors and Anderson-Darling tests goodness-of-fit tests. 
 Normality: The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015). 
 If Good="No", this list includes SDI and DistPar.
-This function also presents other data (in millimeters) calculated from the NASA POWER project:
+This function also presents other data (in millimetres) calculated from the NASA POWER project:
 Rainfall amounts (Rain).
 Potential evapotranspiration values estimated through the Hargreaves and Samani method (PEHS). 
 Potential evapotranspiration values estimated through the FAO-56 Penman-Monteith method (PEPM). The difference between rainfall and potential evapotranspiration.
@@ -120,7 +120,7 @@ start.date: Date at each the calculation must start (“YYYY-MM-DD").
 end.date: Date at each the calculation must end (“YYYY-MM-DD").
 PEMethod: A character variable ("HS" or "PM") defining the potential evapotranspiration method. Default is "HS".
 distr: A character variable ("GEV" or "GLO") defining which distribution is used to calculate the SPEI. Default is "GEV".
-parms: Parameters required for calculating the SPI and SPEI. It is provided by the ScientSDI function (DistPar).
+parms: parameters required for calculating the SPI and SPEI. It is provided by the ScientSDI function (DistPar).
 TS: Time scale on the "quart.month" basis (integer values between 1 and 96).
 
 ## Value
@@ -189,7 +189,7 @@ data("refHS")
 Reference(ref = refHS, distr = "GEV, PEMethod = "HS", TS = 4)
 ```
 
-## DistPar: Parameters for calculating the SDIs. Provided by the ScientSDI function. 
+## DistPar: parameters for calculating the SDIs. Provided by the ScientSDI function. 
 Contains parameters of the gamma and GEV distributions and the Pr(Rain=0).
 
 ## Usage 
@@ -245,9 +245,9 @@ An 8-column matrix with 10950 rows and 8 variables
 YEAR: Year
 MM: Month
 DD: Day
-tmed: Daily average air temperature at 2 meters above the ground (oC)
-tmax: Daily maximum air temperature at 2 meters above the ground (oC)
-tmin: Daily minimum air temperature at 2 meters above the ground (oC)
+tmed: Daily average air temperature at 2 metres above the ground (oC)
+tmax: Daily maximum air temperature at 2 metres above the ground (oC)
+tmin: Daily minimum air temperature at 2 metres above the ground (oC)
 Ra: Daily top of the atmosphere radiation (MJ/m2/day)
 Rain: Daily rainfall amounts (mm)
 
@@ -271,13 +271,13 @@ A 11-column matrix with 10958 rows and 11 variables
 YEAR: Year
 MM: Month
 DD: Day
-tmed: Daily average air temperature at 2 meters above the ground (oC)
-tmax: Daily maximum air temperature at 2 meters above the ground (oC)
-tmin: Daily minimum air temperature at 2 meters above the ground (oC)
+tmed: Daily average air temperature at 2 metres above the ground (oC)
+tmax: Daily maximum air temperature at 2 metres above the ground (oC)
+tmin: Daily minimum air temperature at 2 metres above the ground (oC)
 Ra: Daily top of the atmosphere radiation (MJ/m2/day)
 Rs: Daily global horizontal irradiance (MJ/m2/day)
-W: Daily average wind speed at 2 meters above the ground (m/s)
-RH: Daily average relative humidity at 2 meters above the ground (in percentage)
+W: Daily average wind speed at 2 metres above the ground (m/s)
+RH: Daily average relative humidity at 2 metres above the ground (in percentage)
 Rain: Daily rainfall amounts (mm)
 
 ## Source
