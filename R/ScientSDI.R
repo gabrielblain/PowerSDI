@@ -173,27 +173,30 @@ ScientSDI <-
                          lat = lat,
                          start.date.user = start.date.user,
                          end.date.user = end.date.user)
-    decli <- calc.decli(sse_i$DOY)
-    lat.rad <- calc.decli.rad(lat)
-    decli.rad <- calc.decli.rad(decli)
-    hn.rad <- calc.hn.rad(decli.rad, lat.rad)
-    hn.deg <- calc.hn.deg(hn.rad)
-    dist.terra.sol <- calc.dist.terra.sol(sse_i$DOY)
-    Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
 
-    #### Hargreaves & Samani ---
-
+    #### Hargreaves & Samani ----
     ETP.harg.daily <-
-      calc.ETP.harg.daily(Ra, sse_i$T2M_MAX, sse_i$T2M_MIN, sse_i$T2M)
+      calc.ETP.daily(
+        J = sse_i$DOY,
+        lat = lat,
+        tavg = sse_i$T2M_MIN,
+        tmax = sse_i$T2M_MAX,
+        tmin = sse_i$T2M_MIN,
+        method = "HS"
+      )
 
-    #### Penman- Monteith-FAO ---
-    es <- calc.es(sse_i$T2M)
-    ea <- calc.ea(sse_i$RH2M, es)
-    slope.pressure <- calc.slope.pressure(es, sse_i$T2M)
-    Q0.ajust <- calc.Q0.ajust(Ra)
-    Rn <- calc.Rn(sse_i$ALLSKY_SFC_SW_DWN, Q0.ajust, ea, sse_i$T2M, sse_i$T2M_MIN)
-    ETP.pm.daily <-
-      calc.ETP.pm.daily(slope.pressure, Rn, sse_i$T2M, sse_i$WS2M, es, ea)
+    #### Penman- Monteith-FAO ----
+    ETP.pm.daily <- calc.ETP.daily(
+      J = sse_i$DOY,
+      lat = lat,
+      tavg = sse_i$T2M_MIN,
+      tmax = sse_i$T2M_MAX,
+      tmin = sse_i$T2M_MIN,
+      rh = sse_i$RH2M,
+      wind = sse_i$WS2M,
+      rad = sse_i$ALLSKY_SFC_SW_DWN,
+      method = "PM"
+    )
 
     sse_i <- cbind(sse_i, ETP.harg.daily, ETP.pm.daily)
     n.tot <- length(sse_i[, 1])

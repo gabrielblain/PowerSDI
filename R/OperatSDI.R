@@ -126,16 +126,15 @@ OperatSDI <-
                            PEMethod = "HS")
 
       # see calculation functions for the following functions
-      decli <- calc.decli(sse_i$DOY)
-      lat.rad <- calc.lat.rad(lat)
-      decli.rad <- calc.decli.rad(decli)
-      hn.rad <- calc.hn.rad(decli.rad, lat.rad)
-      hn.deg <- calc.hn.deg(hn.rad)
-      N <- calc.N(hn.deg)
-      dist.terra.sol <- calc.dist.terra.sol(sse_i$DOY)
-      Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
       ETP.harg.daily <-
-        calc.ETP.harg.daily(Ra, sse_i$T2M_MAX, sse_i$T2M_MIN, sse_i$T2M)
+        calc.ETP.daily(
+          J = sse_i$DOY,
+          lat = lat,
+          tavg = sse_i$T2M_MIN,
+          tmax = sse_i$T2M_MAX,
+          tmin = sse_i$T2M_MIN,
+          method = PEMethod
+        )
 
       sse_i <- cbind(sse_i, ETP.harg.daily)
       n.tot <- length(sse_i[, 1])
@@ -201,24 +200,17 @@ OperatSDI <-
                            end.date.user,
                            PEMethod = "PM")
       # see calculation functions for the following functions
-      decli <- calc.decli(sse_i$DOY)
-      lat.rad <- calc.lat.rad(lat)
-      decli.rad <- calc.decli.rad(decli)
-      hn.rad <- calc.hn.rad(decli.rad, lat.rad)
-      hn.deg <- calc.hn.deg(hn.rad)
-      N <- calc.N(hn.deg)
-      dist.terra.sol <- calc.dist.terra.sol(sse_i$DOY)
-      Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
-      es <- calc.es(sse_i$T2M)
-      ea <- calc.ea(sse_i$RH2M, es)
-      slope.pressure <- calc.slope.pressure(es, sse_i$T2M)
-      ETP.pm.daily <-
-        calc.ETP.pm.daily(slope.pressure,
-                          sse_i$T2M_MAX,
-                          sse_i$T2M_MIN,
-                          sse_i$T2M,
-                          es,
-                          ea)
+      ETP.pm.daily <- calc.ETP.daily(
+        J = sse_i$DOY,
+        lat = lat,
+        tavg = sse_i$T2M_MIN,
+        tmax = sse_i$T2M_MAX,
+        tmin = sse_i$T2M_MIN,
+        rh = sse_i$RH2M,
+        wind = sse_i$WS2M,
+        rad = sse_i$ALLSKY_SFC_SW_DWN,
+        method = PEMethod
+      )
 
       sse_i <- cbind(sse_i, ETP.pm.daily)
       n.tot <- length(sse_i[, 1])
