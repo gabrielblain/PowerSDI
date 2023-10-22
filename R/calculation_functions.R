@@ -92,29 +92,16 @@ calc.Q0.ajust <- function(Ra) {
   0.75 * Ra
 }
 
-#' Calculate Rn
+#' Calculate Rn, net radiation at the crop surface [MJ m-2 day-1]
 #' @keywords Internal
 #' @noRd
-calc.Rn <- function(Rs, Q0.ajust, ea, temp, tmin) {
-  0.8 * Rs -
-    (1.35 * (Rs / Q0.ajust) - 0.35) *
+calc.Rn <- function(rad, Q0.ajust, ea, temp, tmin) {
+  0.8 * rad -
+    (1.35 * (rad / Q0.ajust) - 0.35) *
     (0.35 - (0.14 * sqrt(ea))) *
-    (5.67 * 10 ^ -8) *
+    0.0000000567 *
     (((temp ^ 4) + (tmin ^ 4)) / 2)
 }
-
-#' Calculate ETP.pm.daily
-#' @keywords Internal
-#' @noRd
-calc.ETP.pm.daily <- function(slope.pressure, Rn, temp, wind.speed, es, ea) {
-  (0.408 * slope.pressure *
-     (Rn - 0.8) + 0.063 *
-     (900 / (temp + 273)) *
-     wind.speed *
-     (es - ea)) / (slope.pressure + 0.063 *
-                     (1 + 0.34 * wind.speed))
-}
-
 
 #' Calculate probzero, the Probability of Zero Rain
 #'
