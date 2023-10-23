@@ -41,10 +41,17 @@
 #'   lat = -22.67,
 #'   start.date = "2023-06-01",
 #'   end.date = "2023-06-30",
+<<<<<<< HEAD
 #'   distr = "GEV",
 #'   parms = DistPar,
 #'   TS = 4L
 #' )
+=======
+#'   PEMethod = "HS",
+#'   distr = "GEV",
+#'   parms = DistPar,
+#'   TS = 4)
+>>>>>>> a868910 (Update OperatSDI.R)
 #' @export
 
 OperatSDI <-
