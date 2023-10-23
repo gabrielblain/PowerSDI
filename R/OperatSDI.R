@@ -13,6 +13,7 @@
 #' @param PEMethod A character variable (\dQuote{HS} (Hargreaves & Samani) or
 #'   \dQuote{PM} (Penman-Monteith) defining the potential evapotranspiration
 #'   method.  Default is \dQuote{HS}.
+#'   method.  Default is \dQuote{HS}.
 #' @param distr A character variable (\dQuote{GEV} or \dQuote{GLO}) defining
 #'   which distribution is used to calculate the \acronym{SPEI}. Default is
 #'   \dQuote{GEV} (generalized extreme value) with \dQuote{GLO} (generalized
@@ -41,17 +42,10 @@
 #'   lat = -22.67,
 #'   start.date = "2023-06-01",
 #'   end.date = "2023-06-30",
-<<<<<<< HEAD
-#'   distr = "GEV",
-#'   parms = DistPar,
-#'   TS = 4L
-#' )
-=======
 #'   PEMethod = "HS",
 #'   distr = "GEV",
 #'   parms = DistPar,
 #'   TS = 4)
->>>>>>> a868910 (Update OperatSDI.R)
 #' @export
 
 OperatSDI <-
