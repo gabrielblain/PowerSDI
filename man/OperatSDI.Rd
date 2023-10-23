@@ -28,7 +28,6 @@ OperatSDI(
 
 \item{PEMethod}{A character variable (\dQuote{HS} (Hargreaves & Samani) or
 \dQuote{PM} (Penman-Monteith) defining the potential evapotranspiration
-method.  Default is \dQuote{HS}.
 method.  Default is \dQuote{HS}.}
 
 \item{distr}{A character variable (\dQuote{GEV} or \dQuote{GLO}) defining
