@@ -28,7 +28,8 @@ OperatSDI(
 
 \item{PEMethod}{A character variable (\dQuote{HS} (Hargreaves & Samani) or
 \dQuote{PM} (Penman-Monteith) defining the potential evapotranspiration
-method. Default is \dQuote{HS}.}
+method.  Default is \dQuote{HS}.
+method.  Default is \dQuote{HS}.}
 
 \item{distr}{A character variable (\dQuote{GEV} or \dQuote{GLO}) defining
 which distribution is used to calculate the \acronym{SPEI}. Default is
@@ -55,14 +56,16 @@ Calculates the \acronym{SPI} (Standardized Precipitation Index) and
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
-# This example uses data included in this package, \code{DistPar} for
-#   \code{parms}
+# This example uses data included in this package, "DistPar" for
+#   "parms" here
 OperatSDI(
   lon = -47.3,
   lat = -22.67,
   start.date = "2023-06-01",
   end.date = "2023-06-30",
-  parms = DistPar
-)
+  PEMethod = "HS",
+  distr = "GEV",
+  parms = DistPar,
+  TS = 4)
 \dontshow{\}) # examplesIf}
 }
