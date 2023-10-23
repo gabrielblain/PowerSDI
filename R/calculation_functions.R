@@ -32,6 +32,9 @@ calc.ETP.daily <-
       hn.rad <- calc.hn.rad(decli.rad, lat.rad)
       hn.deg <- calc.hn.deg(hn.rad)
       dist.terra.sol <- calc.dist.terra.sol(J)
+    }
+
+    if (is.null(Ra)) {
       Ra <-
         calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
     }
