@@ -133,9 +133,11 @@ Reference <- function(ref,
       calc.ETP.daily(
         tavg = tavg,
         tmax = tmax,
-        tmin = tmim,
+        tmin = tmin,
         wind = W,
         rh = RH,
+        Ra = Ra,
+        rad = Rs,
         method = PEMethod
       )
 
