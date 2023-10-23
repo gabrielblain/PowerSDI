@@ -52,31 +52,6 @@ Reference <- function(ref,
          "columns. It should be 11.")
   }
 
-  colnames(ref) <- switch(
-    PEMethod,
-    "HS" = c("YEAR",
-             "MM",
-             "DD",
-             "tavg",
-             "tmax",
-             "tmin",
-             "Ra",
-             "Rain"),
-    "PM" = c(
-      "YEAR",
-      "MM",
-      "DD",
-      "tavg",
-      "tmax",
-      "tmin",
-      "Ra",
-      "Rs",
-      "W",
-      "RH",
-      "Rain"
-    )
-  )
-
   n.tot <- length(ref[, 1])
   end.year <- ref$YEAR[n.tot]
   end.month <- ref$MM[n.tot]
