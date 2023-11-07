@@ -6,25 +6,27 @@
 #'
 #' @param lon longitude in decimal degrees.
 #' @param lat latitude in decimal degrees.
-#' @param start.date Date at each the calculation must start
+#' @param start.date Date at each time when the calculation must start
 #'  (\dQuote{YYYY-MM-DD}).
-#' @param end.date Date at each the calculation must end (\dQuote{YYYY-MM-DD}).
-#' @param PEMethod A character variable (\dQuote{HS} or \dQuote{PM}) defining
-#'   the potential evapotranspiration method. Default is \dQuote{HS}.
+#' @param end.date Date at each time when the calculation must end
+#'  (\dQuote{YYYY-MM-DD}).
+#' @param PEMethod A character variable (\dQuote{HS} (Hargreaves & Samani) or
+#'   \dQuote{PM} (Penman-Monteith) defining the potential evapotranspiration
+#'   method.  Default is \dQuote{HS}.
 #' @param distr A character variable (\dQuote{GEV} or \dQuote{GLO}) defining
 #'   which distribution is used to calculate the \acronym{SPEI}. Default is
 #'   \dQuote{GEV} (generalized extreme value) with \dQuote{GLO} (generalized
 #'   logistic distributions) as an option.
 #' @param parms Parameters required for calculating the \acronym{SPI} and
-#'   \acronym{SPEI}.  It is provided by the \code{ScientSDI} function (DistPar).
+#'   \acronym{SPEI}.  It is provided by the \code{\link{ScientSDI}} function's
+#'   \code{DistPar}.
 #' @param TS Time scale on the \dQuote{quart.month} basis (integer values
 #'   between 1 and 96).
 #'
 #' @return
 #' A data frame with rainfall, potential evapotranspiration (PE),
 #'   difference between rainfall and PE (in millimiters), the NASA-SPI and
-#'   NASA_SPEI, and the SDI categories corresponding to each indices estimates.
-#' @importFrom nasapower get_power
+#'   NASA-SPEI, and the SDI categories corresponding to each indices estimates.
 #' @importFrom lmom cdfgam pelgam pelgev pelglo quagev quagam quaglo samlmu
 #' @importFrom graphics title
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
@@ -32,7 +34,8 @@
 #'
 #' @examplesIf interactive()
 #'
-#' data("DistPar")
+#' # This example uses data included in this package, "DistPar" for
+#' #   "parms" here
 #' OperatSDI(
 #'   lon = -47.3,
 #'   lat = -22.67,
@@ -108,7 +111,7 @@ OperatSDI <-
     start.week <- find.week.int(start.day)
     dif <- calculate.dif(start.week, start.day)
 
-    start.date.user <- start.date.user - dif
+    start.date.user <- as.Date(start.date.user - dif)
     start.day <-
       as.numeric(format(start.date.user, format = "%d"))
     start.year <-
@@ -118,29 +121,23 @@ OperatSDI <-
     message("Calculating...")
 
     if (PEMethod == "HS") {
-      sse_i <- as.data.frame(get_power(
-        community = "ag",
-        lonlat = c(lon, lat),
-        dates = c(start.date.user,
-                  end.date.user),
-        temporal_api = "daily",
-        pars = c("T2M",
-                 "T2M_MAX",
-                 "T2M_MIN",
-                 "PRECTOTCORR")
-      ))
+      sse_i <-
+        get_sdi_power_data(lon,
+                           lat,
+                           start.date.user,
+                           end.date.user,
+                           PEMethod = "HS")
 
       # see calculation functions for the following functions
-      decli <- calc.decli(sse_i$DOY)
-      lat.rad <- calc.lat.rad(lat)
-      decli.rad <- calc.decli.rad(decli)
-      hn.rad <- calc.hn.rad(decli.rad, lat.rad)
-      hn.deg <- calc.hn.deg(hn.rad)
-      N <- calc.N(hn.deg)
-      dist.terra.sol <- calc.dist.terra.sol(sse_i$DOY)
-      Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
       ETP.harg.daily <-
-        calc.ETP.harg.daily(Ra, sse_i$T2M_MAX, sse_i$T2M_MIN, sse_i$T2M)
+        calc.ETP.daily(
+          J = sse_i$DOY,
+          lat = lat,
+          tavg = sse_i$T2M_MIN,
+          tmax = sse_i$T2M_MAX,
+          tmin = sse_i$T2M_MIN,
+          method = PEMethod
+        )
 
       sse_i <- cbind(sse_i, ETP.harg.daily)
       n.tot <- length(sse_i[, 1])
@@ -199,41 +196,24 @@ OperatSDI <-
         d <- d + 4
       }
     } else {
-      sse_i <- as.data.frame(get_power(
-        community = "ag",
-        lonlat = c(lon, lat),
-        dates = c(start.date.user,
-                  end.date.user),
-        temporal_api = "daily",
-        pars = c(
-          "T2M",
-          "T2M_MAX",
-          "T2M_MIN",
-          "ALLSKY_SFC_SW_DWN",
-          "WS2M",
-          "RH2M",
-          "PRECTOTCORR"
-        )
-      ))
+      sse_i <-
+        get_sdi_power_data(lon,
+                           lat,
+                           start.date.user,
+                           end.date.user,
+                           PEMethod = "PM")
       # see calculation functions for the following functions
-      decli <- calc.decli(sse_i$DOY)
-      lat.rad <- calc.lat.rad(lat)
-      decli.rad <- calc.decli.rad(decli)
-      hn.rad <- calc.hn.rad(decli.rad, lat.rad)
-      hn.deg <- calc.hn.deg(hn.rad)
-      N <- calc.N(hn.deg)
-      dist.terra.sol <- calc.dist.terra.sol(sse_i$DOY)
-      Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
-      es <- calc.es(sse_i$T2M)
-      ea <- calc.ea(sse_i$RH2M, es)
-      slope.pressure <- calc.slope.pressure(es, sse_i$T2M)
-      ETP.pm.daily <-
-        calc.ETP.pm.daily(slope.pressure,
-                          sse_i$T2M_MAX,
-                          sse_i$T2M_MIN,
-                          sse_i$T2M,
-                          es,
-                          ea)
+      ETP.pm.daily <- calc.ETP.daily(
+        J = sse_i$DOY,
+        lat = lat,
+        tavg = sse_i$T2M_MIN,
+        tmax = sse_i$T2M_MAX,
+        tmin = sse_i$T2M_MIN,
+        rh = sse_i$RH2M,
+        wind = sse_i$WS2M,
+        rad = sse_i$ALLSKY_SFC_SW_DWN,
+        method = PEMethod
+      )
 
       sse_i <- cbind(sse_i, ETP.pm.daily)
       n.tot <- length(sse_i[, 1])
@@ -500,7 +480,7 @@ check.final.agreement <-
            final.week,
            final.day) {
     msg <-
-      "The last day of the period must be 1, 7, 14, 21 or (28/29 Feb) or 30/31."
+      "The last day of the period must be 7, 14, 21 or (28/29 Feb) or 30/31."
 
     if (final.week == 1 & final.day != 7) {
       stop(msg,
@@ -519,12 +499,13 @@ check.final.agreement <-
                final.week == 4 & final.day != 30) {
       stop(msg,
            call. = FALSE)
-    } else if (isFALSE(lubridate::leap_year(final.year)) &&
-               final.month == 2) {
-      if (final.day != 28) {
+    } else if (final.month == 2) {
+      if (isFALSE(lubridate::leap_year(final.year)) &
+          final.week == 4 & final.day != 28) {
         stop(msg,
              call. = FALSE)
-      } else {
+      } else if (lubridate::leap_year(final.year) &
+                 final.week == 4 & final.day != 29) {
         stop(msg,
              call. = FALSE)
       }

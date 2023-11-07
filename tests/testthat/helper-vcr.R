@@ -3,4 +3,5 @@ invisible(vcr::vcr_configure(
   dir = vcr::vcr_test_path("fixtures")
 ))
 vcr::check_cassette_names(allowed_duplicates = c("ScientSDI",
-                                                 "OperatSDI-PEMethod=PM"))
+                                                 "OperatSDI-PM",
+                                                 "OperatSDI-HS"))

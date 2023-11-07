@@ -10,7 +10,7 @@ ScientSDI(
   start.date,
   end.date,
   distr = "GEV",
-  TS = 4,
+  TS = 4L,
   Good = "No",
   sig.level = 0.95,
   RainUplim = NULL,
@@ -25,12 +25,13 @@ ScientSDI(
 \item{lat}{latitude in decimal degrees: (+) Northern hemisphere, (-) Southern
 Hemisphere.}
 
-\item{start.date}{date at which the indices estimates should start. Format: "YYYY-MM-DD".}
+\item{start.date}{date at which the indices estimates should start. Format:
+\dQuote{YYYY-MM-DD}.}
 
-\item{end.date}{date at which the indices estimates should end. Format: "YYYY-MM-DD".}
+\item{end.date}{date at which the indices estimates should end. Format: \dQuote{YYYY-MM-DD}.}
 
-\item{distr}{A character variable ("GEV" or "GLO") defining the distribution to calculate
-the \acronym{SPEI}.  Default is "GEV".}
+\item{distr}{A character variable (\dQuote{GEV} or \dQuote{GLO}) defining the distribution
+to calculate the \acronym{SPEI}.  Default is \code{GEV}.}
 
 \item{TS}{Time scale on the quart.month basis (integer values between 1 and 96).
 Default is 4.}
@@ -41,43 +42,43 @@ and normality tests. Default is "No".}
 \item{sig.level}{A numeric variable (between 0.90 and 0.95) defining the significance level
 for parameter Good. Default is "0.95".}
 
-\item{RainUplim}{Optional. Upper limit in millimeters from which rainfall values larger than
+\item{RainUplim}{Optional. Upper limit in millimetres from which rainfall values larger than
 it will be removed.  Default is \code{NULL}.}
 
-\item{RainLowlim}{Optional. Lower limit in millimeters from which rainfall values smaller than
+\item{RainLowlim}{Optional. Lower limit in millimetres from which rainfall values smaller than
 it will be removed.  Default is \code{NULL}.}
 
-\item{PEUplim}{Optional. Upper limit in millimeters from which evapotranspiration values
+\item{PEUplim}{Optional. Upper limit in millimetres from which evapotranspiration values
 larger than it will be removed.  Default is \code{NULL}.}
 
-\item{PELowlim}{Optional. Lower limit in millimeters from which evapotranspiration values
+\item{PELowlim}{Optional. Lower limit in millimetres from which evapotranspiration values
 smaller than it will be removed.  Default is \code{NULL}.}
 }
 \value{
 A list with data calculated at the time scale selected by the user.
-If \code{Good="Yes"}, this list includes:
+If \code{Good = "Yes"}, this list includes:
 \describe{
   \item{SDI}{The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.}
-  \item{DistPar}{The parameters of the distributions (gamma and GEV) used to
-  calculate the indices.}
+  \item{DistPar}{The parameters of the distributions (gamma and
+    \acronym{GEV}) used to calculate the indices.}
   \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
-  tests.}
+    tests.}
   \item{Normality}{The outcomes of the two normality checking procedures (Wu
-  et al., 2007 and Stagge et al., 2015).}
+    \emph{et al}., 2007 and Stagge \emph{et al}., 2015).}
  }
 
-If \code{Good="No"}, this list includes \acronym{SDI} and DistPar.
+If \code{Good = "No"}, this list includes \acronym{SDI} and DistPar.
 
 This function also presents other data (in millimiters) calculated from the
   \acronym{NASA} \acronym{POWER} project:
 \itemize{
   \item Rainfall amounts (Rain).
   \item Potential evapotranspiration values estimated through the Hargreaves
-   and Samani method (PEHS).
+   and Samani method (\acronym{PEHS}).
   \item Potential evapotranspiration values estimated through the FAO-56
-   Penman-Monteith method (PEPM).
+   Penman-Monteith method (\acronym{PEPM}).
   \item The difference between rainfall and potential evapotranspiration
-  (PPEHS and PPEPM).
+  (\acronym{PPEHS} and \acronym{PPEPM}).
   }
 }
 \description{
@@ -94,7 +95,7 @@ Verifies concepts expected from SDI.  The first step of the \acronym{SPI} and
 ScientSDI(
   lon = -47.3,
   lat = -22.87,
-  start.date = "2015-01-01",
+  start.date = "1993-01-01",
   end.date = "2022-12-31",
   TS = 1,
   Good = "no"

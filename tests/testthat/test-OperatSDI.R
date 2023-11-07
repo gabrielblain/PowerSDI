@@ -1,7 +1,7 @@
 
+
 test_that("OperatSDI works as expected in example", {
-  vcr::use_cassette("OperatSDI-PEMethod=HS", {
-    data("DistPar")
+  vcr::use_cassette("OperatSDI-HS", {
     osdi <- OperatSDI(
       lon = -47.3,
       lat = -22.67,
@@ -41,24 +41,24 @@ test_that("OperatSDI works as expected in example", {
     expect_equal(
       osdi[, "PE"],
       c(
-        93.398055164382,
-        91.4362597205983,
-        86.2179712791408,
-        85.1970945920589,
-        81.0599379146688,
-        78.6346906850623
+        79.4021491975414,
+        77.2887684422473,
+        72.7382753982665,
+        71.0434518271779,
+        67.5909689784445,
+        64.8060544474655
       ),
       tolerance = 0.1
     )
     expect_equal(
       osdi[, "PPE"],
       c(
-        -82.078055164382,
-        -56.8362597205983,
-        -50.2879712791408,
-        -45.9870945920589,
-        -34.1199379146688,
-        -63.2746906850623
+        -68.0821491975414,
+        -42.6887684422473,
+        -36.8082753982665,
+        -31.8334518271779,
+        -20.6509689784445,
+        -49.4460544474655
       ),
       tolerance = 0.1
     )
@@ -66,23 +66,23 @@ test_that("OperatSDI works as expected in example", {
       osdi[, "SPI"],
       c(
         -0.982842281872578,
-        -0.497989940589525,
+        -0.497989940589524,
         -0.385541271014979,
         -0.183884807837741,
-        0.195580476882116,
-        -0.386626155683377
+        0.195580476882115,
+        -0.386626155683378
       ),
       tolerance = 0.1
     )
     expect_equal(
       osdi[, "SPEI"],
       c(
-        -0.876080819273402,
-        -0.643505897961827,
-        -0.465928871841173,
-        -0.261613415849469,
-        0.233705486100684,
-        -0.433331351592998
+        -0.433915296540335,
+        -0.252392352116453,
+        -0.0749384759119569,
+        0.162662067295644,
+        0.518966324971316,
+        0.116415753685488
       ),
       tolerance = 0.1
     )
@@ -94,7 +94,7 @@ test_that("OperatSDI works as expected in example", {
 })
 
 test_that("OperatSDI works as expected w/ PEMethod=PM", {
-  vcr::use_cassette("OperatSDI-PEMethod=PM", {
+  vcr::use_cassette("OperatSDI-PM", {
     osdi <- OperatSDI(
       lon = -47.3,
       lat = -22.67,
@@ -136,24 +136,24 @@ test_that("OperatSDI works as expected w/ PEMethod=PM", {
     expect_equal(
       osdi[, "PE"],
       c(
-        140.158552712686,
-        149.314819414548,
-        139.883948394412,
-        144.102577406368,
-        135.963707185575,
-        132.552852346312
+        90.1205821981333,
+        88.070088043992,
+        82.1028375249963,
+        77.81230954449,
+        69.8280874392652,
+        69.7586238134786
       ),
-      tolerance = 0.1
+      tolerance = 0.01
     )
     expect_equal(
       osdi[, "PPE"],
       c(
-        -128.838552712686,
-        -114.714819414548,
-        -103.953948394412,
-        -104.892577406368,
-        -89.0237071855748,
-        -117.192852346312
+        -78.8005821981333,
+        -53.470088043992,
+        -46.1728375249964,
+        -38.60230954449,
+        -22.8880874392652,
+        -54.3986238134786
       ),
       tolerance = 0.1
     )
@@ -167,36 +167,29 @@ test_that("OperatSDI works as expected w/ PEMethod=PM", {
         0.195580476882115,
         -0.386626155683378
       ),
-      tolerance = 0.1
+      tolerance = 0.01
     )
     expect_equal(
       osdi[, "SPEI"],
       c(
-        -2.17062067194088,
-        -2.09486022918856,
-        -2.36852896026298,
-        -3.92364479231243,
-        -1.51192614071924,
-        -4.35395047715826
+        -0.485394334878798,
+        -0.345103969149215,
+        -0.163349652114086,
+        0.142781562089768,
+        0.560134125535894,
+        0.181995340717053
       ),
       tolerance = 0.1
     )
     expect_equal(osdi[, "Categ.SPI"],
                  c("Normal", "Normal", "Normal", "Normal", "Normal", "Normal"))
     expect_equal(osdi[, "Categ.SPEI"],
-                 c(
-                   "ext.dry",
-                   "ext.dry",
-                   "ext.dry",
-                   "ext.dry",
-                   "sev.dry",
-                   "ext.dry"
-                 ))
+                 c("Normal", "Normal", "Normal", "Normal", "Normal", "Normal"))
   })
 })
 
 test_that("OperatSDI works as expected w/ PEMethod=PM, dist=GLO", {
-  vcr::use_cassette("OperatSDI-PEMethod=PM", {
+  vcr::use_cassette("OperatSDI-PM", {
     osdi <- OperatSDI(
       lon = -47.3,
       lat = -22.67,
@@ -239,26 +232,26 @@ test_that("OperatSDI works as expected w/ PEMethod=PM, dist=GLO", {
     expect_equal(
       osdi[, "PE"],
       c(
-        140.158552712686,
-        149.314819414548,
-        139.883948394412,
-        144.102577406368,
-        135.963707185575,
-        132.552852346312
+        90.1205821981333,
+        88.070088043992,
+        82.1028375249963,
+        77.81230954449,
+        69.8280874392652,
+        69.7586238134786
       ),
-      tolerance = 0.1
+      tolerance = 0.01
     )
     expect_equal(
       osdi[, "PPE"],
       c(
-        -128.838552712686,
-        -114.714819414548,
-        -103.953948394412,
-        -104.892577406368,
-        -89.0237071855748,
-        -117.192852346312
+        -78.8005821981333,
+        -53.470088043992,
+        -46.1728375249964,
+        -38.60230954449,
+        -22.8880874392652,
+        -54.3986238134786
       ),
-      tolerance = 0.1
+      tolerance = 0.01
     )
     expect_equal(
       osdi[, "SPI"],
@@ -270,31 +263,24 @@ test_that("OperatSDI works as expected w/ PEMethod=PM, dist=GLO", {
         0.195580476882115,
         -0.386626155683378
       ),
-      tolerance = 0.1
+      tolerance = 0.01
     )
     expect_equal(
       osdi[, "SPEI"],
       c(
-        -0.869564987719618,
-        -0.843375808988047,
-        -0.935077359265666,
-        -1.33720536025451,
-        -0.618389343897046,
-        -1.42260223092696
+        -0.0926067131721325,
+        -0.0048911664412907,
+        0.115089358597543,
+        0.333638734413817,
+        0.664103255778851,
+        0.363123196739047
       ),
-      tolerance = 0.1
+      tolerance = 0.01
     )
     expect_equal(osdi[, "Categ.SPI"],
                  c("Normal", "Normal", "Normal", "Normal", "Normal", "Normal"))
     expect_equal(osdi[, "Categ.SPEI"],
-                 c(
-                   "Normal",
-                   "Normal",
-                   "Normal",
-                   "mod.dry",
-                   "Normal",
-                   "mod.dry"
-                 ))
+                 c("Normal", "Normal", "Normal", "Normal", "Normal", "Normal"))
   })
 })
 

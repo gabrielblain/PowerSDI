@@ -12,7 +12,7 @@ OperatSDI(
   PEMethod = "HS",
   distr = "GEV",
   parms,
-  TS = 4
+  TS = 4L
 )
 }
 \arguments{
@@ -20,13 +20,15 @@ OperatSDI(
 
 \item{lat}{latitude in decimal degrees.}
 
-\item{start.date}{Date at each the calculation must start
+\item{start.date}{Date at each time when the calculation must start
 (\dQuote{YYYY-MM-DD}).}
 
-\item{end.date}{Date at each the calculation must end (\dQuote{YYYY-MM-DD}).}
+\item{end.date}{Date at each time when the calculation must end
+(\dQuote{YYYY-MM-DD}).}
 
-\item{PEMethod}{A character variable (\dQuote{HS} or \dQuote{PM}) defining
-the potential evapotranspiration method. Default is \dQuote{HS}.}
+\item{PEMethod}{A character variable (\dQuote{HS} (Hargreaves & Samani) or
+\dQuote{PM} (Penman-Monteith) defining the potential evapotranspiration
+method.  Default is \dQuote{HS}.}
 
 \item{distr}{A character variable (\dQuote{GEV} or \dQuote{GLO}) defining
 which distribution is used to calculate the \acronym{SPEI}. Default is
@@ -34,7 +36,8 @@ which distribution is used to calculate the \acronym{SPEI}. Default is
 logistic distributions) as an option.}
 
 \item{parms}{Parameters required for calculating the \acronym{SPI} and
-\acronym{SPEI}.  It is provided by the \code{ScientSDI} function (DistPar).}
+\acronym{SPEI}.  It is provided by the \code{\link{ScientSDI}} function's
+\code{DistPar}.}
 
 \item{TS}{Time scale on the \dQuote{quart.month} basis (integer values
 between 1 and 96).}
@@ -42,7 +45,7 @@ between 1 and 96).}
 \value{
 A data frame with rainfall, potential evapotranspiration (PE),
   difference between rainfall and PE (in millimiters), the NASA-SPI and
-  NASA_SPEI, and the SDI categories corresponding to each indices estimates.
+  NASA-SPEI, and the SDI categories corresponding to each indices estimates.
 }
 \description{
 Calculates the \acronym{SPI} (Standardized Precipitation Index) and
@@ -52,13 +55,16 @@ Calculates the \acronym{SPI} (Standardized Precipitation Index) and
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
-data("DistPar")
+# This example uses data included in this package, "DistPar" for
+#   "parms" here
 OperatSDI(
   lon = -47.3,
   lat = -22.67,
   start.date = "2023-06-01",
   end.date = "2023-06-30",
-  parms = DistPar
-)
+  PEMethod = "HS",
+  distr = "GEV",
+  parms = DistPar,
+  TS = 4)
 \dontshow{\}) # examplesIf}
 }
