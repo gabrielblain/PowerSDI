@@ -91,7 +91,7 @@ Accuracy <- function(obs_est,
       ))) / sum(abs(p - o))) - 1)
     }
     # Rquad
-    RQuad <- cor(o, p, method = "pearson")
+    RQuad <- (cor(o, p, method = "pearson"))^2
 
     if (conf.int == "yes") {
     message("Just a sec")
@@ -132,7 +132,7 @@ Accuracy <- function(obs_est,
       }
       # Rquad
       RQuadboot[i, 1] <-
-        cor(oboot, pboot, method = "pearson")
+        (cor(oboot, pboot, method = "pearson"))^2
     }
     # Defining confidence intervals
     AME_CIinf <-
