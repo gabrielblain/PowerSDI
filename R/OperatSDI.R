@@ -133,7 +133,7 @@ OperatSDI <-
         calc.ETP.daily(
           J = sse_i$DOY,
           lat = lat,
-          tavg = sse_i$T2M_MIN,
+          tavg = sse_i$T2M,
           tmax = sse_i$T2M_MAX,
           tmin = sse_i$T2M_MIN,
           method = PEMethod
@@ -206,7 +206,7 @@ OperatSDI <-
       ETP.pm.daily <- calc.ETP.daily(
         J = sse_i$DOY,
         lat = lat,
-        tavg = sse_i$T2M_MIN,
+        tavg = sse_i$T2M,
         tmax = sse_i$T2M_MAX,
         tmin = sse_i$T2M_MIN,
         rh = sse_i$RH2M,
