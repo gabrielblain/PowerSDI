@@ -8,11 +8,11 @@
 #' \item{YEAR}{Year}
 #' \item{MM}{Month}
 #' \item{DD}{Day}
-#' \item{tmed}{Daily average air temperature at 2 meters above the ground
+#' \item{tavg}{Daily average air temperature at 2 metres above the ground
 #'   (degrees C)}
-#' \item{tmax}{Daily maximum air temperature at 2 meters above the ground
+#' \item{tmax}{Daily maximum air temperature at 2 metres above the ground
 #'   (degrees C)}
-#' \item{tmin}{Daily minimum air temperature at 2 meters above the ground
+#' \item{tmin}{Daily minimum air temperature at 2 metres above the ground
 #'   (degrees C)}
 #' \item{Ra}{Daily top of the atmosphere radiation (MJ/m^2/day)}
 #' \item{Rain}{Daily rainfall amounts (mm)}

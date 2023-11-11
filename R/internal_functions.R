@@ -1,4 +1,5 @@
 
+
 #' Adjust prob Values
 #'
 #' Takes a probability and if <0.001351 or >0.998649 sets it to those values, if
@@ -32,18 +33,6 @@ adjust.prob <- function(prob) {
 #' @keywords internal
 #' @noRd
 check.dates <- function(dates) {
-  if (is.null(dates)) {
-    stop(call. = FALSE,
-         "You have not entered dates for the query.\n")
-  }
-  if (length(unique(dates)) < 2) {
-    stop(
-      call. = FALSE,
-      "For `temporal_api = monthly`, at least two (2) years ",
-      "are required to be provided.\n"
-    )
-  }
-
   # check end date to be sure it's not in the future
   if (dates[[2]] > Sys.Date()) {
     stop(call. = FALSE,
@@ -234,7 +223,8 @@ check.TS <- function(TS) {
 #' @noRd
 #'
 check.sig.level <- function(sig.level) {
-  if (isFALSE(is.numeric(sig.level)) || sig.level < 0.90 || sig.level > 0.95) {
+  if (isFALSE(is.numeric(sig.level)) ||
+      sig.level < 0.90 || sig.level > 0.95) {
     stop(
       "Please provide an appropriate significance level, that is:
         `sig.level` may only assume numeric values between 0.9 and 0.95.",
@@ -358,6 +348,135 @@ find.week.int <- function(x) {
 `%notin%` <- function(x, table) {
   match(x, table, nomatch = 0L) == 0L
 }
+
+
+#' Get POWER data from NASA POWER API for PowerSDI
+#'
+#' @param lon user-supplied longitude
+#' @param lat user-supplied latitude
+#' @param start.date.user user-supplied start date
+#' @param end.date.user user-supplied end date
+#' @param PEMethod Method for calculating potential evapotranspiration to be
+#'   used. Defaults to \code{PM}.
+#'
+#' @return a `data.frame`
+#' @noRd
+#' @keywords Internal
+#'
+#' @examples
+#' get_sdi_power_data(lon = -47.3,
+#'   lat = -22.67,
+#'   start.date = "2023-06-01",
+#'   end.date = "2023-06-30",
+#'   PEMethod = "PM")
+#'
+#' @importFrom nasapower get_power
+
+get_sdi_power_data <-
+  function(lon,
+           lat,
+           start.date.user,
+           end.date.user,
+           PEMethod = "PM") {
+    power_pars <- switch(
+      PEMethod,
+      "HS" = c("T2M",
+               "T2M_MAX",
+               "T2M_MIN",
+               "PRECTOTCORR"),
+      "PM" = c(
+        "T2M",
+        "T2M_MAX",
+        "T2M_MIN",
+        "ALLSKY_SFC_SW_DWN",
+        "WS2M",
+        "RH2M",
+        "PRECTOTCORR"
+      )
+    )
+
+    cache_file <- file.path(tempdir(), "sse_i.Rda")
+
+    if (file.exists(cache_file)) {
+      sse_i <- readRDS(cache_file)
+
+      if (start.date.user >= min(sse_i$YYYYMMDD) &&
+          end.date.user <= max(sse_i$YYYYMMDD) &&
+          lon == sse_i$LON[1] &&
+          lat == sse_i$LAT[1] &&
+          PEMethod == sse_i$PEMethod[1]) {
+        return(as.data.frame(sse_i[, !(names(sse_i) %in% "PEMethod")]))
+      } else {
+        # it exists but doesn't meet our needs, download new data
+        return(
+          PSDI_get_power(
+            lon,
+            lat,
+            start.date.user,
+            end.date.user,
+            PEMethod,
+            power_pars
+          )
+        )
+      }
+    }  else {
+      # cache doesn't exist so we download fresh data
+      return(PSDI_get_power(
+        lon,
+        lat,
+        start.date.user,
+        end.date.user,
+        PEMethod,
+        power_pars
+      ))
+    }
+  }
+
+
+#' Wrap get_power() from {nasaspower} for this package
+#'
+#' @param lon user provided longitude
+#' @param lat user provided latitude
+#' @param start.date.user user provided start date
+#' @param end.date.user user provided end date
+#' @param PEMethod \code{PEMethod} selected by the user
+#' @param power_pars The POWER parameters to download in line with the selected
+#'   \code{PEMethod}
+#'
+#' @return a \code{data.frame} of NASA POWER data that is also cached in tempdir
+#' @noRd
+#' @keywords Internal
+#'
+
+PSDI_get_power <-
+  function(lon,
+           lat,
+           start.date.user,
+           end.date.user,
+           PEMethod,
+           power_pars) {
+    sse_i <-
+      get_power(
+        community = "ag",
+        lonlat = c(lon, lat),
+        dates = c(start.date.user,
+                  end.date.user),
+        temporal_api = "daily",
+        pars = power_pars
+      )
+
+    # add a col for PEMethod when caching for easier checking when reading
+    # cached versions against what's newly requested
+    sse_i$PEMethod <- PEMethod
+
+    saveRDS(sse_i,
+            file = file.path(tempdir(), "sse_i.Rda"),
+            compress = FALSE)
+
+    # upon return drop PEMethod col that's not used except in this internal
+    # fn for validation
+    return(as.data.frame(sse_i[, !(names(sse_i) %in% "PEMethod")]))
+  }
 
 #' Find prob Value for the Potential Evapotranspiration Method
 #' @param distr A character value of either `GLO` or `GEV`

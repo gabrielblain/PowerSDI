@@ -14,12 +14,13 @@
 #' latitude in decimal degrees: (+) Northern hemisphere, (-) Southern
 #'   Hemisphere.
 #' @param start.date
-#' date at which the indices estimates should start. Format: "YYYY-MM-DD".
+#' date at which the indices estimates should start. Format:
+#'   \dQuote{YYYY-MM-DD}.
 #' @param end.date
-#' date at which the indices estimates should end. Format: "YYYY-MM-DD".
+#' date at which the indices estimates should end. Format: \dQuote{YYYY-MM-DD}.
 #' @param distr
-#' A character variable ("GEV" or "GLO") defining the distribution to calculate
-#'   the \acronym{SPEI}.  Default is "GEV".
+#' A character variable (\dQuote{GEV} or \dQuote{GLO}) defining the distribution
+#'   to calculate the \acronym{SPEI}.  Default is \code{GEV}.
 #' @param TS
 #' Time scale on the quart.month basis (integer values between 1 and 96).
 #'   Default is 4.
@@ -30,52 +31,51 @@
 #' A numeric variable (between 0.90 and 0.95) defining the significance level
 #'   for parameter Good. Default is "0.95".
 #' @param RainUplim
-#' Optional. Upper limit in millimeters from which rainfall values larger than
+#' Optional. Upper limit in millimetres from which rainfall values larger than
 #'   it will be removed.  Default is \code{NULL}.
 #' @param RainLowlim
-#' Optional. Lower limit in millimeters from which rainfall values smaller than
+#' Optional. Lower limit in millimetres from which rainfall values smaller than
 #'   it will be removed.  Default is \code{NULL}.
 #' @param PEUplim
-#' Optional. Upper limit in millimeters from which evapotranspiration values
+#' Optional. Upper limit in millimetres from which evapotranspiration values
 #'   larger than it will be removed.  Default is \code{NULL}.
 #' @param PELowlim
-#' Optional. Lower limit in millimeters from which evapotranspiration values
+#' Optional. Lower limit in millimetres from which evapotranspiration values
 #'   smaller than it will be removed.  Default is \code{NULL}.
 #' @return
 #' A list with data calculated at the time scale selected by the user.
-#' If \code{Good="Yes"}, this list includes:
+#' If \code{Good = "Yes"}, this list includes:
 #' \describe{
 #'   \item{SDI}{The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.}
-#'   \item{DistPar}{The parameters of the distributions (gamma and GEV) used to
-#'   calculate the indices.}
+#'   \item{DistPar}{The parameters of the distributions (gamma and
+#'     \acronym{GEV}) used to calculate the indices.}
 #'   \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
-#'   tests.}
+#'     tests.}
 #'   \item{Normality}{The outcomes of the two normality checking procedures (Wu
-#'   et al., 2007 and Stagge et al., 2015).}
+#'     \emph{et al}., 2007 and Stagge \emph{et al}., 2015).}
 #'  }
 #'
-#' If \code{Good="No"}, this list includes \acronym{SDI} and DistPar.
+#' If \code{Good = "No"}, this list includes \acronym{SDI} and DistPar.
 #'
 #' This function also presents other data (in millimiters) calculated from the
 #'   \acronym{NASA} \acronym{POWER} project:
 #' \itemize{
 #'   \item Rainfall amounts (Rain).
 #'   \item Potential evapotranspiration values estimated through the Hargreaves
-#'    and Samani method (PEHS).
+#'    and Samani method (\acronym{PEHS}).
 #'   \item Potential evapotranspiration values estimated through the FAO-56
-#'    Penman-Monteith method (PEPM).
+#'    Penman-Monteith method (\acronym{PEPM}).
 #'   \item The difference between rainfall and potential evapotranspiration
-#'   (PPEHS and PPEPM).
+#'   (\acronym{PPEHS} and \acronym{PPEPM}).
 #'   }
 #' @export
-#' @importFrom nasapower get_power
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @importFrom utils install.packages menu write.table
 #' @examplesIf interactive()
 #' ScientSDI(
 #'   lon = -47.3,
 #'   lat = -22.87,
-#'   start.date = "2015-01-01",
+#'   start.date = "1993-01-01",
 #'   end.date = "2022-12-31",
 #'   TS = 1,
 #'   Good = "no"
@@ -95,13 +95,17 @@
 #'   locations and dry seasons. International Journal of Climatology: A Journal
 #'   of the Royal Meteorological Society, 27(1), pp.65-79.
 
+# TODO: Think about splitting this up to i) fetch data, ii) process and split
+# processing functions by GLO/GEV first and then add Goodness test functions
+# as a third step?
+
 ScientSDI <-
   function(lon,
            lat,
            start.date,
            end.date,
            distr = "GEV",
-           TS = 4,
+           TS = 4L,
            Good = "No",
            sig.level = 0.95,
            RainUplim = NULL,
@@ -145,6 +149,11 @@ ScientSDI <-
     if (mim.date.fit < 8) {
       stop("Please select a longer period between start.date and end.date.",
            call. = FALSE)
+    } else if (mim.date.fit < 30) {
+      warning("A period of 30 years is normal for calibrating standardised ",
+              "drought indices. However, these indices will be calculated ",
+              "with a shorter period, ", round(mim.date.fit, 1), ", years.",
+           call. = FALSE)
     }
 
     start.user.day <-
@@ -165,42 +174,35 @@ ScientSDI <-
 
     start.date.protocal <- start.date.user - dif
 
-    sse_i <- as.data.frame(get_power(
-      community = "ag",
-      lonlat = c(lon, lat),
-      dates = c(start.date.protocal, end.date.user),
-      temporal_api = "daily",
-      pars = c(
-        "T2M",
-        "T2M_MAX",
-        "T2M_MIN",
-        "ALLSKY_SFC_SW_DWN",
-        "WS2M",
-        "RH2M",
-        "PRECTOTCORR"
-      )
-    ))
-    decli <- calc.decli(sse_i$DOY)
-    lat.rad <- calc.decli.rad(lat)
-    decli.rad <- calc.decli.rad(decli)
-    hn.rad <- calc.hn.rad(decli.rad, lat.rad)
-    hn.deg <- calc.hn.deg(hn.rad)
-    dist.terra.sol <- calc.dist.terra.sol(sse_i$DOY)
-    Ra <- calc.Ra(dist.terra.sol, hn.deg, hn.rad, lat.rad, decli.rad)
+    sse_i <-
+      get_sdi_power_data(lon = lon,
+                         lat = lat,
+                         start.date.user = start.date.user,
+                         end.date.user = end.date.user)
 
-    #### Hargreaves & Samani ---
-
+    #### Hargreaves & Samani ----
     ETP.harg.daily <-
-      calc.ETP.harg.daily(Ra, sse_i$T2M_MAX, sse_i$T2M_MIN, sse_i$T2M)
+      calc.ETP.daily(
+        J = sse_i$DOY,
+        lat = lat,
+        tavg = sse_i$T2M,
+        tmax = sse_i$T2M_MAX,
+        tmin = sse_i$T2M_MIN,
+        method = "HS"
+      )
 
-    #### Penman- Monteith-FAO ---
-    es <- calc.es(sse_i$T2M)
-    ea <- calc.ea(sse_i$RH2M, es)
-    slope.pressure <- calc.slope.pressure(es, sse_i$T2M)
-    Q0.ajust <- calc.Q0.ajust(Ra)
-    Rn <- calc.Rn(sse_i$ALLSKY_SFC_SW_DWN, Q0.ajust, ea, sse_i$T2M, sse_i$T2M_MIN)
-    ETP.pm.daily <-
-      calc.ETP.pm.daily(slope.pressure, Rn, sse_i$T2M, sse_i$WS2M, es, ea)
+    #### Penman- Monteith-FAO ----
+    ETP.pm.daily <- calc.ETP.daily(
+      J = sse_i$DOY,
+      lat = lat,
+      tavg = sse_i$T2M,
+      tmax = sse_i$T2M_MAX,
+      tmin = sse_i$T2M_MIN,
+      rh = sse_i$RH2M,
+      wind = sse_i$WS2M,
+      rad = sse_i$ALLSKY_SFC_SW_DWN,
+      method = "PM"
+    )
 
     sse_i <- cbind(sse_i, ETP.harg.daily, ETP.pm.daily)
     n.tot <- length(sse_i[, 1])
@@ -828,6 +830,7 @@ ScientSDI <-
           pos <- pos + 1
         }
       } else {
+        # TODO: could this just be an apply() rather than a while loop?
         while (pos <= n.weeks) {
           i <- data.at.timescale[pos, 3]
           prob <-

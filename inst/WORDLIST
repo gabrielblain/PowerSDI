@@ -1,6 +1,7 @@
 AME
 Agric
 Appl
+Begueria
 Bragantia
 BugReports
 Constantino
@@ -12,10 +13,13 @@ GEV
 GLO
 GoodFit
 Gudmundsson
+Guttman
 Hosking
+JAWRA
 Kleist
 LaRC
 Lilliefors
+Lmom
 MJ
 Mckee
 Monteith
@@ -54,11 +58,13 @@ climatological
 conf
 da
 distr
+distributions's
 dmod
 dorig
 dref
 et
 evapotranspiration
+gridded
 harg
 irradiance
 lmom
