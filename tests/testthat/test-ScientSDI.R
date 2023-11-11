@@ -1,5 +1,4 @@
 
-
 # in most of these tests, `Good = "no"` because it's faster and is tested 1X
 test_that("ScientSDI properly fetches and calculates values TS=1, distr=GEV",
           {
@@ -272,22 +271,22 @@ test_that("ScientSDI properly fetches and calculates values, Good='yes'",
 
 ## expect messages for removed rows ----
 test_that("ScientSDI emits a message and removes rows above the limit", {
-    expect_message(
-      s_sdi <- ScientSDI(
-        lon = -48.11,
-        lat = -24.81,
-        start.date = "1991-01-01",
-        end.date = "2022-12-31",
-        TS = 1,
-        Good = "no",
-        distr = "GEV",
-        PEUplim = 45
-      ),
-      regexp = "above limit: 48, 52"
-    )
-    expect_length(s_sdi, 2)
-    expect_equal(s_sdi[[1]]$PE.PM[1], 30.12083, tolerance = 0.01)
-  })
+  expect_message(
+    s_sdi <- ScientSDI(
+      lon = -48.11,
+      lat = -24.81,
+      start.date = "1991-01-01",
+      end.date = "2022-12-31",
+      TS = 1,
+      Good = "no",
+      distr = "GEV",
+      PEUplim = 45
+    ),
+    regexp = "above limit: 48, 52"
+  )
+  expect_length(s_sdi, 2)
+  expect_equal(s_sdi[[1]]$PE.PM[1], 30.12083, tolerance = 0.01)
+})
 
 ## Check user inputs, expect errors ----
 test_that("ScientSDI errors with an invalid entry for 'Good'", {
@@ -303,7 +302,7 @@ test_that("ScientSDI errors with an invalid entry for 'Good'", {
   )
 })
 
-test_that("ScientSDIerros with not enough data to run", {
+test_that("ScientSDI errors with not enough data to run", {
   expect_error(
     s_sdi <- ScientSDI(
       lon = -48.11,
@@ -348,5 +347,19 @@ test_that("ScientSDI errors when dates are too close together", {
       PELowlim = 100
     ),
     "Please select a longer period between start.date and end.date."
+  )
+})
+
+test_that("ScientSDI emits a warning when <30 years is selected", {
+  expect_warning(
+    s_sdi <- ScientSDI(
+      lon = -48.11,
+      lat = -24.81,
+      start.date = "1993-01-01",
+      end.date = "2020-12-31",
+      TS = 1,
+      Good = "no"
+    ),
+    regexp = "A period of 30 years is normal for calibrating standardised "
   )
 })
