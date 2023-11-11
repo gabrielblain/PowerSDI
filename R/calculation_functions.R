@@ -27,7 +27,7 @@ calc.ETP.daily <-
     # calculate all of these values
     if (!is.null(J) && !is.null(lat)) {
       decli <- calc.decli(J)
-      lat.rad <- calc.decli.rad(lat)
+      lat.rad <- calc.lat.rad(lat)
       decli.rad <- calc.decli.rad(decli)
       hn.rad <- calc.hn.rad(decli.rad, lat.rad)
       hn.deg <- calc.hn.deg(hn.rad)
@@ -164,8 +164,7 @@ calc.Q0.ajust <- function(Ra) {
 calc.Rn <- function(rad, Q0.ajust, ea, temp, tmin) {
   0.8 * rad -
     (1.35 * (rad / Q0.ajust) - 0.35) *
-    (0.35 - (0.14 * sqrt(ea))) *
-    0.0000000567 *
+    (0.35 - (0.14 * sqrt(ea))) * 0.0000000567 *
     (((temp ^ 4) + (tmin ^ 4)) / 2)
 }
 

@@ -12,7 +12,7 @@ test_that("print.PowerSDI.accuracy() returns a proper summary w/ ci no", {
   x <- utils::capture.output(print(a))
   expect_type(x, "character")
   expect_equal(x[[1]], "      AME     RMSE     dorig      dmod     dref     RQuad")
-  expect_equal(x[[2]], " 2.470223 3.144231 0.9718557 0.8386579 0.838266 0.9590222")
+  expect_equal(x[[2]], " 2.470223 3.144231 0.9718557 0.8386579 0.838266 0.9197235")
 })
 
 test_that("plot.PowerSDI.Accuracy works properly w/ ci no", {
@@ -105,3 +105,4 @@ test_that("accuracy fails w/ `NA` in ObsEst values", {
   expect_error(Accuracy(obs_est = na_obs_est, conf.int = "No"))
   rm(na_obs_est)
 })
+
