@@ -149,6 +149,11 @@ ScientSDI <-
     if (mim.date.fit < 8) {
       stop("Please select a longer period between start.date and end.date.",
            call. = FALSE)
+    } else if (mim.date.fit < 30) {
+      warning("A period of 30 years is normal for calibrating standardised ",
+              "drought indices. However, these indices will be calculated ",
+              "with a shorter period, ", round(mim.date.fit, 1), ", years.",
+           call. = FALSE)
     }
 
     start.user.day <-
