@@ -318,7 +318,7 @@ test_that("OperatSDI fails w/ bad date format", {
     OperatSDI(
       lon = -47.3,
       lat = -22.67,
-      start.date = "06-01-2023",
+      start.date = "5-12-08",
       end.date = "2023-06-30",
       parms = DistPar,
       distr = "GEV"
