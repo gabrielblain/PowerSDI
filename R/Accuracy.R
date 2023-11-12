@@ -25,7 +25,7 @@
 #'
 #' @export
 #'
-#' @examples
+#' @examplesIf interactive()
 #' data("ObsEst")
 #' a <- Accuracy(obs_est = ObsEst, conf.int = "No")
 #' a

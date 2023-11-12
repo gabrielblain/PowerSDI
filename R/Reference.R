@@ -29,9 +29,10 @@
 #'
 #' @export
 #'
-#' @examples
+#' @examplesIf interactive()
 #'
 #' Reference(ref = refHS, distr = "GEV", PEMethod = "HS", TS = 4)
+#'
 Reference <- function(ref,
                       distr = "GEV",
                       PEMethod = "HS",
