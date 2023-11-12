@@ -33,17 +33,6 @@ adjust.prob <- function(prob) {
 #' @keywords internal
 #' @noRd
 check.dates <- function(dates) {
-  # check end date to be sure it's not in the future
-  if (dates[[2]] > Sys.Date()) {
-    stop(call. = FALSE,
-         "The weather data cannot possibly extend beyond this day.\n")
-  }
-
-  if (dates[[2]] < dates[[1]]) {
-    message("Your start and end dates were reversed. ",
-            "They have been reordered.\n")
-    dates <- c(dates[2], dates[1])
-  }
   # put dates in list to use lapply
   dates <- as.list(dates)
 
@@ -70,8 +59,28 @@ check.dates <- function(dates) {
     )
     as.Date(x)
   }
+
   # apply function to reformat/check dates
   dates <- lapply(X = dates, FUN = date_format)
+
+  if (dates[[2]] < dates[[1]]) {
+    message("Your start and end dates were reversed. ",
+            "They have been reordered.\n")
+    dates <- c(dates[2], dates[1])
+  }
+
+  # check end date to be sure it's not in the future
+  if (dates[[2]] > Sys.Date()) {
+    stop(call. = FALSE,
+         "The weather data cannot possibly extend beyond this day.\n")
+  }
+
+  if (dates[[2]] < dates[[1]]) {
+    message("Your start and end dates were reversed. ",
+            "They have been reordered.\n")
+    dates <- c(dates[2], dates[1])
+  }
+
   return(dates)
 }
 
