@@ -6,8 +6,11 @@ test_that("OperatSDI works as expected in example", {
       lat = -22.67,
       start.date = "2023-06-01",
       end.date = "2023-06-30",
-      parms = DistPar
-    )
+      PEMethod = "HS",
+      distr = "GEV",
+      parms = DistPar,
+      TS = 4)
+
     expect_s3_class(osdi, "data.frame")
     expect_length(osdi, 12)
     expect_equal(nrow(osdi), 6)

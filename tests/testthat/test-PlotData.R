@@ -1,5 +1,5 @@
 
-test_that("PlotData creates proper plots", {
+test_that("PlotData works as expected in example", {
   skip_if_offline()
   vcr::use_cassette("PlotData", {
     PlotData_a <- PlotData(
