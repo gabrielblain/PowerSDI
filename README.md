@@ -2,11 +2,17 @@
 Calculates the Standardised Precipitation (SPI) and Standardised Precipitation-Evapotranspiration (SPEI) indices using NASA POWER data.
 
 # Basic Description
-The PowerSDI is an R package capable of calculating the SPI and SPEI using NASA POWER data. The package is based on five R-functions designed to calculate these two standardized drought indices (SDI) in scientific and operational/routine modes. The functions `ScientSDI()`, `Accuracy()`, `Reference()` and, `PlotData()` may be used to assess, among other features, the ability of the SPI and SPEI frequency distributions to meet the normality assumption and how well NASA POWER estimates represent “real-world” data. The `OperatSDI()` function calculates both SPI and SPEI in an operational mode.
+The PowerSDI is an R package capable of calculating the SPI and SPEI using NASA POWER data.
+The package is based on five R-functions designed to calculate these two standardized drought indices (SDI) in scientific and operational/routine modes.
+The functions `ScientSDI()`, `Accuracy()`, `Reference()` and, `PlotData()` may be used to assess, among other features, the ability of the SPI and SPEI frequency distributions to meet the normality assumption and how well NASA POWER estimates represent “real-world” data.
+The `OperatSDI()` function calculates both SPI and SPEI in an operational mode.
 
-The PowerSDI adopts a basic time scale that splits each month into four subperiods: days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 28, 29, 30, or 31 depending on the month. For instance, if TS=4, the time scale corresponds to a moving window with a 1-month length that is calculated four times each month. If TS=48, the time scale corresponds to a moving window with a 12-month length that is calculated four times each month. This time scale is referred as to quart.month.
+The PowerSDI adopts a basic time scale that splits each month into four subperiods: days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 28, 29, 30, or 31 depending on the month.
+For instance, if TS=4, the time scale corresponds to a moving window with a 1-month length that is calculated four times each month.
+If TS=48, the time scale corresponds to a moving window with a 12-month length that is calculated four times each month.
+This time scale is referred to as "quart.month".
 
-The package depends on R (>= 3.10) and R packages nasapower and lmom
+The package depends on R (>= 3.10) and R packages {[nasapower](https://docs.ropensci.org/nasapower/)} and {[lmom](https://cran.r-project.org/package=lmom)}.
 
 # Installation
 
