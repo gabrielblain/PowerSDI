@@ -28,6 +28,6 @@ test_that("PlotData stops if invalid date format is supplied", {
     lon = -47.3,
     lat = -22.87,
     start.date = "2020-12-28",
-    end.date = "12-28-2021"
+    end.date = "12-28-21"
   ))
 })
