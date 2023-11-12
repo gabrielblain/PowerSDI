@@ -289,25 +289,33 @@ data(refPM)
 ```
 
 ## BugReports: 
-https://github.com/gabrielblain/PowerSDI/issues
+<https://github.com/gabrielblain/PowerSDI/issues>
 
 ## License:
 MIT
 
 ## Authors: 
 Gabriel Constantino Blain, Graciela da Rocha Sobierajski, Leticia Lopes Martins, and Adam H Sparks
-Maintainer: Gabriel Constantino Blain gabriel.blain@sp.gov.br
+Maintainer: Gabriel Constantino Blain, <gabriel.blain@sp.gov.br>
 
 ## Acknowledgments:
-The package uses data obtained from the NASA Langley Research Center (LaRC) POWER Project funded through the NASA Earth Science/Applied Science Program. The POWER project provides data for support several activities including agriculture and energy. 
+The package uses data obtained from the NASA Langley Research Center (LaRC) POWER Project funded through the NASA Earth Science/Applied Science Program.
+The POWER project provides data for support several activities including agriculture and energy. 
 The authors greatly appreciate this initiative.
 
 ## References
 Allen, R.G.; Pereira, L.S.; Raes, D.; Smith, M. Crop evapotranspiration. In Guidelines for Computing Crop Water Requirements. Irrigation and Drainage Paper 56; FAO: Rome, Italy, 1998; p. 300.
+
 Blain, G. C., 2014. Revisiting the critical values of the Lilliefors test: towards the correct agrometeorological use of the Kolmogorov- Smirnov framework. Bragantia, 73, 192-202. http://dx.doi.org/10.1590/brag.2014.015
+
 Hargreaves, G.H.; Samani, Z.A. 1985.Reference crop evapotranspiration from temperature. Appl. Eng. Agric,1, 96–99.
+
 Mckee, T. B., Doesken, N.J. and Kleist, J., 1993. The relationship of drought frequency and duration to time scales. In: 8th Conference on Applied Climatology. Boston, MA: American Meteorological Society, 179–184.
+
 Stagge, J. H., Tallaksen, L. M., Gudmundsson, L., Van Loon, A. F. and Stahl, K., 2015. Candidate distribution for climatological drought indices (SPI and SPEI). International Journal of Climatology, 35(13), 4027–4040. https://doi.org/10.1002/joc.4267
+
 Package ‘lmom', Version 2.9, Author J. R. M. Hosking. https://CRAN.R-project.org/package=lmom
+
 Package ‘nasapower', Version 4.0.10, Author Adam H. Sparks et al., https://CRAN.R-project.org/package=nasapower
+
 Wu, H., Svoboda, M. D., Hayes, M. J., Wilhite, D. A. and Wen, F., 2007. Appropriate application of the standardized precipitation index in arid locations and dry seasons. International Journal of Climatology, 27(1), 65–79. https://doi.org/10.1002/joc.1371.
