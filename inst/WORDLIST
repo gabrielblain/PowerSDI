@@ -5,6 +5,7 @@ Begueria
 Bragantia
 BugReports
 Constantino
+De
 DistPar
 Doesken
 Evapotranspiration
@@ -34,6 +35,7 @@ PPEHS
 PPEPM
 Pereira
 PlotData
+Pre
 Raes
 RainLowlim
 RainUplim
@@ -70,6 +72,8 @@ irradiance
 lmom
 loc
 lon
+metres
+millimetres
 millimiters
 nasapower
 oC
