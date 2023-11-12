@@ -52,7 +52,6 @@ check.dates <- function(dates) {
                                       )),
       warning = function(c) {
         stop(call. = FALSE,
-             "",
              x,
              " is not a valid entry for date. Enter as YYYY-MM-DD.\n")
       }
