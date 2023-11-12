@@ -17,12 +17,17 @@
 #' @export
 #' @importFrom graphics par
 #' @examplesIf interactive()
+#'
+#' # This example requires an Internet connection to fetch data and so is only
+#' # run in interactive sessions
+#'
 #' PlotData(
 #'   lon = -47.3,
 #'   lat = -22.87,
 #'   start.date = "2021-12-28",
 #'   end.date = "2022-12-31"
 #' )
+#'
 PlotData <- function(lon, lat, start.date, end.date) {
 
   dates <- check.dates(c(start.date, end.date))

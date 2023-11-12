@@ -31,7 +31,6 @@
 #' @importFrom graphics title
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #'
-#'
 #' @examplesIf interactive()
 #'
 #' # This example uses data included in this package, "DistPar" for

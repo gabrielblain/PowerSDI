@@ -1,7 +1,7 @@
 
 ## Method = "HS" ----
 
-test_that("Reference() calculates SPI/SPEI using GEV & HS w/ TS4", {
+test_that("Reference() works as expected in example", {
   expect_warning(
     ref_gev <- Reference(
       ref = refHS,

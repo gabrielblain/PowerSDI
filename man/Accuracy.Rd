@@ -32,10 +32,12 @@ An object of \code{PowerSDI.Accuracy}, a \code{list}, which reports:
 Calculates scalar measures of accuracy.
 }
 \examples{
-data("ObsEst")
+{
+
 a <- Accuracy(obs_est = ObsEst, conf.int = "No")
 a
 
 # A generic plotting method is also supplied
 plot(a)
+}
 }

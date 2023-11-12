@@ -1,7 +1,7 @@
 Package: PowerSDI
 Type: Package
 Title: Calculate Standardised Drought Indices Using NASA POWER Data
-Version: 1.0.0
+Version: 0.1.1
 Authors@R: c(
   person(
     given = "Gabriel Constantino",
@@ -25,20 +25,22 @@ Authors@R: c(
   person(
     given = "Adam H.",
     family = "Sparks",
+    email = "adamhsparks@gmail.com",
     role = c("aut"),
     comment = c(ORCID = "0000-0002-0061-8359")))
 Description: A set of functions designed to calculate the standardized
     precipitation and standardized precipitation evapotranspiration indices
     using NASA POWER data.  These indices are calculated using a reference
     data source.  The functions verify if the indices estimates meet the
-    normality assumption and how well NASA POWER estimates represent real world
-    data.  Indices are calculated in a routine mode.  Potential
+    normality assumption and how well NASA POWER estimates represent real
+    world data.  Indices are calculated in a routine mode.  Potential
     evapotranspiration amounts and the difference between rainfall and potential
     evapotranspiration are also calculated.  The functions adopt a basic time
     scale that splits each month into four periods.  Days 1 to 7, days 8 to 14,
-    days 15 to 21, and days 22 to 28, 29, 30, or 31.  Where TS=4 corresponds to
-    a 12-month length moving window (calculated 4 times a month) and TS=48
-    corresponds to a 1-month length moving window (calculated 4 times a month).
+    days 15 to 21, and days 22 to 28, 29, 30, or 31, where 'TS=4' corresponds to
+    a 1-month length moving window (calculated 4 times per month) and 'TS=48'
+    corresponds to a 12-month length moving window (calculated 4 times per
+    month).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

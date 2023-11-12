@@ -1,6 +1,6 @@
 
 # in most of these tests, `Good = "no"` because it's faster and is tested 1X
-test_that("ScientSDI properly fetches and calculates values TS=1, distr=GEV",
+test_that("ScientSDI() works as expected in example",
           {
             vcr::use_cassette("ScientSDI", {
               s_sdi <- ScientSDI(
