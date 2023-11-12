@@ -166,7 +166,13 @@ Default is "GEV".
 
 ## Value
 
-A data frame with Rainfall, potential evapotranspiration (PE), difference between rainfall and PE (in millimiters), the NASA-SPI and NASA_SPEI, and the SDI categories corresponding to each indices estimates.
+A data frame with:
+
+* Rainfall,
+* potential evapotranspiration (PE),
+* difference between rainfall and PE (in millimiters),
+* the NASA-SPI and NASA_SPEI,
+* and the SDI categories corresponding to each indices estimates.
 
 ## Examples
 
@@ -199,7 +205,9 @@ PlotData(lon, lat, start.date, end.date)
 
 ## Value
 
-Scatter plots of Rainfall and potential evapotranspiration accumulated at the 1-quart.month time scale.
+Scatter plots of:
+* Rainfall and
+* potential evapotranspiration accumulated at the 1-quart.month time scale.
 
 ## Examples
 
@@ -235,7 +243,11 @@ Default is 4.
 
 ## Value
 
-A data frame with: Rain, potential evapotranspiration, difference between rainfall and potential evapotranspiration, SPI and SPEI calculated at the time scale selected by the user.
+A data frame with:
+* Rain,
+*  potential evapotranspiration,
+* difference between rainfall and potential evapotranspiration,
+* SPI and SPEI calculated at the time scale selected by the user.
 
 ## Examples
 
