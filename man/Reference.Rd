@@ -21,7 +21,7 @@ evapotranspiration method.  Default is \dQuote{HS}.}
 96).  Default is 4.}
 }
 \value{
-A \code{data.frame} with:
+A \code{data.frame} with
 \itemize{
   \item rain,
   \item potential evapotranspiration,
@@ -38,4 +38,5 @@ Calculates the Standardised Precipitation Index (\acronym{SPI}) and
 \examples{
 
 Reference(ref = refHS, distr = "GEV", PEMethod = "HS", TS = 4)
+
 }

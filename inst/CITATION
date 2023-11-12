@@ -1,0 +1,20 @@
+bibentry(
+  bibtype = "Article",
+  author = c(person(c("Gabriel", "Constantino"), "Blain"),
+             person(c("Graciela", "da Rocha"), "Sobierajski"),
+             person(c("Letícia", "Lopes"), "Martins")),
+  title = "The Powersdi: An R-Package for Implementing and Calculating the SPI and Spei Using Data from the Nasa-Power Project",
+  journal = "Social Science Research Network",
+  year = "2023",
+  doi = "10.2139/ssrn.4442843",
+  url = "https://www.ssrn.com/abstract=4442843")
+
+bibentry(bibtype = "Manual",
+         title = "{PowerSDI}: Calculate Standardised Drought Indices Using NASA POWER Data",
+         author = c(person(c("Gabriel", "Constantino"), "Blain"),
+                    person(c("Graciela", "R."), "Sobierajski"),
+                    person(c("Leticia", "L."), "Martins"),
+                    person(c("Adam", "H."), "Sparks")),
+         year = sub("-.*", "", meta$Date),
+         note = sprintf("R package version %s", meta$Version),
+         url = "https://github.com/gabrielblain/PowerSDI")

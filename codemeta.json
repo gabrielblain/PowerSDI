@@ -1,0 +1,246 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "PowerSDI",
+  "description": "A set of functions designed to calculate the standardized precipitation and standardized precipitation evapotranspiration indices using NASA POWER data. These indices are calculated using a reference data source. The functions verify if the indices estimates meet the normality assumption and how well NASA POWER estimates represent real world data. Indices are calculated in a routine mode. Potential evapotranspiration amounts and the difference between rainfall and potential evapotranspiration are also calculated. The functions adopt a basic time scale that splits each month into four periods. Days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 28, 29, 30, or 31, where 'TS=4' corresponds to a 1-month length moving window (calculated 4 times per month) and 'TS=48' corresponds to a 12-month length moving window (calculated 4 times per month).",
+  "name": "PowerSDI: Calculate Standardised Drought Indices Using NASA POWER Data",
+  "codeRepository": "https://github.com/gabrielblain/PowerSDI",
+  "issueTracker": "https://github.com/gabrielblain/PowerSDI/issues",
+  "license": "https://spdx.org/licenses/MIT",
+  "version": "0.1.1",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "R",
+    "url": "https://r-project.org"
+  },
+  "runtimePlatform": "R version 4.3.2 (2023-10-31)",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Gabriel Constantino",
+      "familyName": "Blain",
+      "email": "gabriel.blain@sp.gov.br",
+      "@id": "https://orcid.org/0000-0001-8832-7734"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Graciela R.",
+      "familyName": "Sobierajski",
+      "@id": "https://orcid.org/0000-0002-7211-9268"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Leticia L.",
+      "familyName": "Martins",
+      "@id": "https://orcid.org/0000-0002-0299-3005"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Adam H.",
+      "familyName": "Sparks",
+      "email": "adamhsparks@gmail.com",
+      "@id": "https://orcid.org/0000-0002-0061-8359"
+    }
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Gabriel Constantino",
+      "familyName": "Blain",
+      "email": "gabriel.blain@sp.gov.br",
+      "@id": "https://orcid.org/0000-0001-8832-7734"
+    }
+  ],
+  "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "knitr",
+      "name": "knitr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=knitr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "testthat",
+      "name": "testthat",
+      "version": ">= 3.0.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "vcr",
+      "name": "vcr",
+      "version": ">= 0.6.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=vcr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "vdiffr",
+      "name": "vdiffr",
+      "version": ">= 1.0.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=vdiffr"
+    }
+  ],
+  "softwareRequirements": {
+    "1": {
+      "@type": "SoftwareApplication",
+      "identifier": "R",
+      "name": "R",
+      "version": ">= 3.1.0"
+    },
+    "2": {
+      "@type": "SoftwareApplication",
+      "identifier": "graphics",
+      "name": "graphics"
+    },
+    "3": {
+      "@type": "SoftwareApplication",
+      "identifier": "lmom",
+      "name": "lmom",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=lmom"
+    },
+    "4": {
+      "@type": "SoftwareApplication",
+      "identifier": "lubridate",
+      "name": "lubridate",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=lubridate"
+    },
+    "5": {
+      "@type": "SoftwareApplication",
+      "identifier": "nasapower",
+      "name": "nasapower",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=nasapower"
+    },
+    "6": {
+      "@type": "SoftwareApplication",
+      "identifier": "stats",
+      "name": "stats"
+    },
+    "7": {
+      "@type": "SoftwareApplication",
+      "identifier": "utils",
+      "name": "utils"
+    },
+    "SystemRequirements": null
+  },
+  "fileSize": "1202.668KB",
+  "citation": [
+    {
+      "@type": "ScholarlyArticle",
+      "datePublished": "2023",
+      "author": [
+        {
+          "@type": "Person",
+          "givenName": ["Gabriel", "Constantino"],
+          "familyName": "Blain"
+        },
+        {
+          "@type": "Person",
+          "givenName": ["Graciela", "da Rocha"],
+          "familyName": "Sobierajski"
+        },
+        {
+          "@type": "Person",
+          "givenName": ["Letícia", "Lopes"],
+          "familyName": "Martins"
+        }
+      ],
+      "name": "The Powersdi: An R-Package for Implementing and Calculating the SPI and Spei Using Data from the Nasa-Power Project",
+      "identifier": "10.2139/ssrn.4442843",
+      "url": "https://www.ssrn.com/abstract=4442843",
+      "@id": "https://doi.org/10.2139/ssrn.4442843",
+      "sameAs": "https://doi.org/10.2139/ssrn.4442843",
+      "isPartOf": {
+        "@type": "PublicationIssue",
+        "datePublished": "2023",
+        "isPartOf": {
+          "@type": ["PublicationVolume", "Periodical"],
+          "name": "Social Science Research Network"
+        }
+      }
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "author": [
+        {
+          "@type": "Person",
+          "givenName": ["Gabriel", "Constantino"],
+          "familyName": "Blain"
+        },
+        {
+          "@type": "Person",
+          "givenName": ["Graciela", "R."],
+          "familyName": "Sobierajski"
+        },
+        {
+          "@type": "Person",
+          "givenName": ["Leticia", "L."],
+          "familyName": "Martins"
+        },
+        {
+          "@type": "Person",
+          "givenName": ["Adam", "H."],
+          "familyName": "Sparks"
+        }
+      ],
+      "name": "{PowerSDI}: Calculate Standardised Drought Indices Using NASA POWER Data",
+      "url": "https://github.com/gabrielblain/PowerSDI",
+      "description": "R package version 0.1.1"
+    }
+  ],
+  "releaseNotes": "https://github.com/gabrielblain/PowerSDI/blob/master/NEWS.md",
+  "readme": "https://github.com/gabrielblain/PowerSDI/blob/master/README.md"
+}

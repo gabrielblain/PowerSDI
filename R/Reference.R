@@ -18,7 +18,7 @@
 #' Time scale on the \dQuote{quart.month} basis (whole values between 1 and
 #'   96).  Default is 4.
 #' @return
-#' A \code{data.frame} with:
+#' A \code{data.frame} with
 #' \itemize{
 #'   \item rain,
 #'   \item potential evapotranspiration,
@@ -32,6 +32,7 @@
 #' @examples
 #'
 #' Reference(ref = refHS, distr = "GEV", PEMethod = "HS", TS = 4)
+#'
 Reference <- function(ref,
                       distr = "GEV",
                       PEMethod = "HS",

@@ -72,6 +72,10 @@
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @importFrom utils install.packages menu write.table
 #' @examplesIf interactive()
+#'
+#' # This example requires an Internet connection to fetch data and so is only
+#' # run in interactive sessions
+#'
 #' ScientSDI(
 #'   lon = -47.3,
 #'   lat = -22.87,
