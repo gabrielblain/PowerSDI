@@ -7,7 +7,7 @@ bibentry(
   journal = "Social Science Research Network",
   year = "2023",
   doi = "10.2139/ssrn.4442843",
-  url = "https://ssrn.com/abstract=4442843")
+  url = "https://www.ssrn.com/abstract=4442843")
 
 bibentry(bibtype = "Manual",
          title = "{PowerSDI}: Calculate Standardised Drought Indices Using NASA POWER Data",
