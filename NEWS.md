@@ -1,4 +1,24 @@
-# PowerSDI 1.0.0
+# PowerSDI 0.1.1
+
+## Minor Changes
+
+* Add a list of words in DESCRIPTION to `.aspell/PowerSDI.rds` for "non-existing words" to avoid CRAN NOTES.
+
+* Add a CITATION file for proper package citations.
+
+* Add a full suite of tests to ensure the package's functionality is accurate.
+
+* Add a vignette for users to refer to.
+
+* Cache POWER data in-session so that users do not experience repeated downloads of the same data, resulting in a faster response to functions that use the same data sets.
+
+* Use best practices for errors, warnings and messages related to user inputs and calculations.
+
+* Pre-calculate values where possible to save computational time.
+
+* Only run examples in an interactive session so that they are not run on CRAN due to long running calculations and/or relying on downloaded data from the POWER API that may fail if there is no Internet connection or the POWER API is down which would have resulted in failures on CRAN.
+
+* De-duplicate functionality in the code base related to downloading data and calculating values.
 
 # PowerSDI 0.1.0
 
