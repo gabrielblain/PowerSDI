@@ -25,6 +25,10 @@ Plots rainfall and potential evapotranspiration amounts using \acronym{NASA}
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+
+# This example requires an Internet connection to fetch data and so is only
+# run in interactive sessions
+
 PlotData(
   lon = -47.3,
   lat = -22.87,

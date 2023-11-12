@@ -29,7 +29,7 @@
 #'
 #' @export
 #'
-#' @examplesIf interactive()
+#' @examples
 #'
 #' Reference(ref = refHS, distr = "GEV", PEMethod = "HS", TS = 4)
 #'

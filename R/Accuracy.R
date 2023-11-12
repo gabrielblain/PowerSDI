@@ -23,15 +23,15 @@
 #'  \item If \code{conf.int="Yes"}, confidence intervals are calculated
 #'  }
 #'
-#' @export
+#' @examples {
 #'
-#' @examplesIf interactive()
-#' data("ObsEst")
 #' a <- Accuracy(obs_est = ObsEst, conf.int = "No")
 #' a
 #'
 #' # A generic plotting method is also supplied
 #' plot(a)
+#' }
+#' @export
 Accuracy <- function(obs_est,
                      conf.int = "Yes",
                      sig.level = 0.95) {
