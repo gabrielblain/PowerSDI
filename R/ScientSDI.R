@@ -52,7 +52,7 @@
 #'   \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
 #'     tests.}
 #'   \item{Normality}{The outcomes of the two normality checking procedures (Wu
-#'     \emph{et al}., 2007 and Stagge \emph{et al}., 2015).}
+#'     \emph{et al}., 2006 and Stagge \emph{et al}., 2015).}
 #'  }
 #'
 #' If \code{Good = "No"}, this list includes \acronym{SDI} and DistPar.
@@ -94,7 +94,7 @@
 #'    K., 2015. Candidate distributions for climatological drought indices (SPI
 #'    and SPEI). International Journal of Climatology, 35(13), pp.4027-4040.
 #'
-#'  Wu, H., Svoboda, M.D., Hayes, M.J., Wilhite, D.A. and Wen, F., 2007.
+#'  Wu, H., Svoboda, M.D., Hayes, M.J., Wilhite, D.A. and Wen, F., 2006.
 #'   Appropriate application of the standardized precipitation index in arid
 #'   locations and dry seasons. International Journal of Climatology: A Journal
 #'   of the Royal Meteorological Society, 27(1), pp.65-79.
