@@ -29,7 +29,7 @@ adjust.prob <- function(prob) {
 #'
 #' @param dates A vector of two user entered `dates` values.
 #'
-#' @return Validated dates in a list
+#' @return Two validated \code{date} objects in a \code{list} object.
 #' @keywords internal
 #' @noRd
 check.dates <- function(dates) {
@@ -442,7 +442,8 @@ get_sdi_power_data <-
 #' Aggregates Data Download and Calculates ETP Daily Values
 #'
 #' Wraps functions that fetch data using `get_sdi_power_data()` and calculates
-#'   the daily evapotranspiration values using `calc.ETP.daily()`.
+#'   the daily evapotranspiration values using `calc.ETP.daily()` for both
+#'   Penman-Monteith and Hargreves and Samani methods.
 #'
 #' @param lon User provided longitude value
 #' @param lat User provided latitude value
