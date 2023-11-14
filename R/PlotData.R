@@ -31,15 +31,13 @@
 PlotData <- function(lon, lat, start.date, end.date) {
 
   dates <- check.dates(c(start.date, end.date))
-
   start.date.user <- dates[[1]]
   end.date.user <- dates[[2]]
 
-  min.period <- end.date.user - start.date.user
-  if (min.period < 365) {
+  if ((end.date.user - start.date.user) < 365) {
     stop(
-      "The difference between start.date and end.date must be of at least 1 year.
-    Please select a longer period.",
+      "The difference between `start.date` and `end.date` ",
+      "must be of at least 1 year. Please select a longer period.",
     call. = FALSE
     )
   }
