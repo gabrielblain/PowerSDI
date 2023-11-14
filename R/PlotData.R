@@ -52,7 +52,8 @@ PlotData <- function(lon, lat, start.date, end.date) {
 
   message(
     "Just a sec. ",
-    "Downloading NASA POWER data and calculating the others parameters.")
+    "Downloading NASA POWER data and calculating the other parameters.")
+
   sse_i <- daily.ETP.wrapper(lon,
                              lat,
                              start.date.user,
