@@ -30,6 +30,10 @@
 #'
 PlotData <- function(lon, lat, start.date, end.date) {
 
+  # ensure that the user's `par()` settings are honoured on exit from this fn
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+
   dates <- check.dates(c(start.date, end.date))
   start.date.user <- dates[[1]]
   end.date.user <- dates[[2]]
