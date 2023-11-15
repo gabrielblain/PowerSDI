@@ -30,19 +30,18 @@ Authors@R: c(
     comment = c(ORCID = "0000-0002-0061-8359")))
 Description: A set of functions designed to calculate the standardised
     precipitation and standardised precipitation evapotranspiration indices
-    using NASA POWER data as described in, "The PowerSDI:An R-Package for
-    Implementing and Calculating the SPI and SPEI Using Data from the
-    NASA-POWER Project", Blain et al., <doi:10.2139/ssrn.4442843>.  These
-    indices are calculated using a reference data source.  The functions verify
-    if the indices' estimates meet the normality assumption and how well NASA
-    POWER estimates represent real world data.  Indices are calculated in a
-    routine mode.  Potential evapotranspiration amounts and the difference
-    between rainfall and potential evapotranspiration are also calculated.  The
-    functions adopt a basic time scale that splits each month into four periods.
-    Days 1 to 7, days 8 to 14, days 15 to 21, and days 22 to 28, 29, 30, or 31,
-    where 'TS=4' corresponds to a 1-month length moving window (calculated 4
-    times per month) and 'TS=48' corresponds to a 12-month length moving window
-    (calculated 4 times per month).
+    using NASA POWER data as described in Blain et al. (2023)
+    <doi:10.2139/ssrn.4442843>.  These indices are calculated using a reference
+    data source.  The functions verify if the indices' estimates meet the
+    normality assumption and how well NASA POWER estimates represent real world
+    data.  Indices are calculated in a routine mode.  Potential
+    evapotranspiration amounts and the difference between rainfall and potential
+    evapotranspiration are also calculated.  The functions adopt a basic time
+    scale that splits each month into four periods.  Days 1 to 7, days 8 to 14,
+    days 15 to 21, and days 22 to 28, 29, 30, or 31, where 'TS=4' corresponds to
+    a 1-month length moving window (calculated 4 times per month) and 'TS=48'
+    corresponds to a 12-month length moving window (calculated 4 times per
+    month).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
