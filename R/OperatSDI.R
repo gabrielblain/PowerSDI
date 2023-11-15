@@ -409,6 +409,8 @@ calc.qnorm <-
             p6 = 12
           )
 
+        prob <- adjust.prob(prob)
+
         SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
         pos <- pos + 1
       }
