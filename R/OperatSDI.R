@@ -361,8 +361,8 @@ OperatSDI <-
     if (anyNA(SDI.final[, 10])) {
       message("Check the original data, it might have gaps.")
     }
-    message("Considering the selected `TS`,", TS,
-            ", the calculations started on: ",
+    message("Considering the selected `TS`, '", TS,
+            "', the calculations started on: ",
             start.date.user)
     return(SDI.final)
   }
