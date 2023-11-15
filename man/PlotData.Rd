@@ -2,7 +2,7 @@
 % Please edit documentation in R/PlotData.R
 \name{PlotData}
 \alias{PlotData}
-\title{PlotData}
+\title{Plot Rainfall and Potential Evapotranspiration Data}
 \usage{
 PlotData(lon, lat, start.date, end.date)
 }
@@ -16,12 +16,13 @@ PlotData(lon, lat, start.date, end.date)
 \item{end.date}{date at which the indices estimates should end ("YYYY-MM-DD").}
 }
 \value{
-Scatter plots of Rainfall and potential evapotranspiration accumulated at the
-  1-quart.month time scale.
+No return value, called for side effects. Using this will display scatter
+  plots of rainfall and potential evapotranspiration accumulated at the
+  1-quart.month time scale in the active \R session.
 }
 \description{
-Plots rainfall and potential evapotranspiration amounts using \acronym{NASA}
-  \acronym{POWER} data.
+Plots rainfall and potential evapotranspiration, both Penman-Montieth and
+  Hargreves and Samani, amounts using \acronym{NASA} \acronym{POWER} data.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
