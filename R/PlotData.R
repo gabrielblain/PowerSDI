@@ -1,7 +1,7 @@
 #' Plot Rainfall and Potential Evapotranspiration Data
 #'
-#' Plots rainfall and potential evapotranspiration, both Penman-Montieth and
-#'   Hargreves and Samani, amounts using \acronym{NASA} \acronym{POWER} data.
+#' Plots rainfall and potential evapotranspiration, both Penman-Monteith and
+#'   Hargreaves and Samani, amounts using \acronym{NASA} \acronym{POWER} data.
 #'
 #' @param lon
 #' longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.
@@ -30,10 +30,6 @@
 #' )
 #'
 PlotData <- function(lon, lat, start.date, end.date) {
-
-  # ensure that the user's `par()` settings are honoured on exit from this fn
-  oldpar <- par(no.readonly = TRUE)
-  on.exit(par(oldpar))
 
   dates <- check.dates(c(start.date, end.date))
   start.date.user <- dates[[1]]
@@ -136,6 +132,11 @@ PlotData <- function(lon, lat, start.date, end.date) {
   if (first.row > 1) {
     data.week <- data.week[-(1:(first.row - 1)), ]
   }
+  # ensure that the user's `par()` settings are honoured on exit from this fn
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+
+  # set up a three row plot with custom margins
   par(mfrow = c(3, 1), mar = c(4, 4, 1.5, 2))
   ##### Rainfall
   plot(

@@ -446,7 +446,7 @@ get_sdi_power_data <-
 #'
 #' Wraps functions that fetch data using `get_sdi_power_data()` and calculates
 #'   the daily evapotranspiration values using `calc.ETP.daily()` for both
-#'   Penman-Monteith and Hargreves and Samani methods.
+#'   Penman-Monteith and Hargreaves and Samani methods.
 #'
 #' @param lon User provided longitude value
 #' @param lat User provided latitude value
