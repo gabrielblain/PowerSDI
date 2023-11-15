@@ -11,8 +11,9 @@
 #' @param sig.level
 #' A numeric variable (between 0.90 and 0.95) defining the significance level
 #'   for parameter the confidence intervals.  Default is 0.95.
+#'
 #' @return
-#' An object of \code{PowerSDI.Accuracy}, a \code{list}, which reports:
+#' An object of class \code{PowerSDI.Accuracy}, a \code{list}, which contains:
 #'
 #' \itemize{
 #'  \item Absolute mean error (AME)
@@ -20,7 +21,7 @@
 #'  \item Willmott's indices of agreement: original (dorig)
 #'  \item Modified (dmod) and refined (dref)
 #'  \item Pearson determination coefficient (R2), and
-#'  \item If \code{conf.int="Yes"}, confidence intervals are calculated
+#'  \item If \code{conf.int="Yes"}, confidence intervals.
 #'  }
 #'
 #' @examples {
