@@ -1,5 +1,15 @@
 # PowerSDI v0.1.1
 
+## Minor Changes
+
+* Ensure that user's options for `par()` are not modified after using `PlotData()`.
+
+* Correct the "Value" for `PlotData()` in documentation.
+
+* Standardise the use of "Standardise" vs. "Standardize" in package, use en-GB.
+
+* Add reference to Description field describing the methods used in this package.
+
 ## Test environments
 
  - local macOS, Platform: aarch64-apple-darwin20 (64-bit), R 4.2.3
