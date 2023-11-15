@@ -11,6 +11,9 @@
 #' adjust.prob(0.997)
 #' adjust.prob(0.0001)
 #' adjust.prob(0.99999)
+#'
+#' @return A single numeric value.
+#'
 #' @noRd
 #' @keywords Internal
 
