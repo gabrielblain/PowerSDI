@@ -27,6 +27,7 @@
 #' A data frame with rainfall, potential evapotranspiration (PE),
 #'   difference between rainfall and PE (in millimiters), the NASA-SPI and
 #'   NASA-SPEI, and the SDI categories corresponding to each indices estimates.
+#'
 #' @importFrom lmom cdfgam pelgam pelgev pelglo quagev quagam quaglo samlmu
 #' @importFrom graphics title
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
@@ -78,46 +79,44 @@ OperatSDI <-
     start.date.user <- dates[[1]]
     end.date.user <- dates[[2]]
 
-    end.date.user <- as.Date(end.date, "%Y-%m-%d")
-    start.date.user <- as.Date(start.date, "%Y-%m-%d")
-
-    final.year <- as.numeric(format(end.date.user, format = "%Y"))
-    final.month <- as.numeric(format(end.date.user, format = "%m"))
-    final.day <- as.numeric(format(end.date.user, format = "%d"))
+    final.year <- lubridate::year(end.date.user)
+    final.month <- lubridate::month(end.date.user)
+    final.day <- lubridate::day(end.date.user)
 
     final.week <- find.week.int(final.day)
 
     # see bottom of this file for this function
     check.final.agreement(final.year, final.month, final.week, final.day)
 
-    mim.date.fit <- (end.date.user - start.date.user) + 1
-    if (mim.date.fit < 7) {
-      stop("Time difference between `end.date` and `start.date` ",
-           "must be equal to or longer than 7 days",
-           call. = FALSE)
+    if (((end.date.user - start.date.user) + 1) < 7) {
+      stop(
+        "Time difference between `end.date` and `start.date` ",
+        "must be equal to or longer than 7 days.",
+        call. = FALSE
+      )
     }
 
     if (TS > 1) {
       start.date.user <- start.date.user - (10 * TS)
     }
 
-    start.day <- as.numeric(format(start.date.user, format = "%d"))
-    start.year <- as.numeric(format(start.date.user, format = "%Y"))
-    start.month <-
-      as.numeric(format(start.date.user, format = "%m"))
-
-
+    start.year <- lubridate::year(start.date.user)
+    start.month <- lubridate::month(start.date.user)
+    start.day <- lubridate::day(start.date.user)
     start.week <- find.week.int(start.day)
-    dif <- calculate.dif(start.week, start.day)
 
+    dif <- calculate.dif(start.week, start.day)
     start.date.user <- as.Date(start.date.user - dif)
-    start.day <-
-      as.numeric(format(start.date.user, format = "%d"))
-    start.year <-
-      as.numeric(format(start.date.user, format = "%Y"))
-    start.month <-
-      as.numeric(format(start.date.user, format = "%m"))
+
+    start.year <- lubridate::year(start.date.user)
+    start.month <- lubridate::month(start.date.user)
+    start.day <- lubridate::day(start.date.user)
+
+    n.years <- 1 + (final.year - start.year)
+    total.nweeks <- 48 * n.years
+
     message("Calculating...")
+
 
     if (PEMethod == "HS") {
       sse_i <-
@@ -139,12 +138,7 @@ OperatSDI <-
         )
 
       sse_i <- cbind(sse_i, ETP.harg.daily)
-      n.tot <- length(sse_i[, 1])
-      final.year <- sse_i$YEAR[n.tot]
-      final.month <- sse_i$MM[n.tot]
-      final.day <- sse_i$DD[n.tot]
-      n.years <- 1 + (final.year - start.year)
-      total.nweeks <- 48 * n.years
+
       a <- 1
       b <- 2
       c <- 3
@@ -173,14 +167,14 @@ OperatSDI <-
                                             sse_i$MM == month &
                                             sse_i$DD > 21),
                                     11:12])
-        data.week[a, ] <- c(lon, lat, year, month, 1,
-                            data.week1)
-        data.week[b, ] <- c(lon, lat, year, month, 2,
-                            data.week2)
-        data.week[c, ] <- c(lon, lat, year, month, 3,
-                            data.week3)
-        data.week[d, ] <- c(lon, lat, year, month, 4,
-                            data.week4)
+        data.week[a,] <- c(lon, lat, year, month, 1,
+                           data.week1)
+        data.week[b,] <- c(lon, lat, year, month, 2,
+                           data.week2)
+        data.week[c,] <- c(lon, lat, year, month, 3,
+                           data.week3)
+        data.week[d,] <- c(lon, lat, year, month, 4,
+                           data.week4)
         month <- month + 1
         if (year == final.year & month > final.month) {
           break
@@ -215,12 +209,7 @@ OperatSDI <-
       )
 
       sse_i <- cbind(sse_i, ETP.pm.daily)
-      n.tot <- length(sse_i[, 1])
-      final.year <- sse_i$YEAR[n.tot]
-      final.month <- sse_i$MM[n.tot]
-      final.day <- sse_i$DD[n.tot]
-      n.years <- 1 + (final.year - start.year)
-      total.nweeks <- 48 * n.years
+
       a <- 1
       b <- 2
       c <- 3
@@ -249,14 +238,14 @@ OperatSDI <-
                                             sse_i$MM == month &
                                             sse_i$DD > 21),
                                     14:15])
-        data.week[a, ] <- c(lon, lat, year, month, 1,
-                            data.week1)
-        data.week[b, ] <- c(lon, lat, year, month, 2,
-                            data.week2)
-        data.week[c, ] <- c(lon, lat, year, month, 3,
-                            data.week3)
-        data.week[d, ] <- c(lon, lat, year, month, 4,
-                            data.week4)
+        data.week[a,] <- c(lon, lat, year, month, 1,
+                           data.week1)
+        data.week[b,] <- c(lon, lat, year, month, 2,
+                           data.week2)
+        data.week[c,] <- c(lon, lat, year, month, 3,
+                           data.week3)
+        data.week[d,] <- c(lon, lat, year, month, 4,
+                           data.week4)
         month <- month + 1
         if (month > 12) {
           year <- year + 1
@@ -295,10 +284,11 @@ OperatSDI <-
                          data.week[, 4] == start.month &
                          data.week[, 5] == start.week)
     if (first.row > 1) {
-      data.week <- as.matrix(data.week[-c(1:(first.row - 1)), , drop = FALSE])
+      data.week <-
+        as.matrix(data.week[-c(1:(first.row - 1)), , drop = FALSE])
     }
 
-    n <- length(data.week[, 1])
+    n <- nrow(data.week)
     data.at.timescale <- matrix(NA, (n - (TS - 1)), 7)
     final.point <- n - (TS - 1)
     if (TS > 1) {
@@ -306,74 +296,75 @@ OperatSDI <-
       a <- 1
       b <- TS
       c <- 1
-      data.at.timescale[c, ] <- c(data.week[b, 1:4],
-                                  data.week[b, 8],
-                                  colSums(data.week[a:b, 6:7]))
+      data.at.timescale[c,] <- c(data.week[b, 1:4],
+                                 data.week[b, 8],
+                                 colSums(data.week[a:b, 6:7]))
       point <- point + 1
       a <- a + 1
       b <- b + 1
       c <- c + 1
       while (point <= final.point) {
-        data.at.timescale[c, ] <- c(data.week[b, 1:4],
-                                    data.week[b, 8],
-                                    colSums(data.week[a:b, 6:7]))
+        data.at.timescale[c,] <- c(data.week[b, 1:4],
+                                   data.week[b, 8],
+                                   colSums(data.week[a:b, 6:7]))
         point <- point + 1
         a <- a + 1
         b <- b + 1
         c <- c + 1
       }
     } else {
-      data.at.timescale[, ] <- as.matrix(c(data.week[, 1:4],
-                                           data.week[, 8],
-                                           data.week[, 6:7]))
+      data.at.timescale[,] <- as.matrix(c(data.week[, 1:4],
+                                          data.week[, 8],
+                                          data.week[, 6:7]))
     }
     data.at.timescale <- as.matrix(cbind(
-      data.at.timescale, (data.at.timescale[, 6] - data.at.timescale[, 7])
+      data.at.timescale,
+      (data.at.timescale[, 6] - data.at.timescale[, 7])
     ))
-    n.weeks <- length(data.at.timescale[, 1])
+    n.weeks <- nrow(data.at.timescale)
     pos <- 1
     SDI <- matrix(NA, n.weeks, 2)
     parameters <- as.data.frame(parms[which(parms[, 1] == lon &
                                               parms[, 2] == lat &
-                                              parms[, 13] == TS),])
+                                              parms[, 13] == TS), ])
 
-      # calc.qnorm() is in this file, below
-      SDI <- calc.qnorm(distr,
-                        data.at.timescale,
-                        parameters,
-                        n.weeks,
-                        SDI,
-                        PEMethod
-      )
+    # calc.qnorm() is in this file, below
+    SDI <- calc.qnorm(distr,
+                      data.at.timescale,
+                      parameters,
+                      n.weeks,
+                      SDI,
+                      PEMethod)
 
-      categories <- matrix(NA, n.weeks, 2)
+    categories <- matrix(NA, n.weeks, 2)
 
-      # see internal_functions.R for find.category()
-      categories[, 1] <- find.category(x = SDI[, 1])
-      categories[, 2] <- find.category(x = SDI[, 2])
+    # see internal_functions.R for find.category()
+    categories[, 1] <- find.category(x = SDI[, 1])
+    categories[, 2] <- find.category(x = SDI[, 2])
 
-      SDI <- cbind(data.at.timescale, SDI)
-      SDI.final <- data.frame(SDI, categories)
-      colnames(SDI.final) <- c(
-        "Lon",
-        "Lat",
-        "Year",
-        "Month",
-        "quart.month",
-        "Rain",
-        "PE",
-        "PPE",
-        "SPI",
-        "SPEI",
-        "Categ.SPI",
-        "Categ.SPEI"
-      )
-      if (anyNA(SDI.final[, 10])) {
-        message("Check the original data, it might have gaps.")
-      }
-      message("Considering the selected `TS`, the calculations started on: ",
-              start.date.user)
-      return(SDI.final)
+    SDI <- cbind(data.at.timescale, SDI)
+    SDI.final <- data.frame(SDI, categories)
+    colnames(SDI.final) <- c(
+      "Lon",
+      "Lat",
+      "Year",
+      "Month",
+      "quart.month",
+      "Rain",
+      "PE",
+      "PPE",
+      "SPI",
+      "SPEI",
+      "Categ.SPI",
+      "Categ.SPEI"
+    )
+    if (anyNA(SDI.final[, 10])) {
+      message("Check the original data, it might have gaps.")
+    }
+    message("Considering the selected `TS`, '", TS,
+            "', the calculations started on: ",
+            start.date.user)
+    return(SDI.final)
   }
 
 #' Calculate Quantile Norm, qnorm, Values
@@ -394,7 +385,7 @@ calc.qnorm <-
     if (distr == "GEV") {
       for (pos in seq_len(n.weeks)) {
         week <- data.at.timescale[pos, 5]
-        par <- as.numeric(parameters[week,])
+        par <- as.numeric(parameters[week, ])
         # see internal_functions.R for `adjust.prob()` and `set.PEMethod.prob`
         prob <-
           adjust.prob((par[6] + (1 - par[6])) *
@@ -403,18 +394,22 @@ calc.qnorm <-
         SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
 
         prob <-
-          set.PEMethod.prob(distr,
-                            PEMethod,
-                            data.at.timescale,
-                            dat_row = pos,
-                            dat_col = 8,
-                            par = par,
-                            p1 = 7,
-                            p2 = 8,
-                            p3 = 9,
-                            p4 = 10,
-                            p5 = 11,
-                            p6 = 12)
+          set.PEMethod.prob(
+            distr,
+            PEMethod,
+            data.at.timescale,
+            dat_row = pos,
+            dat_col = 8,
+            par = par,
+            p1 = 7,
+            p2 = 8,
+            p3 = 9,
+            p4 = 10,
+            p5 = 11,
+            p6 = 12
+          )
+
+        prob <- adjust.prob(prob)
 
         SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)
         pos <- pos + 1
@@ -422,7 +417,7 @@ calc.qnorm <-
     } else {
       for (pos in seq_len(n.weeks)) {
         week <- data.at.timescale[pos, 5]
-        par <- as.numeric(parameters[week,])
+        par <- as.numeric(parameters[week, ])
         prob <-
           (par[6] + (1 - par[6])) *
           cdfgam(data.at.timescale[pos, 6], c(par[4], par[5]))
@@ -431,18 +426,20 @@ calc.qnorm <-
         prob <- adjust.prob(prob)
         SDI[pos, 1] <- qnorm(prob, mean = 0, sd = 1)
         prob <-
-          set.PEMethod.prob(distr,
-                            PEMethod,
-                            data.at.timescale,
-                            dat_row = pos,
-                            dat_col = 8,
-                            par = par,
-                            p1 = 7,
-                            p2 = 8,
-                            p3 = 9,
-                            p4 = 10,
-                            p5 = 11,
-                            p6 = 12)
+          set.PEMethod.prob(
+            distr,
+            PEMethod,
+            data.at.timescale,
+            dat_row = pos,
+            dat_col = 8,
+            par = par,
+            p1 = 7,
+            p2 = 8,
+            p3 = 9,
+            p4 = 10,
+            p5 = 11,
+            p6 = 12
+          )
         prob <- adjust.prob(prob)
 
         SDI[pos, 2] <- qnorm(prob, mean = 0, sd = 1)

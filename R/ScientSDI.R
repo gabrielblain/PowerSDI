@@ -43,8 +43,8 @@
 #' Optional. Lower limit in millimetres from which evapotranspiration values
 #'   smaller than it will be removed.  Default is \code{NULL}.
 #' @return
-#' A list with data calculated at the time scale selected by the user.
-#' If \code{Good = "Yes"}, this list includes:
+#' A \code{list} object with data calculated at the time scale selected by the
+#'    user.  If \code{Good = "Yes"}, this \code{list} object includes:
 #' \describe{
 #'   \item{SDI}{The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.}
 #'   \item{DistPar}{The parameters of the distributions (gamma and
@@ -52,10 +52,11 @@
 #'   \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
 #'     tests.}
 #'   \item{Normality}{The outcomes of the two normality checking procedures (Wu
-#'     \emph{et al}., 2007 and Stagge \emph{et al}., 2015).}
+#'     \emph{et al}., 2006 and Stagge \emph{et al}., 2015).}
 #'  }
 #'
-#' If \code{Good = "No"}, this list includes \acronym{SDI} and DistPar.
+#' If \code{Good = "No"}, this \code{list} object includes \acronym{SDI} and
+#'   DistPar.
 #'
 #' This function also presents other data (in millimiters) calculated from the
 #'   \acronym{NASA} \acronym{POWER} project:
@@ -68,6 +69,7 @@
 #'   \item The difference between rainfall and potential evapotranspiration
 #'   (\acronym{PPEHS} and \acronym{PPEPM}).
 #'   }
+#'
 #' @export
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
 #' @importFrom utils install.packages menu write.table
@@ -94,7 +96,7 @@
 #'    K., 2015. Candidate distributions for climatological drought indices (SPI
 #'    and SPEI). International Journal of Climatology, 35(13), pp.4027-4040.
 #'
-#'  Wu, H., Svoboda, M.D., Hayes, M.J., Wilhite, D.A. and Wen, F., 2007.
+#'  Wu, H., Svoboda, M.D., Hayes, M.J., Wilhite, D.A. and Wen, F., 2006.
 #'   Appropriate application of the standardized precipitation index in arid
 #'   locations and dry seasons. International Journal of Climatology: A Journal
 #'   of the Royal Meteorological Society, 27(1), pp.65-79.
@@ -160,62 +162,28 @@ ScientSDI <-
            call. = FALSE)
     }
 
-    start.user.day <-
-      as.numeric(format(start.date.user, format = "%d"))
-    end.user.day <-
-      as.numeric(format(end.date.user, format = "%d"))
-    end.user.month <-
-      as.numeric(format(end.date.user, format = "%m"))
-    start.year <-
-      as.numeric(format(start.date.user, format = "%Y"))
-    start.month <-
-      as.numeric(format(start.date.user, format = "%m"))
-
+    start.year <- lubridate::year(start.date.user)
+    start.month <- lubridate::month(start.date.user)
+    start.day <- lubridate::day(start.date.user)
+    final.year <- lubridate::year(end.date.user)
+    final.month <- lubridate::month(end.date.user)
+    final.day <- lubridate::day(end.date.user)
     start.week <-
-      find.week.int(start.user.day) # see internal_functions.R
+      find.week.int(lubridate::day(start.date.user)) # see internal_functions.R
     dif <-
-      calculate.dif(start.week, start.user.day) # see internal_functions.R
+      calculate.dif(start.week, lubridate::day(start.date.user)) # see internal_functions.R
 
     start.date.protocal <- start.date.user - dif
 
-    sse_i <-
-      get_sdi_power_data(lon = lon,
-                         lat = lat,
-                         start.date.user = start.date.user,
-                         end.date.user = end.date.user)
-
-    #### Hargreaves & Samani ----
-    ETP.harg.daily <-
-      calc.ETP.daily(
-        J = sse_i$DOY,
-        lat = lat,
-        tavg = sse_i$T2M,
-        tmax = sse_i$T2M_MAX,
-        tmin = sse_i$T2M_MIN,
-        method = "HS"
-      )
-
-    #### Penman- Monteith-FAO ----
-    ETP.pm.daily <- calc.ETP.daily(
-      J = sse_i$DOY,
+    sse_i <- daily.ETP.wrapper(
+      lon = lon,
       lat = lat,
-      tavg = sse_i$T2M,
-      tmax = sse_i$T2M_MAX,
-      tmin = sse_i$T2M_MIN,
-      rh = sse_i$RH2M,
-      wind = sse_i$WS2M,
-      rad = sse_i$ALLSKY_SFC_SW_DWN,
-      method = "PM"
+      start.date.user = start.date.user,
+      end.date.user = end.date.user
     )
 
-    sse_i <- cbind(sse_i, ETP.harg.daily, ETP.pm.daily)
-    n.tot <- length(sse_i[, 1])
-    final.year <- sse_i$YEAR[n.tot]
-    initial.year <- sse_i$YEAR[1]
-    final.month <- sse_i$MM[n.tot]
-    final.day <- sse_i$DD[n.tot]
-    final.week <- find.week.int(final.day)
-    n.years <- 1 + (final.year - initial.year)
+    final.week <- find.week.int(final.year)
+    n.years <- 1 + (final.year - start.year)
     total.nweeks <- 48 * n.years
     a <- 1
     b <- 2
@@ -224,7 +192,8 @@ ScientSDI <-
     data.week <- matrix(NA, total.nweeks, 8)
     month <- start.month
     year <- start.year
-    while (year <= final.year || month <= final.month) {
+    while (year <= final.year ||
+           month <= final.month) {
       data.week1 <- colSums(sse_i[which(sse_i$YEAR == year &
                                           sse_i$MM == month &
                                           sse_i$DD <= 7), 14:16])
@@ -239,16 +208,17 @@ ScientSDI <-
       data.week4 <- colSums(sse_i[which(sse_i$YEAR == year &
                                           sse_i$MM == month &
                                           sse_i$DD > 21), 14:16])
-      data.week[a, ] <-
+      data.week[a,] <-
         c(lon, lat, year, month, 1, data.week1)
-      data.week[b, ] <-
+      data.week[b,] <-
         c(lon, lat, year, month, 2, data.week2)
-      data.week[c, ] <-
+      data.week[c,] <-
         c(lon, lat, year, month, 3, data.week3)
-      data.week[d, ] <-
+      data.week[d,] <-
         c(lon, lat, year, month, 4, data.week4)
       month <- month + 1
-      if (year == final.year & month > final.month) {
+      if (year == final.year &
+          month > final.month) {
         break
       }
       if (month > 12) {
@@ -265,19 +235,21 @@ ScientSDI <-
               data.week[, 4] > final.month)
     n.rows <- length(rows)
     if (n.rows > 0) {
-      data.week <- data.week[-c(rows), ]
+      data.week <- data.week[-c(rows),]
     }
     rows <-
-      which(data.week[, 3] == final.year &
-              data.week[, 4] == final.month &
-              data.week[, 5] >
-              final.week)
+      which(
+        data.week[, 3] == final.year &
+          data.week[, 4] == final.month &
+          data.week[, 5] >
+          final.week
+      )
     n.rows <- length(rows)
     if (n.rows > 0) {
-      data.week <- data.week[-c(rows), ]
+      data.week <- data.week[-c(rows),]
     }
     n <- length(which(data.week[, 3] <= final.year))
-    data.week <- data.week[1:n, ]
+    data.week <- data.week[1:n,]
 
     # see internal_functions.R for `find.quart.month.int()`
     data.week <-
@@ -288,7 +260,7 @@ ScientSDI <-
               data.week[, 4] == start.month &
               data.week[, 5] == start.week)
     if (first.row > 1) {
-      data.week <- data.week[-(1:(first.row - 1)), ]
+      data.week <- data.week[-(1:(first.row - 1)),]
     }
     ######## removing suspicious data ----
 
@@ -298,7 +270,7 @@ ScientSDI <-
       check.remove.lims(data.week, 7L, PEUplim, PELowlim, "PE")
 
     #########
-    n <- length(data.week[, 1])
+    n <- nrow(data.week)
     data.at.timescale <- matrix(NA, (n - (TS - 1)), 6)
     final.point <- n - (TS - 1)
     if (TS > 1) {
@@ -395,10 +367,12 @@ ScientSDI <-
                           parameters[i, 8], parameters[i, 9], parameters[i, 10]
                         )))
         }
+
         prob.harg[prob.harg < 0.001351] <- 0.001351
         prob.harg[prob.harg > 0.998649] <- 0.998649
         prob.pm[prob.pm < 0.001351] <- 0.001351
         prob.pm[prob.pm > 0.998649] <- 0.998649
+
         n.harg <- length(na.omit(petp.harg))
         soma.harg <- matrix(NA, n.harg, 1)
         prob.emp <-
@@ -581,7 +555,7 @@ ScientSDI <-
         "Crit"
       )
       ########
-      n.weeks <- length(data.at.timescale[, 1])
+      n.weeks <- nrow(data.at.timescale)
       pos <- 1
       SDI <- matrix(NA, n.weeks, 3)
       if (distr == "GEV") {
@@ -658,7 +632,7 @@ ScientSDI <-
         w$p.value[w$p.value < 0.01] <- 0.01
         Norn.check[j, 7:9] <-
           c(w$statistic, w$p.value, abs(median((SDI.week[, 3]), na.rm = TRUE)))
-        ###### As proposed in Wu et al. (2007)
+        ###### As proposed in Wu et al. (2006)
 
         Norn.check[j, 10] <- ifelse((Norn.check[j, 1] < 0.960 &&
                                        Norn.check[j, 2] < 0.10 &&
@@ -728,10 +702,9 @@ ScientSDI <-
         "Categ.SPEI.Harg",
         "Categ.SPEI.PM"
       )
-      check.quart.month.complete(as.numeric(format(end.date.user,
-                                                   format = "%Y")),
-                                 end.user.month,
-                                 end.user.day)
+      check.quart.month.complete(final.year,
+                                 final.month,
+                                 final.day)
       SDI.final <- SDI.final[-c(n.weeks), ]
 
       row.names(SDI.final[1, ]) <- paste("TS is ", as.character(TS))
@@ -807,7 +780,7 @@ ScientSDI <-
         "sh.pm",
         "TS"
       )
-      n.weeks <- length(data.at.timescale[, 1])
+      n.weeks <- nrow(data.at.timescale)
       pos <- 1
       SDI <- matrix(NA, n.weeks, 3)
       if (distr == "GEV") {
@@ -880,10 +853,9 @@ ScientSDI <-
         "Categ.SPEI.Harg",
         "Categ.SPEI.PM"
       )
-      check.quart.month.complete(as.numeric(format(end.date.user,
-                                                   format = "%Y")),
-                                 end.user.month,
-                                 end.user.day)
+      check.quart.month.complete(final.year,
+                                 final.month,
+                                 final.day)
       SDI.final <- SDI.final[-c(n.weeks), ]
 
       row.names(SDI.final[1, ]) <- paste("TS is", as.character(TS))

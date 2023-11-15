@@ -55,8 +55,8 @@ larger than it will be removed.  Default is \code{NULL}.}
 smaller than it will be removed.  Default is \code{NULL}.}
 }
 \value{
-A list with data calculated at the time scale selected by the user.
-If \code{Good = "Yes"}, this list includes:
+A \code{list} object with data calculated at the time scale selected by the
+   user.  If \code{Good = "Yes"}, this \code{list} object includes:
 \describe{
   \item{SDI}{The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.}
   \item{DistPar}{The parameters of the distributions (gamma and
@@ -64,10 +64,11 @@ If \code{Good = "Yes"}, this list includes:
   \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
     tests.}
   \item{Normality}{The outcomes of the two normality checking procedures (Wu
-    \emph{et al}., 2007 and Stagge \emph{et al}., 2015).}
+    \emph{et al}., 2006 and Stagge \emph{et al}., 2015).}
  }
 
-If \code{Good = "No"}, this list includes \acronym{SDI} and DistPar.
+If \code{Good = "No"}, this \code{list} object includes \acronym{SDI} and
+  DistPar.
 
 This function also presents other data (in millimiters) calculated from the
   \acronym{NASA} \acronym{POWER} project:
@@ -115,7 +116,7 @@ Guttman, N.B., 1999. Accepting the standardized precipitation
    K., 2015. Candidate distributions for climatological drought indices (SPI
    and SPEI). International Journal of Climatology, 35(13), pp.4027-4040.
 
- Wu, H., Svoboda, M.D., Hayes, M.J., Wilhite, D.A. and Wen, F., 2007.
+ Wu, H., Svoboda, M.D., Hayes, M.J., Wilhite, D.A. and Wen, F., 2006.
   Appropriate application of the standardized precipitation index in arid
   locations and dry seasons. International Journal of Climatology: A Journal
   of the Royal Meteorological Society, 27(1), pp.65-79.
