@@ -21,8 +21,8 @@ No return value, called for side effects. Using this will display scatter
   1-quart.month time scale in the active \R session.
 }
 \description{
-Plots rainfall and potential evapotranspiration, both Penman-Montieth and
-  Hargreves and Samani, amounts using \acronym{NASA} \acronym{POWER} data.
+Plots rainfall and potential evapotranspiration, both Penman-Monteith and
+  Hargreaves and Samani, amounts using \acronym{NASA} \acronym{POWER} data.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
