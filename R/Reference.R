@@ -42,18 +42,18 @@ Reference <- function(ref,
   PEMethod <- check.PEMethod(PEMethod)
   check.TS(TS)
 
-  if (PEMethod == "HS" && length(ref[1,]) != 8) {
+  if (PEMethod == "HS" && ncol(ref) != 8) {
     stop(
       "It seems that your input file (ref) has the wrong number of ",
       "columns. It should be 8.",
       call. = FALSE
     )
-  } else if (PEMethod == "PM" && length(ref[1,]) != 11) {
+  } else if (PEMethod == "PM" && ncol(ref) != 11) {
     stop("It seems that your input file (ref) has the wrong number of ",
          "columns. It should be 11.")
   }
 
-  n.tot <- length(ref[, 1])
+  n.tot <- nrow(ref)
   end.year <- ref$YEAR[n.tot]
   end.month <- ref$MM[n.tot]
   end.day <- ref$DD[n.tot]
@@ -145,7 +145,7 @@ Reference <- function(ref,
     message("Calculating. Please wait.")
 
     ref <- cbind(ref, ETP.pm.daily)
-    n.tot <- length(ref[, 1])
+    n.tot <- nrow(ref)
     end.year <- ref$YEAR[n.tot]
     end.month <- ref$MM[n.tot]
     end.day <- ref$DD[n.tot]
@@ -213,7 +213,7 @@ Reference <- function(ref,
     data.week <- data.week[c(-1), ]
   }
 
-  n <- length(data.week[, 1])
+  n <- nrow(data.week)
   data.at.timescale <- matrix(NA, (n - (TS - 1)),
                               5)
   end.point <- n - (TS - 1)
@@ -273,7 +273,7 @@ Reference <- function(ref,
                             "loc.gev",
                             "sc.gev",
                             "sh.gev")
-  n.weeks <- length(data.at.timescale[, 1])
+  n.weeks <- nrow(data.at.timescale)
   pos <- 1
   SDI <- matrix(NA, n.weeks, 2)
   while (pos <= n.weeks) {
