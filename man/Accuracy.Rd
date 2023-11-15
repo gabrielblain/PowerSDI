@@ -17,7 +17,7 @@ calculate confidence intervals.  Default is \dQuote{Yes}.}
 for parameter the confidence intervals.  Default is 0.95.}
 }
 \value{
-An object of \code{PowerSDI.Accuracy}, a \code{list}, which reports:
+An object of class \code{PowerSDI.Accuracy}, a \code{list}, which contains:
 
 \itemize{
  \item Absolute mean error (AME)
@@ -25,7 +25,7 @@ An object of \code{PowerSDI.Accuracy}, a \code{list}, which reports:
  \item Willmott's indices of agreement: original (dorig)
  \item Modified (dmod) and refined (dref)
  \item Pearson determination coefficient (R2), and
- \item If \code{conf.int="Yes"}, confidence intervals are calculated
+ \item If \code{conf.int="Yes"}, confidence intervals.
  }
 }
 \description{

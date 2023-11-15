@@ -3,7 +3,7 @@ Calculates the Standardised Precipitation (SPI) and Standardised Precipitation-E
 
 # Basic Description
 The PowerSDI is an R package capable of calculating the SPI and SPEI using NASA POWER data.
-The package is based on five R-functions designed to calculate these two standardized drought indices (SDI) in scientific and operational/routine modes.
+The package is based on five R-functions designed to calculate these two standardised drought indices (SDI) in scientific and operational/routine modes.
 The functions `ScientSDI()`, `Accuracy()`, `Reference()` and, `PlotData()` may be used to assess, among other features, the ability of the SPI and SPEI frequency distributions to meet the normality assumption and how well NASA POWER estimates represent “real-world” data.
 The `OperatSDI()` function calculates both SPI and SPEI in an operational mode.
 
@@ -23,7 +23,7 @@ devtools::install_github("gabrielblain/PowerSDI")
 # Basic Instructions
 
 ## Function ScientSDI()
-Helps the users to verify if the SPI and SPEI calculated from NASA POWER data meet the conceptual assumptions expected from standardized drought indices.
+Helps the users to verify if the SPI and SPEI calculated from NASA POWER data meet the conceptual assumptions expected from standardised drought indices.
 
 ## Usage
 ```r
@@ -77,7 +77,7 @@ If `Good="Yes"`, this list includes:
   * SDI: The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM. 
   * DistPar: The parameters of the distributions (gamma and GEV or GLO) used to calculate the indices. 
   * GoodFit: The Lilliefors and Anderson-Darling tests goodness-of-fit tests. 
-  * Normality: The outcomes of the two normality checking procedures (Wu et al., 2007 and Stagge et., 2015).
+  * Normality: The outcomes of the two normality checking procedures (Wu et al., 2006 and Stagge et., 2015).
 
 If `Good="No"`, this list includes:
 * SDI and 
@@ -414,4 +414,4 @@ Package ‘lmom', Version 2.9, Author J. R. M. Hosking. https://CRAN.R-project.o
 
 Package ‘nasapower', Version 4.0.10, Author Adam H. Sparks et al., https://CRAN.R-project.org/package=nasapower
 
-Wu, H., Svoboda, M. D., Hayes, M. J., Wilhite, D. A. and Wen, F., 2007. Appropriate application of the standardized precipitation index in arid locations and dry seasons. International Journal of Climatology, 27(1), 65–79. https://doi.org/10.1002/joc.1371.
+Wu, H., Svoboda, M. D., Hayes, M. J., Wilhite, D. A. and Wen, F., 2006. Appropriate application of the standardised precipitation index in arid locations and dry seasons. International Journal of Climatology, 27(1), 65–79. https://doi.org/10.1002/joc.1371.

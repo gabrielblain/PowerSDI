@@ -11,6 +11,9 @@
 #' adjust.prob(0.997)
 #' adjust.prob(0.0001)
 #' adjust.prob(0.99999)
+#'
+#' @return A single numeric value.
+#'
 #' @noRd
 #' @keywords Internal
 
@@ -29,7 +32,7 @@ adjust.prob <- function(prob) {
 #'
 #' @param dates A vector of two user entered `dates` values.
 #'
-#' @return Validated dates in a list
+#' @return Two validated \code{date} objects in a \code{list} object.
 #' @keywords internal
 #' @noRd
 check.dates <- function(dates) {
@@ -314,7 +317,6 @@ find.quart.month.int <- function(x) {
       all(b == a))))
 }
 
-
 #' Find a Corresponding Integer Value for a Week's Position in a Month
 #'
 #' Given a user-supplied \code{user.start.day} value, calculate the start.week
@@ -440,6 +442,63 @@ get_sdi_power_data <-
     }
   }
 
+#' Aggregates Data Download and Calculates ETP Daily Values
+#'
+#' Wraps functions that fetch data using `get_sdi_power_data()` and calculates
+#'   the daily evapotranspiration values using `calc.ETP.daily()` for both
+#'   Penman-Monteith and Hargreaves and Samani methods.
+#'
+#' @param lon User provided longitude value
+#' @param lat User provided latitude value
+#' @param start.date.user Start date provided by user
+#' @param end.date.user End date provided by User
+#' @return A \code{list} with the POWER data, `sse_i`; evapotranspiration for
+#'    PM, `ETP.pm.daily`; and HS, `ETP.hs.daily`, values.
+#' @keywords Internal
+#' @noRd
+
+daily.ETP.wrapper <-
+  function(lon,
+           lat,
+           start.date.user,
+           end.date.user) {
+
+    sse_i <-
+      get_sdi_power_data(
+        lon = lon,
+        lat = lat,
+        start.date.user = start.date.user,
+        end.date.user = end.date.user
+      )
+
+    #### Hargreaves & Samani ----
+    ETP.harg.daily <-
+      calc.ETP.daily(
+        J = sse_i$DOY,
+        lat = lat,
+        tavg = sse_i$T2M,
+        tmax = sse_i$T2M_MAX,
+        tmin = sse_i$T2M_MIN,
+        method = "HS"
+      )
+
+    #### Penman- Monteith-FAO ----
+    ETP.pm.daily <- calc.ETP.daily(
+      J = sse_i$DOY,
+      lat = lat,
+      tavg = sse_i$T2M,
+      tmax = sse_i$T2M_MAX,
+      tmin = sse_i$T2M_MIN,
+      rh = sse_i$RH2M,
+      wind = sse_i$WS2M,
+      rad = sse_i$ALLSKY_SFC_SW_DWN,
+      method = "PM"
+    )
+
+    return(cbind(sse_i,
+                 ETP.harg.daily,
+                 ETP.pm.daily))
+  }
 
 #' Wrap get_power() from {nasaspower} for this package
 #'

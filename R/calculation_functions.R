@@ -1,5 +1,6 @@
 
 #' Calculate Daily Evapotranspiration
+#'
 #' @param DOY Day of year as an integer
 #' @param lat User provided latitude value
 #' @param tavg Average daily temperature
