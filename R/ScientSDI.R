@@ -43,8 +43,8 @@
 #' Optional. Lower limit in millimetres from which evapotranspiration values
 #'   smaller than it will be removed.  Default is \code{NULL}.
 #' @return
-#' A list with data calculated at the time scale selected by the user.
-#' If \code{Good = "Yes"}, this list includes:
+#' A \code{list} object with data calculated at the time scale selected by the
+#'    user.  If \code{Good = "Yes"}, this \code{list} object includes:
 #' \describe{
 #'   \item{SDI}{The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.}
 #'   \item{DistPar}{The parameters of the distributions (gamma and
@@ -55,7 +55,8 @@
 #'     \emph{et al}., 2007 and Stagge \emph{et al}., 2015).}
 #'  }
 #'
-#' If \code{Good = "No"}, this list includes \acronym{SDI} and DistPar.
+#' If \code{Good = "No"}, this \code{list} object includes \acronym{SDI} and
+#'   DistPar.
 #'
 #' This function also presents other data (in millimiters) calculated from the
 #'   \acronym{NASA} \acronym{POWER} project:
@@ -269,7 +270,7 @@ ScientSDI <-
       check.remove.lims(data.week, 7L, PEUplim, PELowlim, "PE")
 
     #########
-    n <- length(data.week[, 1])
+    n <- nrow(data.week)
     data.at.timescale <- matrix(NA, (n - (TS - 1)), 6)
     final.point <- n - (TS - 1)
     if (TS > 1) {
@@ -366,10 +367,12 @@ ScientSDI <-
                           parameters[i, 8], parameters[i, 9], parameters[i, 10]
                         )))
         }
+
         prob.harg[prob.harg < 0.001351] <- 0.001351
         prob.harg[prob.harg > 0.998649] <- 0.998649
         prob.pm[prob.pm < 0.001351] <- 0.001351
         prob.pm[prob.pm > 0.998649] <- 0.998649
+
         n.harg <- length(na.omit(petp.harg))
         soma.harg <- matrix(NA, n.harg, 1)
         prob.emp <-
@@ -552,7 +555,7 @@ ScientSDI <-
         "Crit"
       )
       ########
-      n.weeks <- length(data.at.timescale[, 1])
+      n.weeks <- nrow(data.at.timescale)
       pos <- 1
       SDI <- matrix(NA, n.weeks, 3)
       if (distr == "GEV") {
@@ -777,7 +780,7 @@ ScientSDI <-
         "sh.pm",
         "TS"
       )
-      n.weeks <- length(data.at.timescale[, 1])
+      n.weeks <- nrow(data.at.timescale)
       pos <- 1
       SDI <- matrix(NA, n.weeks, 3)
       if (distr == "GEV") {

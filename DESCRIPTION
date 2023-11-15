@@ -28,8 +28,8 @@ Authors@R: c(
     email = "adamhsparks@gmail.com",
     role = c("aut"),
     comment = c(ORCID = "0000-0002-0061-8359")))
-Description: A set of functions designed to calculate the standardized
-    precipitation and standardized precipitation evapotranspiration indices
+Description: A set of functions designed to calculate the standardised
+    precipitation and standardised precipitation evapotranspiration indices
     using NASA POWER data.  These indices are calculated using a reference
     data source.  The functions verify if the indices estimates meet the
     normality assumption and how well NASA POWER estimates represent real
