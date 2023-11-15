@@ -1,7 +1,7 @@
-#' PlotData
+#' Plot Rainfall and Potential Evapotranspiration Data
 #'
-#' Plots rainfall and potential evapotranspiration amounts using \acronym{NASA}
-#'   \acronym{POWER} data.
+#' Plots rainfall and potential evapotranspiration, both Penman-Montieth and
+#'   Hargreves and Samani, amounts using \acronym{NASA} \acronym{POWER} data.
 #'
 #' @param lon
 #' longitude in decimal degrees: (+) Eastern Hemisphere (-) Western Hemisphere.
@@ -12,8 +12,9 @@
 #' @param end.date
 #' date at which the indices estimates should end ("YYYY-MM-DD").
 #' @return
-#' Scatter plots of Rainfall and potential evapotranspiration accumulated at the
-#'   1-quart.month time scale.
+#' No return value, called for side effects. Using this will display scatter
+#'   plots of rainfall and potential evapotranspiration accumulated at the
+#'   1-quart.month time scale in the active \R session.
 #' @export
 #' @importFrom graphics par
 #' @examplesIf interactive()
