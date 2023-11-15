@@ -14,7 +14,7 @@
 
  - local macOS, Platform: aarch64-apple-darwin20 (64-bit), R 4.2.3
  - local macOS, Platform: aarch64-apple-darwin20 (64-bit), R 4.3.2
- - win-builder, R Under development (unstable) (2023-11-11 r85510 ucrt)
+ - win-builder, R Under development (unstable) (2023-11-13 r85520 ucrt)
  
 ## R CMD check results
 
