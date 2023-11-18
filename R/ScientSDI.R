@@ -46,7 +46,8 @@
 #' A \code{list} object with data calculated at the time scale selected by the
 #'    user.  If \code{Good = "Yes"}, this \code{list} object includes:
 #' \describe{
-#'   \item{SDI}{The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.}
+#'   \item{SDI}{The \dQuote{NASA-SPI}, \dQuote{NASA-SPEI.HS} and
+#'     \dQuote{NASA-SPEI.PM.}}
 #'   \item{DistPar}{The parameters of the distributions (gamma and
 #'     \acronym{GEV}) used to calculate the indices.}
 #'   \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
@@ -61,22 +62,22 @@
 #' This function also presents other data (in millimiters) calculated from the
 #'   \acronym{NASA} \acronym{POWER} project:
 #' \itemize{
-#'   \item Rainfall amounts (Rain).
-#'   \item Potential evapotranspiration values estimated through the Hargreaves
-#'    and Samani method (\acronym{PEHS}).
-#'   \item Potential evapotranspiration values estimated through the FAO-56
-#'    Penman-Monteith method (\acronym{PEPM}).
-#'   \item The difference between rainfall and potential evapotranspiration
+#'   \item Rainfall amounts (Rain),
+#'   \item potential evapotranspiration values estimated through the Hargreaves
+#'    and Samani method (\acronym{PEHS}),
+#'   \item potential evapotranspiration values estimated through the FAO-56
+#'    Penman-Monteith method (\acronym{PEPM}), and
+#'   \item the difference between rainfall and potential evapotranspiration
 #'   (\acronym{PPEHS} and \acronym{PPEPM}).
 #'   }
 #'
 #' @export
 #' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
-#' @importFrom utils install.packages menu write.table
+#' @importFrom lmom pelgam pelgev pelglo quagam quagev quaglo samlmu
 #' @examplesIf interactive()
 #'
-#' # This example requires an Internet connection to fetch data and so is only
-#' # run in interactive sessions
+#' # This example requires an Internet connection to fetch data and takes >5s
+#' #  to run, and so is only run in interactive sessions
 #'
 #' ScientSDI(
 #'   lon = -47.3,
@@ -100,10 +101,6 @@
 #'   Appropriate application of the standardized precipitation index in arid
 #'   locations and dry seasons. International Journal of Climatology: A Journal
 #'   of the Royal Meteorological Society, 27(1), pp.65-79.
-
-# TODO: Think about splitting this up to i) fetch data, ii) process and split
-# processing functions by GLO/GEV first and then add Goodness test functions
-# as a third step?
 
 ScientSDI <-
   function(lon,

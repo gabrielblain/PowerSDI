@@ -2,19 +2,19 @@
 
 ## Minor Changes
 
-* Ensure that user's options for `par()` are not modified after using `PlotData()`.
+* Document the `\value` for the custom `print()` for `PowerSDI.Accuracy` objects as requested by CRAN maintainers.
 
-* Correct the "Value" for `PlotData()` in documentation.
+* Standardise `\value` sections in {ROxygen} portions of each file.
 
-* Standardise the use of "Standardise" vs. "Standardize" in package, use en-GB.
+* Remove unimported package, {utils}.
 
-* Add reference to Description field describing the methods used in this package.
+* Remove unused functions from `@importFrom` in {ROxygen} portions of several files.
 
 ## Test environments
 
  - local macOS, Platform: aarch64-apple-darwin20 (64-bit), R 4.2.3
  - local macOS, Platform: aarch64-apple-darwin20 (64-bit), R 4.3.2
- - win-builder, R Under development (unstable) (2023-11-13 r85520 ucrt)
+ - win-builder, R Under development (unstable) (2023-11-17 r85550 ucrt)
  
 ## R CMD check results
 
