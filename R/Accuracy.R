@@ -16,12 +16,16 @@
 #' An object of class \code{PowerSDI.Accuracy}, a \code{list}, which contains:
 #'
 #' \itemize{
-#'  \item Absolute mean error (AME)
-#'  \item Square root of the mean squared error (RMSE)
-#'  \item Willmott's indices of agreement: original (dorig)
-#'  \item Modified (dmod) and refined (dref)
+#'  \item Absolute mean error (AME),
+#'  \item square root of the mean squared error (RMSE),
+#'  \item Willmott's indices of agreement:
+#'    \itemize{
+#'      \item original (dorig),
+#'      \item modified (dmod) and
+#'      \item refined (dref)
+#'      }
 #'  \item Pearson determination coefficient (R2), and
-#'  \item If \code{conf.int="Yes"}, confidence intervals.
+#'  \item if \code{conf.int = "Yes"}, confidence intervals.
 #'  }
 #'
 #' @examples {
@@ -41,7 +45,7 @@ Accuracy <- function(obs_est,
 
   check.confint(conf.int, sig.level)
 
-  o <- (obs_est[, 1])
+  o <- obs_est[, 1]
   p <- obs_est[, 2]
   N <- length(o)
 
@@ -237,6 +241,8 @@ Accuracy <- function(obs_est,
 #' @param digits The number of digits to be used after the decimal when
 #'   displaying accuracy values.
 #' @param ... ignored
+#' @return Nothing. Side-effect: pretty prints a \code{PowerSDI.Accuracy} object
+#'   in the \R console.
 #' @export
 #'
 print.PowerSDI.Accuracy <- function(x,
@@ -252,7 +258,9 @@ print.PowerSDI.Accuracy <- function(x,
 #'
 #' @param x a `PowerSDI.Accuracy` object
 #' @param ... Other parameters as passed to \code{plot()}
-#' @return Nothing. Side-effect: plots graphs.
+#' @return No return value, called for side effects. Using this will display a
+#'   scatter plot of reference ETP data (x-axis) and estimated ETP (y-axis) in
+#'   the active \R session.
 #' @export
 #'
 plot.PowerSDI.Accuracy <- function(x, ...) {
