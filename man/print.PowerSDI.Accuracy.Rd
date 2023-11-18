@@ -14,6 +14,10 @@ displaying accuracy values.}
 
 \item{...}{ignored}
 }
+\value{
+Nothing. Side-effect: pretty prints a \code{PowerSDI.Accuracy} object
+  in the \R console.
+}
 \description{
 Custom \code{print()} method for \code{PowerSDI.Accuracy} objects.
 }

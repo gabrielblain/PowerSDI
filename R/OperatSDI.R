@@ -24,18 +24,25 @@
 #'   between 1 and 96).
 #'
 #' @return
-#' A data frame with rainfall, potential evapotranspiration (PE),
-#'   difference between rainfall and PE (in millimiters), the NASA-SPI and
-#'   NASA-SPEI, and the SDI categories corresponding to each indices estimates.
+#' A data frame with six columns
+#' \itemize{
+#'   \item rainfall,
+#'   \item potential evapotranspiration (PE),
+#'   \item difference between rainfall and PE (in millimiters),
+#'   \item the NASA-SPI,
+#'   \item the NASA-SPEI and
+#'   \item the SDI categories corresponding to each indices estimates.
+#'   }
 #'
-#' @importFrom lmom cdfgam pelgam pelgev pelglo quagev quagam quaglo samlmu
-#' @importFrom graphics title
-#' @importFrom stats cor median na.omit qnorm quantile runif shapiro.test
+#' @importFrom lmom cdfgam
+#' @importFrom stats na.omit qnorm
 #'
 #' @examplesIf interactive()
 #'
-#' # This example uses data included in this package, "DistPar" for
-#' #   "parms" here
+#' # This example is not run as it requires data to be downloaded from an API,
+#' #  which may fail.  It also uses data included in this package, "DistPar" for
+#' #  `parms` here
+#'
 #' OperatSDI(
 #'   lon = -47.3,
 #'   lat = -22.67,

@@ -58,7 +58,8 @@ smaller than it will be removed.  Default is \code{NULL}.}
 A \code{list} object with data calculated at the time scale selected by the
    user.  If \code{Good = "Yes"}, this \code{list} object includes:
 \describe{
-  \item{SDI}{The NASA-SPI, NASA-SPEI.HS and NASA-SPEI.PM.}
+  \item{SDI}{The \dQuote{NASA-SPI}, \dQuote{NASA-SPEI.HS} and
+    \dQuote{NASA-SPEI.PM.}}
   \item{DistPar}{The parameters of the distributions (gamma and
     \acronym{GEV}) used to calculate the indices.}
   \item{GoodFit}{The Lilliefors and Anderson-Darling tests goodness-of-fit
@@ -73,12 +74,12 @@ If \code{Good = "No"}, this \code{list} object includes \acronym{SDI} and
 This function also presents other data (in millimiters) calculated from the
   \acronym{NASA} \acronym{POWER} project:
 \itemize{
-  \item Rainfall amounts (Rain).
-  \item Potential evapotranspiration values estimated through the Hargreaves
-   and Samani method (\acronym{PEHS}).
-  \item Potential evapotranspiration values estimated through the FAO-56
-   Penman-Monteith method (\acronym{PEPM}).
-  \item The difference between rainfall and potential evapotranspiration
+  \item Rainfall amounts (Rain),
+  \item potential evapotranspiration values estimated through the Hargreaves
+   and Samani method (\acronym{PEHS}),
+  \item potential evapotranspiration values estimated through the FAO-56
+   Penman-Monteith method (\acronym{PEPM}), and
+  \item the difference between rainfall and potential evapotranspiration
   (\acronym{PPEHS} and \acronym{PPEPM}).
   }
 }
@@ -94,8 +95,8 @@ Verifies concepts expected from SDI.  The first step of the \acronym{SPI} and
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
-# This example requires an Internet connection to fetch data and so is only
-# run in interactive sessions
+# This example requires an Internet connection to fetch data and takes >5s
+#  to run, and so is only run in interactive sessions
 
 ScientSDI(
   lon = -47.3,

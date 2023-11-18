@@ -12,7 +12,9 @@
 \item{...}{Other parameters as passed to \code{plot()}}
 }
 \value{
-Nothing. Side-effect: plots graphs.
+No return value, called for side effects. Using this will display a
+  scatter plot of reference ETP data (x-axis) and estimated ETP (y-axis) in
+  the active \R session.
 }
 \description{
 Custom \code{plot()} method for \code{PowerSDI.Accuracy} objects.

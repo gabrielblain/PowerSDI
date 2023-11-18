@@ -19,7 +19,7 @@
 #'   96).  Default is 4.
 #'
 #' @return
-#' A \code{data.frame} with
+#' A data frame with five columns
 #' \itemize{
 #'   \item rain,
 #'   \item potential evapotranspiration,
