@@ -20,12 +20,16 @@ for parameter the confidence intervals.  Default is 0.95.}
 An object of class \code{PowerSDI.Accuracy}, a \code{list}, which contains:
 
 \itemize{
- \item Absolute mean error (AME)
- \item Square root of the mean squared error (RMSE)
- \item Willmott's indices of agreement: original (dorig)
- \item Modified (dmod) and refined (dref)
+ \item Absolute mean error (AME),
+ \item square root of the mean squared error (RMSE),
+ \item Willmott's indices of agreement:
+   \itemize{
+     \item original (dorig),
+     \item modified (dmod) and
+     \item refined (dref)
+     }
  \item Pearson determination coefficient (R2), and
- \item If \code{conf.int="Yes"}, confidence intervals.
+ \item if \code{conf.int = "Yes"}, confidence intervals.
  }
 }
 \description{

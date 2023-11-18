@@ -21,7 +21,7 @@ evapotranspiration method.  Default is \dQuote{HS}.}
 96).  Default is 4.}
 }
 \value{
-A \code{data.frame} with
+A data frame with five columns
 \itemize{
   \item rain,
   \item potential evapotranspiration,

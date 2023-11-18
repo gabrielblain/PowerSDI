@@ -43,9 +43,15 @@ logistic distributions) as an option.}
 between 1 and 96).}
 }
 \value{
-A data frame with rainfall, potential evapotranspiration (PE),
-  difference between rainfall and PE (in millimiters), the NASA-SPI and
-  NASA-SPEI, and the SDI categories corresponding to each indices estimates.
+A data frame with six columns
+\itemize{
+  \item rainfall,
+  \item potential evapotranspiration (PE),
+  \item difference between rainfall and PE (in millimiters),
+  \item the NASA-SPI,
+  \item the NASA-SPEI and
+  \item the SDI categories corresponding to each indices estimates.
+  }
 }
 \description{
 Calculates the \acronym{SPI} (Standardized Precipitation Index) and
@@ -55,8 +61,10 @@ Calculates the \acronym{SPI} (Standardized Precipitation Index) and
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
-# This example uses data included in this package, "DistPar" for
-#   "parms" here
+# This example is not run as it requires data to be downloaded from an API,
+#  which may fail.  It also uses data included in this package, "DistPar" for
+#  `parms` here
+
 OperatSDI(
   lon = -47.3,
   lat = -22.67,
