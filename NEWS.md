@@ -1,3 +1,15 @@
+# PowerSDI 0.1.3
+
+## Minor Changes
+
+* Document the `\value` for the custom `print()` for `PowerSDI.Accuracy` objects as requested by CRAN maintainers.
+
+* Standardise `\value` sections in {ROxygen} portions of each file.
+
+* Remove unimported package, {utils}.
+
+* Remove unused functions from `@importFrom` in {ROxygen} portions of several files.
+
 # PowerSDI 0.1.2
 
 ## Minor Changes
