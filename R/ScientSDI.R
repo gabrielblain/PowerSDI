@@ -102,10 +102,6 @@
 #'   locations and dry seasons. International Journal of Climatology: A Journal
 #'   of the Royal Meteorological Society, 27(1), pp.65-79.
 
-# TODO: Think about splitting this up to i) fetch data, ii) process and split
-# processing functions by GLO/GEV first and then add Goodness test functions
-# as a third step?
-
 ScientSDI <-
   function(lon,
            lat,

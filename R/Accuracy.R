@@ -28,14 +28,13 @@
 #'  \item if \code{conf.int = "Yes"}, confidence intervals.
 #'  }
 #'
-#' @examples {
-#'
+#' @examples
 #' a <- Accuracy(obs_est = ObsEst, conf.int = "No")
 #' a
 #'
 #' # A generic plotting method is also supplied
 #' plot(a)
-#' }
+#'
 #' @export
 Accuracy <- function(obs_est,
                      conf.int = "Yes",
