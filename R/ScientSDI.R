@@ -38,10 +38,12 @@
 #'   it will be removed.  Default is \code{NULL}.
 #' @param PEUplim
 #' Optional. Upper limit in millimetres from which evapotranspiration values
-#'   larger than it will be removed.  Default is \code{NULL}.
+#'   larger than it will be removed. Valid for Hargreaves and Samani method
+#'   Default is \code{NULL}.
 #' @param PELowlim
 #' Optional. Lower limit in millimetres from which evapotranspiration values
-#'   smaller than it will be removed.  Default is \code{NULL}.
+#'   smaller than it will be removed. Valid for Hargreaves and Samani method
+#'   Default is \code{NULL}.
 #' @return
 #' A \code{list} object with data calculated at the time scale selected by the
 #'    user.  If \code{Good = "Yes"}, this \code{list} object includes:
@@ -277,7 +279,7 @@ ScientSDI <-
       c <- 1
       data.at.timescale[c, ] <-
         c(data.week[b, 3:4], data.week[b, 9],
-          colSums(data.week[a:b, 6:8]))
+          colSums(data.week[a:b, 6:8],na.rm = TRUE))
       point <- point + 1
       a <- a + 1
       b <- b + 1
@@ -285,7 +287,7 @@ ScientSDI <-
       while (point <= final.point) {
         data.at.timescale[c, ] <-
           c(data.week[b, 3:4], data.week[b, 9],
-            colSums(data.week[a:b, 6:8]))
+            colSums(data.week[a:b, 6:8],na.rm = TRUE))
         if (is.na(data.at.timescale[c, 4]) ||
             is.na(data.at.timescale[c, 5]) ||
             is.na(data.at.timescale[c, 6])) {
@@ -866,7 +868,7 @@ ScientSDI <-
 #' Check and Remove Values Outside of Set Limits
 #'
 #' Takes a user-provided value, checks if values are within the boundaries,
-#' emits a message with number of removed rows and removes the rows falling
+#' emits a message with number of removed rows and set to 'na' the data falling
 #' outside the boundaries.
 #' @param data.week A matrix of values
 #' @param col.position An integer value indicating which column should be
@@ -913,25 +915,35 @@ check.remove.lims <-
            which.lim) {
     if (!is.null(Uplim)) {
       upremov <- which(data.week[, col.position] > Uplim)
+      if (length(upremov) > 384) {
+        stop(call. = FALSE,
+             "There are not enough rows in the data with the limits that you ",
+             "have set. Please use lower or higher limits to allow enough data ",
+             "to remain.")
+      }
       if (length(upremov) > 0) {
-        message("Removed row(s) above limit: ",
+        message("Row(s) with data above limit: ",
                 paste(upremov, collapse = ", "),
                 " for ",
                 which.lim)
-        data.week <-
-          data.week[data.week[, col.position] < Uplim, , drop = FALSE]
+        data.week[which(data.week[, col.position] > Uplim), col.position] <- Uplim
       }
     }
 
     if (!is.null(Lowlim)) {
       lowremov <- which(data.week[, col.position] < Lowlim)
+      if (length(lowremov) > 384) {
+        stop(call. = FALSE,
+             "There are not enough rows in the data with the limits that you ",
+             "have set. Please use lower or higher limits to allow enough data ",
+             "to remain.")
+      }
       if (length(lowremov) > 0) {
-        message("Removed rows below limit: ",
+        message("Row(s) with data below limit: ",
                 paste(lowremov, collapse = ", "),
                 " for ",
                 which.lim)
-        data.week <-
-          data.week[data.week[, col.position] > Lowlim, , drop = FALSE]
+        data.week[which(data.week[, col.position] < Lowlim), col.position] <- Lowlim
       }
     }
 

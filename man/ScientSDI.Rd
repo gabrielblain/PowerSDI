@@ -49,10 +49,12 @@ it will be removed.  Default is \code{NULL}.}
 it will be removed.  Default is \code{NULL}.}
 
 \item{PEUplim}{Optional. Upper limit in millimetres from which evapotranspiration values
-larger than it will be removed.  Default is \code{NULL}.}
+larger than it will be removed. Valid for Hargreaves and Samani method
+Default is \code{NULL}.}
 
 \item{PELowlim}{Optional. Lower limit in millimetres from which evapotranspiration values
-smaller than it will be removed.  Default is \code{NULL}.}
+smaller than it will be removed. Valid for Hargreaves and Samani method
+Default is \code{NULL}.}
 }
 \value{
 A \code{list} object with data calculated at the time scale selected by the
