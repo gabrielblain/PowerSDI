@@ -1,5 +1,9 @@
 # PowerSDI 1.0.0
 
+## Major Change
+
+* Replace the suspicious values for `PowerSDI.ScientSDI` with the limits provided by the users.
+
 # PowerSDI 0.1.3
 
 ## Minor Changes
