@@ -1,7 +1,7 @@
 Package: PowerSDI
 Type: Package
 Title: Calculate Standardised Drought Indices Using NASA POWER Data
-Version: 1.0.0
+Version: 2.0.0
 Authors@R: c(
   person(
     given = "Gabriel Constantino",
