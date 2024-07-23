@@ -178,5 +178,5 @@ calc.Rn <- function(rad, Q0.ajust, ea, temp, tmin) {
 #' @keywords Internal
 
 calc.probzero <- function(n.z, n.rain) {
-  ifelse(n.z == 0, 0, (n.z + 1) / (2 * (n.rain + 1)))
+  ifelse(n.z == 0, 0, n.z / (n.rain + 1))
 }
